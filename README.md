@@ -5,7 +5,7 @@ Starboard is a family dashboard for the kitchen, inspired by Skylight. It runs f
 What it does:
 
 - Shows the shared Google Calendar.
-- Kid's picture routine for the day.
+- Cleo's picture routine for the day.
 - Chores with stickers.
 - Grocery list with voice input.
 - Meal plan and recipe box.

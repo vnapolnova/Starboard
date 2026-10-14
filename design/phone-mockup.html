@@ -168,7 +168,7 @@ label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
       <label for="cName">Chore</label><input id="cName" placeholder="e.g. Water plants">
       <label>Who</label><div class="chips" id="cWho"></div>
       <label>Repeats</label><div class="chips" id="cRep"></div>
-      <div id="picWrap"><label>Picture for the kid</label><div class="emoji-pick" id="cPic"></div><p class="hint">Kid's chores show a big picture so they can find them on their own.</p></div>
+      <div id="picWrap"><label>Picture for the kid</label><div class="emoji-pick" id="cPic"></div><p class="hint">Cleo's chores show a big picture so they can find them on their own.</p></div>
       <button class="btn danger" id="delChore">Delete chore</button>
       <div class="savebar"><button class="btn ghost" data-cancel>Cancel</button><button class="btn" id="saveChore">Save chore</button></div>
     </div>
@@ -210,15 +210,15 @@ label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
 
 <script>
 const $=s=>document.querySelector(s);
-const TAGS=["Weeknight","Kid's pick","Vegetarian","Freezes well","Big batch"];
+const TAGS=["Weeknight","Cleo's pick","Vegetarian","Freezes well","Big batch"];
 const P={p1:{n:"Alice",c:"var(--p1)"},p2:{n:"Bob",c:"var(--p2)"},kid:{n:"Cleo",c:"var(--kid)"}};
 const PICS=["🧸","👟","🪥","🧺","🌱","🍽️","📚","🛁","🧦","🐟"];
 const REP=["Daily","Weekdays","Weekly","Once"];
 let recipes=[
  {n:"Sheet-pan chicken fajitas",time:"35 min",serv:"4",tags:["Weeknight"],e:"🌮",sw:"#FFD9A8",ing:["1.5 lb chicken thighs","3 bell peppers","1 red onion","8 tortillas","Sour cream","2 limes"],steps:"Heat oven to 425°F.\nSlice chicken, peppers and onion; toss with oil and spices.\nRoast 20–25 min.\nServe in warm tortillas with lime.",src:""},
  {n:"Turkey chili",time:"50 min",serv:"6",tags:["Freezes well"],e:"🍲",sw:"#FFC2B3",ing:["1 lb ground turkey","2 cans kidney beans","28 oz crushed tomatoes","2 tbsp chili powder","Cheddar"],steps:"Brown turkey.\nAdd everything else and simmer 30 min.",src:""},
- {n:"Unicorn pancakes",time:"25 min",serv:"4",tags:["Kid's pick"],e:"🥞",sw:"#E7D6FF",ing:["1.5 cups flour","2 eggs","1.25 cups milk","Blueberries","Sprinkles"],steps:"Whisk batter.\nCook on a buttered pan.\nTop with berries and sprinkles.",src:""},
- {n:"Purple berry smoothie",time:"5 min",serv:"2",tags:["Kid's pick","Vegetarian"],e:"🫐",sw:"#D9C2FF",ing:["1 cup frozen blueberries","1 banana","1/2 cup Greek yogurt","1 cup milk"],steps:"Blend until smooth.",src:""}
+ {n:"Unicorn pancakes",time:"25 min",serv:"4",tags:["Cleo's pick"],e:"🥞",sw:"#E7D6FF",ing:["1.5 cups flour","2 eggs","1.25 cups milk","Blueberries","Sprinkles"],steps:"Whisk batter.\nCook on a buttered pan.\nTop with berries and sprinkles.",src:""},
+ {n:"Purple berry smoothie",time:"5 min",serv:"2",tags:["Cleo's pick","Vegetarian"],e:"🫐",sw:"#D9C2FF",ing:["1 cup frozen blueberries","1 banana","1/2 cup Greek yogurt","1 cup milk"],steps:"Blend until smooth.",src:""}
 ];
 let plan=[["Mon",1],["Tue",null],["Wed",0],["Thu",null],["Fri",2],["Sat","out"],["Sun",null]];
 let chores=[

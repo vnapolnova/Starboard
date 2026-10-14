@@ -27,15 +27,15 @@ Starboard is a family kitchen dashboard for two parents and a toddler.
 - **Calendar:** one shared "Family" Google Calendar.
   - Ownership order: guests' emails map to people first, then a name or nickname at the start of the title, otherwise Family.
   - Corrections made in the app are stored per event ID in Firestore.
-- **Kid's day:** built in three layers.
+- **Cleo's day:** built in three layers.
   1. Weekday or weekend template.
-  2. Today's Kid events, merged in by time.
+  2. Today's Cleo events, merged in by time.
   3. One-off changes for today.
   - The current step is the latest step whose start time has passed.
 - **Grocery voice:** the tablet mic through the Web Speech API. The Google Hub/Keep sync is a later experiment and not in scope.
 - **Screen:** wake at 6:15, dim at 8:45 pm, off at 10 pm, with motion wake handled by Fully Kiosk.
 - **Phases:**
-  1. Calendar, Today, weather, chores, grocery, Kid's day.
+  1. Calendar, Today, weather, chores, grocery, Cleo's day.
   2. Meals and recipes with link import, phone Manage screens, Settings.
   3. Event search and Explore.
   - Later: Google Photos slideshow.

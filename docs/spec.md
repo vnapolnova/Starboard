@@ -26,20 +26,22 @@ Starboard is a Skylight-style family dashboard for the kitchen, with a phone com
 | Cleo | Purple | The kid (a toddler). Has their own Google account. |
 | Family | Amber | Shared events |
 
+Alice, Bob and Cleo are placeholder names used in this spec, the mockups and the issues. The app reads real names from Firestore (`members`), so "Cleo's day" and "Cleo's pick" show the kid's actual name.
+
 Header chips toggle each person's events on and off in the Today and Calendar views.
 
 ## 3. Look & feel
 
 - **Palette:** purple, with a starry night-sky header.
-- **Mascot:** an original unicorn in the header. Tapping it opens Kid's day.
-- **Playful details:** a rainbow "Now" line, and a sparkle burst plus a sticker when one of Kid's chores is done.
+- **Mascot:** an original unicorn in the header. Tapping it opens Cleo's day.
+- **Playful details:** a rainbow "Now" line, and a sparkle burst plus a sticker when one of Cleo's chores is done.
 - **Fonts:** Baloo 2 for display text and Atkinson Hyperlegible for body text.
 - **Themes:** light and dark. Motion respects reduced-motion settings.
 - **Fun level:** the same look all day. A calmer look for nights or mornings can come later.
 
 ## 4. Tablet screens
 
-Tabs: Today · Calendar · Meals · Grocery · Chores, plus Kid's day (opened from the unicorn) and Explore (opened from the Nearby card).
+Tabs: Today · Calendar · Meals · Grocery · Chores, plus Cleo's day (opened from the unicorn) and Explore (opened from the Nearby card).
 
 ### Today
 
@@ -50,12 +52,12 @@ Tabs: Today · Calendar · Meals · Grocery · Chores, plus Kid's day (opened fr
 - **Grocery:** count, a short preview and a mic button.
 - **Nearby this week:** 4–6 ranked suggestions, plus **See more**, which opens Explore.
 
-### Kid's day
+### Cleo's day
 
 A picture routine with a **Weekday / Weekend** toggle.
 
 - **Current step:** the latest step whose start time has passed. It gets a rainbow border, and earlier steps fade. The highlight only shows on the routine that matches today.
-- **Countdown:** "N sleeps until…" the next Kid or Family event marked as special.
+- **Countdown:** "N sleeps until…" the next Cleo or Family event marked as special.
 
 | Time | Weekday | Weekend |
 |---|---|---|
@@ -74,7 +76,7 @@ A picture routine with a **Weekday / Weekend** toggle.
 How the routine is built each day:
 
 1. Start from the routine template for the day type. Templates are stored in Firebase and edited on the phone.
-2. Merge in today's calendar events that involve Kid, placed by time.
+2. Merge in today's calendar events that involve Cleo, placed by time.
    - Each event gets a picture: matched from words in the title, or picked when the event is edited.
    - An event that overlaps a routine step replaces that step for the day.
 3. Apply any one-off changes for today only, such as "no nap today." The template is not changed.
@@ -86,7 +88,7 @@ How the routine is built each day:
 ### Meals
 
 - **Weekly dinner plan:** a recipe per day, or "Eating out."
-- **Recipe box:** recipe cards, including an "Kid's pick" tag.
+- **Recipe box:** recipe cards, including a "Cleo's pick" tag.
 - **Recipe sheet:** shows the ingredients, with **Add ingredients to grocery list**. Items already on the list are skipped.
 
 ### Grocery
@@ -101,7 +103,7 @@ How the routine is built each day:
 - A column per person.
 - Each chore repeats daily, on weekdays, weekly or once.
 - Daily chores reset each morning.
-- Adults earn stars. Kid's chores show big pictures and earn stickers.
+- Adults earn stars. Cleo's chores show big pictures and earn stickers.
 
 ### Explore
 
@@ -132,7 +134,7 @@ Tabs: Recipes · Meal plan · Chores · Settings.
 - **Meal plan:** tap a day to pick a recipe, mark it "Eating out," or clear it.
 - **Chores:**
   - Add or edit a chore's name, person and how often it repeats.
-  - Kid's chores also get a picture.
+  - Cleo's chores also get a picture.
 - **Settings:**
   - Weather: location search by city or ZIP. The list disambiguates places with the same name, for example Rochester, MI vs NY vs MN. There's also an option to use the tablet's location.
   - Temperature in °F or °C, with a live preview.
@@ -189,7 +191,7 @@ A scheduled Cloud Function collects events, cleans them up, ranks them and write
   - Up to 10 min counts fully.
   - 10–20 min is shown only for high-scoring events.
   - Nothing farther than 20 min appears on the home screen.
-- **Age fit for Kid.**
+- **Age fit for Cleo.**
 - **Free time on the Family calendar.**
 - **Time of day:** weekend mornings score higher, and clashes with nap or bedtime score lower.
 - **Feedback:** Add, Hide and "fewer like this" adjust future picks.
@@ -203,7 +205,7 @@ A scheduled Cloud Function collects events, cleans them up, ranks them and write
 
 ## 10. Build phases
 
-1. **Phase 1:** calendar, Today screen, weather, chores, grocery list, Kid's day.
+1. **Phase 1:** calendar, Today screen, weather, chores, grocery list, Cleo's day.
 2. **Phase 2:** meals and recipes with link import, plus the phone Manage screens and Settings.
 3. **Phase 3:** event search and Explore.
 4. **Later:** Google Photos slideshow as an idle screen, Hub/Keep sync experiment, and an optional calmer night look.

@@ -40,7 +40,7 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 Once the preview URL works, run issues with `/build N` in cloud sessions:
 
 1. **In parallel:** Activity log + Undo, and the App shell (Calendar sync can also start any time).
-2. **In parallel:** Weather, Today, Calendar week, Chores, Grocery, Kid's day.
+2. **In parallel:** Weather, Today, Calendar week, Chores, Grocery, Cleo's day.
 3. **Then:** Phone companion.
 4. 👤 **Then:** Fully Kiosk setup + acceptance.
 

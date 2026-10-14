@@ -1,6 +1,6 @@
 # Phase 1 plan
 
-**Goal:** the kitchen tablet shows a live Today screen, the week calendar, chores, the grocery list and Kid's day, backed by Firebase and the Family Google Calendar. Phones can check off chores and groceries and undo changes.
+**Goal:** the kitchen tablet shows a live Today screen, the week calendar, chores, the grocery list and Cleo's day, backed by Firebase and the Family Google Calendar. Phones can check off chores and groceries and undo changes.
 
 **Out of scope for Phase 1:** meals and recipes, the phone Manage editors (chores and the routine are set up with a seed script for now), event search and Explore, and the Photos slideshow.
 
@@ -62,13 +62,13 @@ households/{hid}
 - [ ] **Calendar:** week view, with the person filters applied.
 - [ ] **Chores:**
   - columns per person, with daily reset based on `choreCompletions` dates,
-  - stars for adults and stickers for Kid,
-  - the sparkle burst when Kid's chores are done.
+  - stars for adults and stickers for Cleo,
+  - the sparkle burst when Cleo's chores are done.
 - [ ] **Grocery:**
   - add by typing or voice through the Web Speech API (parse "add X"),
   - categories, an "In the cart" section and source tags.
-- [ ] **Kid's day:**
-  - merge the template, today's Kid events and the day's overrides,
+- [ ] **Cleo's day:**
+  - merge the template, today's Cleo events and the day's overrides,
   - highlight the current step,
   - Weekday/Weekend toggle,
   - "N sleeps until" countdown for the next event marked special.
@@ -94,6 +94,6 @@ households/{hid}
 
 - [ ] An event added to the Family calendar shows up on the tablet within 5 minutes, colored for the right person.
 - [ ] A chore checked off on the tablet appears on a phone within seconds, and the Undo works.
-- [ ] Kid's day shows the right current step on a weekday and on a weekend.
+- [ ] Cleo's day shows the right current step on a weekday and on a weekend.
 - [ ] Saying "add milk" adds milk to the grocery list.
 - [ ] The tablet follows its wake and sleep schedule on its own.
