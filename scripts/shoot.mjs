@@ -29,7 +29,9 @@ const suffix = flag('--suffix');
 const [target, name] = args;
 
 if (!target || !name) {
-  console.error('Usage: node scripts/shoot.mjs <url-or-html-file> <name> [--only tablet|phone] [--hash <#route>]');
+  console.error(
+    'Usage: node scripts/shoot.mjs <url-or-html-file> <name> [--only tablet|phone] [--hash <#route>]',
+  );
   process.exit(1);
 }
 
