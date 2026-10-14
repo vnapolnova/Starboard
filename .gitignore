@@ -1,0 +1,24 @@
+# Secrets and local config
+.env*
+!.env.example
+seed.local.json
+*.local.json
+service-account*.json
+
+# Dependencies and build output
+node_modules/
+dist/
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
+# Playwright
+test-results/
+playwright-report/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json

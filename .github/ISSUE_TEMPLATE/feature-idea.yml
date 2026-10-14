@@ -1,0 +1,32 @@
+name: Feature idea
+description: A new idea for Starboard. It starts the pipeline at stage:idea.
+title: "Idea: "
+labels: ["stage:idea"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What should Starboard do? Sketches, photos and links are welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why / when it matters
+      description: Who in the family hits this, and at what moment of the day?
+  - type: checkboxes
+    id: surfaces
+    attributes:
+      label: Surfaces
+      options:
+        - label: Kitchen tablet
+        - label: Phone
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options: ["Phase 1", "Phase 2", "Phase 3", "Later", "Not sure"]
+  - type: markdown
+    attributes:
+      value: "Next: `/brief <this issue number>` in Cowork or a cloud session. See `docs/pipeline.md`."

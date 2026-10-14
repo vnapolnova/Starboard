@@ -1,0 +1,59 @@
+# Deploys Hosting to the live channel on every push to main (that is, after you merge).
+# Functions and Firestore rules are deployed by hand for now: firebase deploy --only functions,firestore
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-live
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Firebase is set up
+        id: ready
+        run: |
+          if [ -f firebase.json ] && [ -n "${{ vars.FIREBASE_PROJECT_ID }}" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+            echo "public=$(jq -r '.hosting.public // "dist"' firebase.json)" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping deploy: firebase.json or FIREBASE_PROJECT_ID not set yet."
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.ready.outputs.ok == 'true' && hashFiles('package-lock.json') != ''
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Build app
+        if: steps.ready.outputs.ok == 'true' && hashFiles('package.json') != ''
+        run: |
+          npm ci
+          npm run build --if-present
+
+      - name: Add mockups
+        if: steps.ready.outputs.ok == 'true'
+        run: |
+          OUT="${{ steps.ready.outputs.public }}/_mockups"
+          mkdir -p "$OUT"
+          cp -r design "$OUT/design"
+          [ -d features ] && cp -r features "$OUT/features" || true
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        if: steps.ready.outputs.ok == 'true'
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets[vars.FIREBASE_SA_SECRET || 'FIREBASE_SERVICE_ACCOUNT'] }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
+          channelId: live
