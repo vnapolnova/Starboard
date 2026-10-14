@@ -12,6 +12,7 @@ Starboard is a Skylight-style family dashboard for the kitchen, with a phone com
 |---|---|
 | Display | Samsung Galaxy Tab S6 Lite, portrait, full screen in Fully Kiosk Browser |
 | App | Web app (same code base for the tablet and phone layouts) |
+| Front end | Vite + Preact + TypeScript. Preact keeps the bundle small for the tablet, and components handle the shared shell, the six screens and live Firestore updates. |
 | Hosting | Firebase Hosting |
 | Data | Firebase (Firestore with real-time sync, Auth with Google sign-in, Cloud Functions) |
 | Calendar | Google Calendar API, using the shared "Family" calendar |

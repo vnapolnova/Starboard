@@ -6,7 +6,7 @@
 
 ## 0. Repo and tooling
 
-- [ ] Choose a lightweight front end, for example Vite with vanilla TypeScript or Preact. Confirm the choice with the project owner before starting.
+- [x] Choose a lightweight front end: **Vite + Preact + TypeScript** (owner confirmed; see `docs/spec.md` §1).
 - [ ] Add a linter, a formatter and a `.gitignore` that covers `.env*`, `seed.local.json` and `node_modules`.
 - [ ] Run `firebase init` for Hosting, Firestore, Functions and the emulators.
 - [ ] Port the design tokens (colors, fonts, spacing) from `design/tablet-mockup.html` into a shared stylesheet.

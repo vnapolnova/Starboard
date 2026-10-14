@@ -13,7 +13,7 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 
 ## B. Session 1: tooling (plan §0) 🤖 + 👤
 
-- [ ] 👤 **Decide the front end.** This is the plan's open question. My suggestion is **Vite + Preact + TypeScript**: it's still lightweight, and components help with the six screens and the shared shell. Vanilla TypeScript is fine if you want zero framework. Record the choice in `docs/spec.md` §1.
+- [x] 👤 **Decide the front end.** Decided: **Vite + Preact + TypeScript**, recorded in `docs/spec.md` §1. The suggestion was **Vite + Preact + TypeScript**: it's still lightweight, and components help with the six screens and the shared shell. Vanilla TypeScript is fine if you want zero framework. Record the choice in `docs/spec.md` §1.
 - [ ] 🤖 Scaffold Vite, the linter and formatter, and a `.env.example`. Port the design tokens from `design/tablet-mockup.html` into a shared stylesheet.
 - [ ] 🤖 Add Playwright as a dev dependency pinned to `playwright@1.56.1`, and an `npm run shoot` alias for `scripts/shoot.mjs`. Check it on `design/tablet-mockup.html`. Cloud sessions already have the matching Chromium in `/opt/pw-browsers`, so don't run `npx playwright install` there; if you bump the version, the preinstalled browser won't match.
 
