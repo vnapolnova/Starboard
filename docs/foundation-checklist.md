@@ -4,12 +4,10 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 
 ## A. Repo on GitHub (👤, about 15 min)
 
-- [ ] Make the first commit and push from your machine:
-  `git add -A && git commit -m "Spec, mockups and pipeline scaffolding" && git push -u origin main`
-- [ ] Install the [GitHub CLI](https://cli.github.com), run `gh auth login`, then run
-  `powershell -File setup/bootstrap-github.ps1`. It installs the slash commands, creates the labels and opens the Phase 1 issues.
-- [ ] Commit and push the new `.claude/commands/` folder.
-- [ ] Delete `setup/` (backlog drafts and staged commands) once the issues exist, so the issues are the only copy. Git history keeps the drafts if you ever need them.
+- [x] Make the first commits and push to `origin main`.
+- [x] Install the [GitHub CLI](https://cli.github.com) and run `gh auth login`.
+- [x] Commit and push the `.claude/commands/` folder.
+- [x] Done: labels and Phase 1 issues created on GitHub
 - [ ] Optional: create a GitHub Project board for the repo, with columns grouped by the `stage:*` labels, and a saved filter `label:needs-me` as your inbox.
 - [ ] Connect the repo in Claude Code on the web. In the environment settings, allow network access for npm and Firebase, and add Java 17+ to the setup script so the Firestore emulator runs. Check whether `gh` works in a session. If it doesn't, sessions will ask you to paste issue text.
 
