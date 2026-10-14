@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Starboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F1FC; --surface:#FFFFFF; --ink:#2A1F3D; --muted:#6C6380; --line:#E7DDF3;
+  --head1:#2E1858; --head2:#5A2E96; --head-ink:#FBF7FF; --head-muted:#CBB8EC;
+  --accent:#6B3FB8; --accent-ink:#fff;
+  --p1:#3D7BD9; --p2:#14917F; --kid:#9B5DE5; --fam:#E08A1E;
+  --rainbow:linear-gradient(90deg,#FF7AB6,#FFB86B,#FFE066,#7EE0A1,#7CC8FF,#B18CFF);
+  --display:"Baloo 2", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#150F22; --surface:#201833; --ink:#EEE8F8; --muted:#A79DBB; --line:#33284A;
+    --head1:#120A26; --head2:#2C1752; --head-ink:#F3EEFC; --head-muted:#9C88C4;
+    --accent:#C3A2FF; --accent-ink:#1B1030;
+    --p1:#82A9F0; --p2:#4CC9B4; --kid:#C3A2FF; --fam:#F2B45A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#150F22; --surface:#201833; --ink:#EEE8F8; --muted:#A79DBB; --line:#33284A;
+  --head1:#120A26; --head2:#2C1752; --head-ink:#F3EEFC; --head-muted:#9C88C4;
+  --accent:#C3A2FF; --accent-ink:#1B1030;
+  --p1:#82A9F0; --p2:#4CC9B4; --kid:#C3A2FF; --fam:#F2B45A;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.4;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app{height:100%;max-width:820px;margin:0 auto;display:flex;flex-direction:column;background:var(--bg);position:relative}
+
+/* Header: starry night sky with a unicorn peeking in */
+.top{position:relative;overflow:hidden;color:var(--head-ink);padding:20px 28px 18px;display:grid;grid-template-columns:1fr auto;gap:2px 16px;align-items:end;
+  background:
+   radial-gradient(1.5px 1.5px at 12% 22%,#fff 99%,transparent),radial-gradient(1px 1px at 28% 70%,#fff 99%,transparent),
+   radial-gradient(2px 2px at 46% 18%,#FFE9A8 99%,transparent),radial-gradient(1px 1px at 58% 82%,#fff 99%,transparent),
+   radial-gradient(1.5px 1.5px at 66% 40%,#fff 99%,transparent),radial-gradient(1px 1px at 38% 48%,#E8D9FF 99%,transparent),
+   radial-gradient(1.5px 1.5px at 88% 14%,#fff 99%,transparent),radial-gradient(1px 1px at 6% 86%,#fff 99%,transparent),
+   linear-gradient(160deg,var(--head1),var(--head2))}
+.clock{font-family:var(--display);font-weight:800;font-size:clamp(78px,19vw,128px);line-height:.85;letter-spacing:-.02em}
+.clock small{font-size:.3em;font-weight:700;margin-left:6px;color:var(--head-muted)}
+.date{grid-column:1;font-family:var(--display);font-size:23px;font-weight:700;color:var(--head-muted)}
+.wx{grid-row:1;grid-column:2;align-self:end;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:0;padding-right:4px}
+.wx svg{width:50px;height:50px}
+.wx .t{font-family:var(--display);font-size:40px;font-weight:700;line-height:1}
+.wx .d{font-size:14px;color:var(--head-muted)}
+.wx .loc{font-size:13px;color:var(--head-muted)}
+.people{grid-column:1 / -1;display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;padding-right:104px}
+.person{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 5px;border-radius:999px;background:rgba(255,255,255,.1);font-size:15px;border:0;color:var(--head-ink)}
+.person[aria-pressed="false"]{opacity:.4}
+.av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff}
+.uni{position:absolute;right:6px;bottom:-6px;width:96px;height:96px;border:0;background:none;padding:0}
+.uni svg{width:100%;height:100%;filter:drop-shadow(0 4px 10px rgba(20,8,50,.35))}
+.uni .bubble{position:absolute;right:84px;bottom:58px;background:#fff;color:#4A2A86;font-family:var(--display);font-weight:700;font-size:14px;padding:4px 10px;border-radius:12px 12px 2px 12px;white-space:nowrap}
+.uni.bob svg{animation:bob .9s ease}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-12px) rotate(-6deg)}60%{transform:translateY(-4px) rotate(3deg)}}
+
+main{flex:1;overflow-y:auto;padding:22px 24px 28px;-webkit-overflow-scrolling:touch}
+.view{display:none}
+.view.on{display:block}
+h2{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1;margin:0 0 12px}
+h2 .sub{font-family:var(--body);font-size:15px;font-weight:400;color:var(--muted);margin-left:8px}
+section+section{margin-top:28px}
+
+/* Agenda */
+.agenda{list-style:none;margin:0;padding:0}
+.ev{display:grid;grid-template-columns:76px 8px 1fr;gap:0 14px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.ev .time{font-family:var(--display);font-weight:700;font-size:20px;line-height:1.2}
+.ev .bar{align-self:stretch;border-radius:4px}
+.ev .what{font-weight:700;font-size:19px}
+.ev .who{font-size:14px;color:var(--muted)}
+.ev.past{opacity:.4}
+.now{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:15px;font-weight:800;color:var(--kid);margin:-2px 0;list-style:none}
+.now::after{content:"";flex:1;height:5px;border-radius:5px;background:var(--rainbow)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{background:var(--surface);border-radius:22px;padding:16px 18px;border:1px solid var(--line)}
+.panel h3{font-family:var(--display);font-weight:700;font-size:19px;margin:0 0 6px;display:flex;justify-content:space-between;align-items:baseline}
+.panel h3 button{border:0;background:none;color:var(--accent);font-size:14px;font-family:var(--body);font-weight:700;padding:4px}
+.dinner{font-family:var(--display);font-size:25px;font-weight:700;line-height:1.1}
+.dinner-meta{color:var(--muted);font-size:14px;margin-top:6px}
+.chk{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:none;padding:8px 0;font-size:17px;position:relative}
+.chk .box{flex:none;width:28px;height:28px;border-radius:9px;border:2px solid var(--muted);display:grid;place-items:center}
+.chk[aria-checked="true"] .box{background:var(--p2);border-color:var(--p2)}
+.chk[aria-checked="true"] .box::after{content:"";width:7px;height:12px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.chk.kid[aria-checked="true"] .box{background:var(--kid);border-color:var(--kid)}
+.chk.kid[aria-checked="true"] .box::after{content:"★";border:0;transform:none;width:auto;height:auto;color:#FFE066;font-size:18px;line-height:1}
+.chk[aria-checked="true"] .lbl{text-decoration:line-through;color:var(--muted)}
+.chk .tag{margin-left:auto;width:10px;height:10px;border-radius:50%;flex:none}
+.chk .emo{font-size:24px;line-height:1}
+
+.grocery-strip{display:flex;align-items:center;gap:14px}
+.grocery-strip .count{font-family:var(--display);font-size:46px;font-weight:800;line-height:1;color:var(--accent)}
+.grocery-strip .items{flex:1;color:var(--muted);font-size:15px}
+.btn{border:0;border-radius:16px;padding:12px 18px;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:16px;display:inline-flex;align-items:center;gap:8px}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent);padding:10px 16px}
+.mic{width:54px;height:54px;border-radius:50%;padding:0;justify-content:center}
+.mic svg{width:22px;height:22px}
+.mic.listening{background:#FF7AB6}
+
+/* Suggestions */
+.sugs{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;margin:0 -24px;padding-left:24px;padding-right:24px;scroll-snap-type:x mandatory}
+.sug{flex:0 0 72%;max-width:300px;scroll-snap-align:start;background:var(--surface);border:2px dashed var(--line);border-radius:22px;padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.sug .when{font-size:14px;font-weight:700;color:var(--accent)}
+.sug .name{font-family:var(--display);font-size:21px;font-weight:700;line-height:1.1}
+.sug .where{font-size:14px;color:var(--muted)}
+.sug .row{display:flex;gap:8px;margin-top:auto;padding-top:10px}
+.sug .row .btn{padding:9px 14px;font-size:15px}
+.sug.added{border-style:solid;border-color:var(--kid)}
+
+/* Week */
+.day{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.day .dn{font-family:var(--display)}
+.day .dn b{display:block;font-size:32px;font-weight:800;line-height:1}
+.day .dn span{font-size:14px;color:var(--muted)}
+.day.today .dn b{color:var(--kid)}
+.chip{display:flex;gap:10px;align-items:baseline;padding:4px 0 4px 12px;border-left:5px solid;border-radius:2px;margin-bottom:6px}
+.chip .ct{font-size:14px;color:var(--muted);min-width:58px}
+.empty{color:var(--muted);font-size:15px;padding-top:6px}
+
+/* Meals */
+.mealrow{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.mealrow .d{font-family:var(--display);font-weight:700;color:var(--muted)}
+.mealrow .m{font-weight:700;font-size:18px}
+.mealrow.today .d{color:var(--kid)}
+.mealrow .open{border:0;background:none;color:var(--accent);font-size:14px;font-weight:700}
+.recipes{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.recipe{border:1px solid var(--line);background:var(--surface);border-radius:20px;padding:0;text-align:left;overflow:hidden}
+.recipe .swatch{height:74px;display:grid;place-items:center;font-size:34px}
+.recipe .rb{padding:10px 14px 14px}
+.recipe .rn{font-family:var(--display);font-weight:700;font-size:18px;line-height:1.1}
+.recipe .rm{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* Grocery */
+.add{display:flex;gap:10px;margin-bottom:18px}
+.add input{flex:1;min-width:0;font:inherit;font-size:18px;padding:12px 16px;border-radius:16px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.cat{font-family:var(--display);font-weight:700;font-size:17px;color:var(--muted);margin:16px 0 0}
+.src{font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap}
+
+/* Chores */
+.chorecols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.chorecol{background:var(--surface);border-radius:22px;padding:14px;border:1px solid var(--line);border-top:7px solid}
+.chorecol h3{font-family:var(--display);font-size:22px;margin:0}
+.chorecol .stars{font-size:14px;color:var(--muted);margin-bottom:6px}
+.chorecol .chk{font-size:16px}
+.chorecol.kidcol{background:linear-gradient(180deg,color-mix(in srgb,var(--kid) 12%,var(--surface)),var(--surface))}
+.chorecol.kidcol .chk{font-size:18px;font-family:var(--display);font-weight:700}
+
+/* Kid's day: picture routine for a toddler */
+.backbar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.backbar .btn{padding:8px 14px}
+.countdown{display:flex;align-items:center;gap:14px;background:var(--surface);border:2px solid var(--kid);border-radius:22px;padding:14px 18px;margin-bottom:18px}
+.countdown .big{font-family:var(--display);font-size:52px;font-weight:800;line-height:1;color:var(--kid)}
+.countdown .txt{font-family:var(--display);font-size:20px;font-weight:700;line-height:1.15}
+.countdown .moons{font-size:22px;letter-spacing:4px}
+.routine{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.step{border-radius:24px;padding:16px;background:var(--surface);border:2px solid var(--line);display:flex;align-items:center;gap:14px;position:relative}
+.step .pic{font-size:46px;line-height:1}
+.step .nm{font-family:var(--display);font-weight:700;font-size:22px;line-height:1}
+.step .tm{font-size:14px;color:var(--muted)}
+.step.done{opacity:.45}
+.step.done::after{content:"✓";position:absolute;top:10px;right:14px;font-weight:800;color:var(--p2)}
+.step.cur{border-color:transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,var(--rainbow) border-box;border-width:4px;padding:14px}
+.step.cur .tm{color:var(--kid);font-weight:700}
+
+/* Explore */
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.sechead .more{border:0;background:none;color:var(--accent);font-weight:700;font-size:15px;padding:4px;white-space:nowrap}
+.filters{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px 18px;margin-bottom:16px}
+.frow+.frow{margin-top:14px}
+.flabel{display:flex;justify-content:space-between;font-weight:700;font-size:15px;margin-bottom:8px}
+.flabel output{color:var(--accent)}
+.range{width:100%;accent-color:var(--kid);height:28px}
+.ticks{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.fchips{display:flex;flex-wrap:wrap;gap:8px}
+.fchip{border:2px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 14px;font-size:15px}
+.fchip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.seg{display:inline-flex;background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:3px}
+.seg button{border:0;background:none;padding:7px 16px;border-radius:10px;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink)}
+.resline{display:flex;justify-content:space-between;align-items:center;margin:4px 0 10px;color:var(--muted);font-size:15px}
+.exrow{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.exdate{font-family:var(--display);text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:6px 0;align-self:start}
+.exdate b{display:block;font-size:28px;font-weight:800;line-height:1}
+.exdate span{font-size:13px;color:var(--muted)}
+.exname{font-family:var(--display);font-size:21px;font-weight:700;line-height:1.1}
+.exmeta{font-size:14px;color:var(--muted);margin-top:2px}
+.exmeta b{color:var(--ink);font-weight:700}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.badge.fit{background:color-mix(in srgb,var(--kid) 16%,var(--surface));border-color:transparent;color:var(--kid)}
+.badge.far{color:var(--fam)}
+.exacts{display:flex;gap:8px;margin-top:10px}
+.exacts .btn{padding:8px 14px;font-size:15px}
+.exnum{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--kid);color:#fff;font-size:12px;font-weight:700;margin-right:6px;vertical-align:2px}
+.mapbox{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:8px;margin-bottom:8px}
+.mapbox svg{width:100%;height:auto;display:block}
+
+.linkt{border:0;background:none;padding:0;margin:0;text-align:left;font:inherit;color:inherit;cursor:pointer;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--kid) 45%,transparent);text-decoration-thickness:2px;text-underline-offset:4px}
+.linkt:hover{text-decoration-color:var(--kid)}
+.evwhen{font-weight:700;color:var(--accent);margin:0 0 2px}
+.evwhere{color:var(--muted);margin:0 0 12px;font-size:15px}
+.evabout{font-size:17px;line-height:1.5;margin:0 0 10px;max-width:62ch}
+.evsrc{font-size:13px;color:var(--muted);margin:0 0 16px}
+
+/* Nav */
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);background:var(--surface);padding:6px 8px}
+.tab{border:0;background:none;padding:10px 4px;border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:14px;color:var(--muted)}
+.tab svg{width:26px;height:26px}
+.tab[aria-selected="true"]{color:var(--accent);background:var(--bg);font-weight:700}
+
+/* Sheet, toast, sparkles */
+.sheet{position:fixed;inset:0;background:rgba(20,10,40,.5);display:none;align-items:flex-end;justify-content:center;z-index:10}
+.sheet.on{display:flex}
+.sheet .card{background:var(--surface);width:100%;max-width:820px;border-radius:28px 28px 0 0;padding:24px 26px calc(26px + env(safe-area-inset-bottom,0px));max-height:80%;overflow-y:auto}
+.sheet ul{padding-left:20px;margin:8px 0 18px}
+.sheet .acts{display:flex;gap:10px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:16px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20;max-width:90%;text-align:center}
+.toast.on{opacity:1}
+.spark{position:fixed;pointer-events:none;z-index:30;font-size:20px;animation:spark .9s ease-out forwards}
+@keyframes spark{from{transform:translate(0,0) scale(.4);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(1.1);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.spark{display:none}}
+@media (max-width:520px){.chorecols{grid-template-columns:1fr}.two{grid-template-columns:1fr}main{padding:18px 16px 24px}.sugs{margin:0 -16px;padding-left:16px;padding-right:16px}.top{padding:18px 18px 14px}.uni{width:88px;height:88px}.uni .bubble{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="clock" id="clock">7:42<small>am</small></div>
+    <div class="wx" aria-label="Weather in Rochester, MI">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="24" cy="24" r="11" fill="#FFD166"/><g stroke="#FFD166" stroke-width="3" stroke-linecap="round"><path d="M24 4v5M24 39v5M4 24h5M39 24h5M10 10l3.5 3.5M34.5 34.5L38 38M10 38l3.5-3.5M34.5 13.5L38 10"/></g><path d="M22 52h28a10 10 0 0 0 0-20 13 13 0 0 0-25 4 8 8 0 0 0-3 16z" fill="#EFE7FF"/></svg>
+      <div class="t">54°</div>
+      <div class="d">High 61° · Low 43°</div>
+      <div class="loc">Rochester</div>
+    </div>
+    <div class="date" id="date">Wednesday, October 14</div>
+    <div class="people" role="group" aria-label="Show events for">
+      <button class="person" aria-pressed="true" data-p="p1"><span class="av" style="background:var(--p1)">A</span>Alice</button>
+      <button class="person" aria-pressed="true" data-p="p2"><span class="av" style="background:var(--p2)">B</span>Bob</button>
+      <button class="person" aria-pressed="true" data-p="kid"><span class="av" style="background:var(--kid)">C</span>Cleo</button>
+      <button class="person" aria-pressed="true" data-p="fam"><span class="av" style="background:var(--fam)">F</span>Family</button>
+    </div>
+    <button class="uni" id="uni" aria-label="Open Kid's day">
+      <span class="bubble">My day!</span>
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle cx="42" cy="40" r="14" fill="#FF8FC7"/><circle cx="33" cy="57" r="13" fill="#B18CFF"/>
+        <circle cx="34" cy="75" r="12" fill="#7CC8FF"/><circle cx="43" cy="91" r="11" fill="#7EE0A1"/>
+        <circle cx="54" cy="104" r="10" fill="#FFE066"/>
+        <path d="M48 120 C44 84 46 58 62 45 C74 35 92 38 100 52 C106 62 104 73 96 77 C88 81 80 79 76 84 C72 92 74 108 78 120 Z" fill="#FFFFFF" stroke="#E2D4F7" stroke-width="2"/>
+        <path d="M63 46 L58 28 L73 39 Z" fill="#FFFFFF" stroke="#E2D4F7" stroke-width="2"/>
+        <path d="M71 41 L86 8 L81 44 Z" fill="#FFD166"/>
+        <path d="M74 34 L83 31 M76 26 L84 23 M79 18 L85 16" stroke="#F4A93B" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="66" cy="42" r="8" fill="#FF8FC7"/><circle cx="58" cy="48" r="6" fill="#B18CFF"/>
+        <path d="M80 57 q5 5 10 0" stroke="#2A1F3D" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        <circle cx="90" cy="67" r="4.5" fill="#FFB3D1"/><circle cx="100" cy="66" r="1.8" fill="#C9B6E6"/>
+      </svg>
+    </button>
+  </header>
+
+  <main>
+    <div class="view on" id="v-today">
+      <section>
+        <h2>Today</h2>
+        <ul class="agenda" id="agenda"></ul>
+      </section>
+      <section class="two">
+        <div class="panel">
+          <h3>Dinner tonight <button data-go="meals">Week</button></h3>
+          <div class="dinner">Sheet-pan chicken fajitas</div>
+          <div class="dinner-meta">35 min · start by 4:25</div>
+          <button class="btn ghost" style="margin-top:12px" data-recipe="0">See recipe</button>
+        </div>
+        <div class="panel">
+          <h3>Chores today <button data-go="chores">All</button></h3>
+          <div id="todayChores"></div>
+        </div>
+      </section>
+      <section class="panel">
+        <h3>Grocery list <button data-go="grocery">Open</button></h3>
+        <div class="grocery-strip">
+          <div class="count" id="gCount">9</div>
+          <div class="items" id="gPreview"></div>
+          <button class="btn mic" aria-label="Add grocery item by voice" data-mic><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+        </div>
+      </section>
+      <section>
+        <div class="sechead"><h2>Nearby this week <span class="sub">Sample suggestions · Rochester, MI</span></h2><button class="more" data-go="explore">See more</button></div>
+        <div class="sugs" id="sugs"></div>
+      </section>
+    </div>
+
+    <div class="view" id="v-kid">
+      <div class="backbar"><button class="btn ghost" data-go="today">Back</button><h2 style="margin:0">Kid's day</h2></div>
+      <div class="countdown">
+        <div class="big">3</div>
+        <div><div class="txt">sleeps until the pumpkin patch 🎃</div><div class="moons" aria-hidden="true">🌙🌙🌙</div></div>
+      </div>
+      <div class="resline"><span>Her usual day</span><div class="seg" role="group" aria-label="Routine" id="rSeg"><button aria-pressed="true" data-rmode="weekday">Weekday</button><button aria-pressed="false" data-rmode="weekend">Weekend</button></div></div>
+      <div class="routine" id="routine"></div>
+    </div>
+
+    <div class="view" id="v-explore">
+      <div class="backbar"><button class="btn ghost" data-go="today">Back</button><h2 style="margin:0">Explore events</h2></div>
+      <div class="filters">
+        <div class="frow">
+          <div class="flabel"><label for="exDist">Drive time</label><output id="exDistOut">Up to 20 min</output></div>
+          <input type="range" class="range" id="exDist" min="10" max="60" step="5" value="20">
+          <div class="ticks"><span>10 min</span><span>20</span><span>30</span><span>45</span><span>60 min</span></div>
+        </div>
+        <div class="frow"><div class="flabel">When</div><div class="fchips" id="exWhen"></div></div>
+        <div class="frow"><div class="flabel">Filters</div><div class="fchips" id="exCats"></div></div>
+      </div>
+      <div class="resline"><span id="exCount"></span><div class="seg" role="group" aria-label="View as"><button aria-pressed="true" data-mode="list">List</button><button aria-pressed="false" data-mode="map">Map</button></div></div>
+      <div class="mapbox" id="exMap" hidden></div>
+      <div id="exList"></div>
+      <p class="empty" style="margin-top:14px">Sample events from LittleGuide Detroit, the library and local parks. Filters here don't change the picks on the home screen.</p>
+    </div>
+
+    <div class="view" id="v-cal">
+      <h2>This week <span class="sub">Google Calendar · Family</span></h2>
+      <div id="week"></div>
+    </div>
+
+    <div class="view" id="v-meals">
+      <section><h2>Dinner plan</h2><div id="mealplan"></div></section>
+      <section><h2>Recipes</h2><div class="recipes" id="recipes"></div></section>
+    </div>
+
+    <div class="view" id="v-grocery">
+      <h2>Grocery list</h2>
+      <div class="add">
+        <input id="gInput" placeholder="Add an item" aria-label="Add an item">
+        <button class="btn" id="gAdd">Add</button>
+        <button class="btn mic" aria-label="Add by voice" data-mic><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      </div>
+      <div id="glist"></div>
+    </div>
+
+    <div class="view" id="v-chores">
+      <h2>Chores <span class="sub">Resets each morning</span></h2>
+      <div class="chorecols" id="chorecols"></div>
+    </div>
+  </main>
+
+  <nav class="tabbar" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" aria-selected="true" data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Today</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="cal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Calendar</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="meals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M16 3c-2 2-2 7 0 9v9"/></svg>Meals</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="grocery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 4h2l2.5 11h10L20 8H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>Grocery</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="chores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Chores</button>
+  </nav>
+</div>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="card">
+    <h2 id="sheetTitle"></h2>
+    <div id="sheetBody"></div>
+    <div class="acts">
+      <button class="btn" id="sheetAdd">Add ingredients to grocery list</button>
+      <button class="btn ghost" id="sheetClose">Close</button>
+    </div>
+  </div>
+</div>
+<div class="sheet" id="evSheet" role="dialog" aria-modal="true" aria-labelledby="evTitle">
+  <div class="card">
+    <h2 id="evTitle"></h2>
+    <p class="evwhen" id="evWhen"></p>
+    <p class="evwhere" id="evWhere"></p>
+    <p class="evabout" id="evAbout"></p>
+    <p class="evsrc" id="evSrc"></p>
+    <div class="acts" id="evActs"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const P={p1:{n:"Alice",c:"var(--p1)"},p2:{n:"Bob",c:"var(--p2)"},kid:{n:"Cleo",c:"var(--kid)"},fam:{n:"Family",c:"var(--fam)"}};
+const filters={p1:true,p2:true,kid:true,fam:true};
+const today=[
+ {t:"8:00",m:480,what:"Daycare drop-off",p:"kid",who:"Alice driving"},
+ {t:"10:00",m:600,what:"Cleo's checkup",p:"kid",who:"With Bob · bring insurance card"},
+ {t:"12:30",m:750,what:"Lunch with a friend",p:"p2",who:"Bob"},
+ {t:"4:00",m:960,what:"Daycare pickup",p:"kid",who:"Bob picking up"},
+ {t:"5:00",m:1020,what:"Family dinner",p:"fam",who:"Fajitas night"},
+ {t:"7:30",m:1170,what:"Fantasy football draft call",p:"p1",who:"Alice"}
+];
+const week=[
+ {d:"Mon",n:12,ev:[["9:00","Team offsite","p1"]]},
+ {d:"Tue",n:13,ev:[["5:45","Tumbling class","kid"],["8:30","Book club","p2"]]},
+ {d:"Wed",n:14,today:true,ev:today.map(e=>[e.t,e.what,e.p])},
+ {d:"Thu",n:15,ev:[["7:00","Gym","p2"],["5:30","Grandma visits","fam"]]},
+ {d:"Fri",n:16,ev:[["6:30","Pizza & movie night","fam"]]},
+ {d:"Sat",n:17,ev:[["10:00","Pumpkin patch","fam"],["12:15","Nap","kid"]]},
+ {d:"Sun",n:18,ev:[]}
+];
+const recipes=[
+ {n:"Sheet-pan chicken fajitas",time:"35 min",tags:"Weeknight",sw:"#FFD9A8",e:"🌮",ing:["Chicken thighs","Bell peppers","Red onion","Tortillas","Sour cream","Limes"]},
+ {n:"Turkey chili",time:"50 min",tags:"Freezes well",sw:"#FFC2B3",e:"🍲",ing:["Ground turkey","Kidney beans","Crushed tomatoes","Chili powder","Cheddar"]},
+ {n:"Lemon orzo with peas",time:"20 min",tags:"Vegetarian",sw:"#E9F3B0",e:"🍋",ing:["Orzo","Frozen peas","Lemons","Parmesan"]},
+ {n:"Teriyaki salmon bowls",time:"30 min",tags:"Weeknight",sw:"#BFDDFF",e:"🍣",ing:["Salmon fillets","Rice","Cucumber","Teriyaki sauce","Edamame"]},
+ {n:"Unicorn pancakes",time:"25 min",tags:"Kid's pick",sw:"#E7D6FF",e:"🥞",ing:["Flour","Eggs","Milk","Blueberries","Maple syrup","Sprinkles"]},
+ {n:"Purple berry smoothie",time:"5 min",tags:"Kid's pick",sw:"#D9C2FF",e:"🫐",ing:["Frozen blueberries","Banana","Greek yogurt","Milk"]},
+ {n:"Minestrone",time:"45 min",tags:"Big batch",sw:"#C8EED7",e:"🥕",ing:["Carrots","Celery","Cannellini beans","Small pasta","Spinach"]}
+];
+const plan=[["Mon",1],["Tue",2],["Wed",0],["Thu",3],["Fri",4],["Sat",null],["Sun",6]];
+let groceries=[
+ {n:"Bananas",c:"Produce",s:"Voice"},{n:"Bell peppers",c:"Produce",s:"Recipe"},{n:"Limes",c:"Produce",s:"Recipe"},
+ {n:"Milk",c:"Dairy & eggs",s:"Voice"},{n:"Yogurt tubes",c:"Dairy & eggs",s:"Bob"},{n:"Eggs",c:"Dairy & eggs",s:""},
+ {n:"Tortillas",c:"Pantry",s:"Recipe"},{n:"Coffee beans",c:"Pantry",s:"Alice"},{n:"Diapers",c:"Household",s:"Bob"}
+].map(g=>({...g,done:false}));
+let chores=[
+ {n:"Take out recycling",p:"p1",done:false},{n:"Water plants",p:"p2",done:true},
+ {n:"Toys in the bin",e:"🧸",p:"kid",done:false},{n:"Pay daycare",p:"p1",done:false},
+ {n:"Wipe counters",p:"p2",done:false},{n:"Shoes by the door",e:"👟",p:"kid",done:true},
+ {n:"Pack daycare bag",p:"p2",done:false},{n:"Fold laundry",p:"p1",done:false},
+ {n:"Brush teeth",e:"🪥",p:"kid",done:false}
+];
+const stars={p1:12,p2:15,kid:23};
+const sugs=[
+ {when:"Sat, Oct 17 · 10am",name:"Fall day at Yates Cider Mill",where:"Rochester Hills · cider & donuts",added:true},
+ {when:"Thu, Oct 15 · 10:30am",name:"Toddler story time",where:"Rochester Hills Public Library · Free"},
+ {when:"Sat, Oct 24 · afternoon",name:"Downtown Halloween walk",where:"Main Street, Rochester · costumes welcome"},
+ {when:"Sun, Oct 18 · 11am",name:"Stroller walk on Paint Creek Trail",where:"Rochester Municipal Park · Free"}
+];
+const ROUTINES={
+ weekday:[
+  {nm:"Wake up",pic:"☀️",m:390,t:"6:30"},{nm:"Breakfast",pic:"🥣",m:420,t:"7:00"},
+  {nm:"Teeth & get ready",pic:"🪥",m:465,t:"7:45"},{nm:"Daycare",pic:"🎨",m:480,t:"8:00"},
+  {nm:"Pickup",pic:"🚗",m:960,t:"4:00"},{nm:"Dinner",pic:"🌮",m:1020,t:"5:00"},
+  {nm:"Snack",pic:"🍎",m:1140,t:"7:00"},{nm:"Bath",pic:"🛁",m:1170,t:"7:30"},
+  {nm:"Bedtime",pic:"🌙",m:1220,t:"8:20"}],
+ weekend:[
+  {nm:"Wake up",pic:"☀️",m:390,t:"6:30"},{nm:"Breakfast",pic:"🥣",m:420,t:"7:00"},
+  {nm:"Lunch",pic:"🥪",m:660,t:"11:00"},{nm:"Nap",pic:"😴",m:735,t:"12:15–2:00"},
+  {nm:"Up from nap",pic:"🧸",m:840,t:"2:00"},{nm:"Dinner",pic:"🌮",m:1020,t:"5:00"},
+  {nm:"Snack",pic:"🍎",m:1140,t:"7:00"},{nm:"Bath",pic:"🛁",m:1170,t:"7:30"},
+  {nm:"Bedtime",pic:"🌙",m:1220,t:"8:20"}]
+};
+const todayType=()=>[0,6].includes(new Date().getDay())?"weekend":"weekday";
+let rMode=todayType();
+
+const SUGINFO={
+ "Fall day at Yates Cider Mill":"Fall day at Yates Cider Mill",
+ "Toddler story time":"Toddler story time",
+ "Stroller walk on Paint Creek Trail":"Stroller walk on Paint Creek Trail"
+};
+const SUGABOUT={"Downtown Halloween walk":"Shops along Main Street hand out treats to kids in costume. Short, walkable and stroller friendly, with plenty of other little ones dressed up."};
+const $=s=>document.querySelector(s);
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),2200)}
+function nowMin(){const d=new Date();return d.getHours()*60+d.getMinutes()}
+function sparkle(el){if(reduce)return;const r=el.getBoundingClientRect();const cx=r.left+28,cy=r.top+r.height/2;
+  const g=["✦","★","✧","♥","✦","★","✧","✦"];const cols=["#FF7AB6","#FFB86B","#FFE066","#7EE0A1","#7CC8FF","#B18CFF"];
+  g.forEach((ch,i)=>{const s=document.createElement("span");s.className="spark";s.textContent=ch;s.style.left=cx+"px";s.style.top=cy+"px";s.style.color=cols[i%cols.length];
+    const a=i/g.length*Math.PI*2;s.style.setProperty("--dx",Math.cos(a)*60+"px");s.style.setProperty("--dy",Math.sin(a)*60+"px");document.body.appendChild(s);setTimeout(()=>s.remove(),950)})}
+
+function tick(){const d=new Date();let h=d.getHours(),m=String(d.getMinutes()).padStart(2,"0");const ap=h>=12?"pm":"am";h=h%12||12;
+  $("#clock").innerHTML=`${h}:${m}<small>${ap}</small>`;$("#date").textContent=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}
+function renderAgenda(){const n=nowMin();let placed=false,html="";
+  today.filter(e=>filters[e.p]).forEach(e=>{if(!placed&&e.m>n){html+=`<li class="now">Now</li>`;placed=true}
+    html+=`<li class="ev ${e.m+45<n?"past":""}"><span class="time">${e.t}</span><span class="bar" style="background:${P[e.p].c}"></span><span><div class="what">${e.what}</div><div class="who">${e.who}</div></span></li>`});
+  if(!placed)html+=`<li class="now">Now</li><li class="empty" style="padding:12px 0;list-style:none">That's everything today. Tomorrow starts with Gym at 7:00.</li>`;
+  $("#agenda").innerHTML=html}
+function chk(c,i,showTag){const kid=c.p==="kid";return `<button class="chk ${kid?"kid":""}" role="checkbox" aria-checked="${c.done}" data-chore="${i}"><span class="box"></span>${c.e?`<span class="emo" aria-hidden="true">${c.e}</span>`:""}<span class="lbl">${c.n}</span>${showTag?`<span class="tag" style="background:${P[c.p].c}"></span>`:""}</button>`}
+function renderChores(){
+  $("#todayChores").innerHTML=chores.slice(0,4).map((c,i)=>chk(c,i,true)).join("");
+  $("#chorecols").innerHTML=["p1","p2","kid"].map(p=>{const list=chores.map((c,i)=>({...c,i})).filter(c=>c.p===p);const done=list.filter(c=>c.done).length;const kid=p==="kid";
+    return `<div class="chorecol ${kid?"kidcol":""}" style="border-top-color:${P[p].c}"><h3>${P[p].n}${kid?" 🦄":""}</h3><div class="stars">${kid?`⭐ ${stars[p]+done} stickers`:`★ ${stars[p]+done} this month`} · ${done}/${list.length} today</div>${list.map(c=>chk(c,c.i,false)).join("")}</div>`}).join("")}
+function gchk(g,i){return `<button class="chk" role="checkbox" aria-checked="${g.done}" data-g="${i}"><span class="box"></span><span class="lbl">${g.n}</span>${!g.done&&g.s?`<span class="src">${g.s==="Recipe"?"From recipe":g.s==="Voice"?"Added by voice":"Added by "+g.s}</span>`:""}</button>`}
+function renderGrocery(){const open=groceries.filter(g=>!g.done);$("#gCount").textContent=open.length;
+  $("#gPreview").textContent=open.length?open.slice(0,5).map(g=>g.n).join(", ")+(open.length>5?` and ${open.length-5} more`:""):"Nothing on the list.";
+  const ix=groceries.map((g,i)=>({...g,i}));const cats=[...new Set(groceries.map(g=>g.c))];
+  let html=cats.map(c=>{const it=ix.filter(g=>g.c===c&&!g.done);return it.length?`<div class="cat">${c}</div>`+it.map(g=>gchk(g,g.i)).join(""):""}).join("");
+  const done=ix.filter(g=>g.done);if(done.length)html+=`<div class="cat">In the cart</div>`+done.map(g=>gchk(g,g.i)).join("");
+  if(!groceries.length)html=`<p class="empty">The list is empty. Add an item above or tap the mic.</p>`;$("#glist").innerHTML=html}
+function renderWeek(){$("#week").innerHTML=week.map(d=>{const ev=d.ev.filter(e=>filters[e[2]]);
+  return `<div class="day ${d.today?"today":""}"><div class="dn"><b>${d.n}</b><span>${d.d}</span></div><div>${ev.length?ev.map(e=>`<div class="chip" style="border-color:${P[e[2]].c}"><span class="ct">${e[0]}</span><span>${e[1]}</span></div>`).join(""):`<div class="empty">Free day</div>`}</div></div>`}).join("")}
+function renderMeals(){
+  $("#mealplan").innerHTML=plan.map(([d,r])=>`<div class="mealrow ${d==="Wed"?"today":""}"><span class="d">${d}</span><span class="m">${r===null?"<span style='color:var(--muted);font-weight:400'>Eating out</span>":recipes[r].n}</span>${r===null?"<span></span>":`<button class="open" data-recipe="${r}">Recipe</button>`}</div>`).join("");
+  $("#recipes").innerHTML=recipes.map((r,i)=>`<button class="recipe" data-recipe="${i}"><div class="swatch" style="background:${r.sw}" aria-hidden="true">${r.e}</div><div class="rb"><div class="rn">${r.n}</div><div class="rm">${r.time} · ${r.tags}</div></div></button>`).join("")}
+function renderSugs(){$("#sugs").innerHTML=sugs.map((s,i)=>`<div class="sug ${s.added?"added":""}"><div class="when">${s.when}</div><div class="name"><button class="linkt" data-suginfo="${i}">${s.name}</button></div><div class="where">${s.where}</div><div class="row">${s.added?`<button class="btn ghost" data-sug="${i}">On calendar ✓</button>`:`<button class="btn" data-sug="${i}">Add to calendar</button><button class="btn ghost" data-hide="${i}">Hide</button>`}</div></div>`).join("")}
+function renderRoutine(){const routine=ROUTINES[rMode];const isToday=rMode===todayType();const n=nowMin();let cur=routine.length-1;for(let i=0;i<routine.length;i++){if(routine[i].m>n){cur=Math.max(0,i-1);break}}
+  if(!isToday)cur=-1;document.querySelectorAll("#rSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.rmode===rMode));
+  $("#routine").innerHTML=routine.map((r,i)=>`<div class="step ${i<cur?"done":i===cur?"cur":""}"><span class="pic" aria-hidden="true">${r.pic}</span><span><div class="nm">${r.nm}</div><div class="tm">${i===cur?"Right now":r.t}</div></span></div>`).join("")}
+const EX=[
+ {n:"Music & Me",where:"Festival Park, Rochester Hills",min:6,ang:200,d:14,dow:"Wed",t:"10am",cats:["Classes"],out:true,fit:3,src:"LittleGuide"},
+ {n:"Great Skeleton Scavenger Hunt",where:"Indian Springs Metropark",min:30,ang:235,d:14,dow:"Wed",t:"9am–4pm",cats:["Nature","Halloween"],out:true,fit:2,src:"LittleGuide"},
+ {n:"Toddler story time",where:"Rochester Hills Public Library",min:6,ang:20,d:15,dow:"Thu",t:"10:30am",cats:["Story time"],free:true,fit:3,src:"Library"},
+ {n:"Fall day at Yates Cider Mill",where:"Rochester Hills",min:8,ang:160,d:17,dow:"Sat",t:"10am",cats:["Festivals"],out:true,fit:3,src:"Local"},
+ {n:"Stroller walk on Paint Creek Trail",where:"Rochester Municipal Park",min:5,ang:60,d:18,dow:"Sun",t:"11am",cats:["Nature"],out:true,free:true,fit:2,src:"Parks"},
+ {n:"HallowGlow & Boo Bounce",where:"TreeRunner, West Bloomfield",min:30,ang:250,d:23,dow:"Fri",t:"6pm",cats:["Halloween"],out:true,fit:1,src:"LittleGuide"},
+ {n:"Brick or Treat",where:"LEGOLAND Discovery Center, Auburn Hills",min:15,ang:280,d:24,dow:"Sat",t:"10am",cats:["Halloween","Shows"],fit:2,src:"LittleGuide"},
+ {n:"Meadow Brook Hall-oween",where:"Meadow Brook Hall, Rochester",min:10,ang:220,d:24,dow:"Sat",t:"1pm",cats:["Halloween"],out:true,fit:3,src:"LittleGuide"},
+ {n:"Little Goblins",where:"Ford House, Grosse Pointe Shores",min:45,ang:130,d:24,dow:"Sat",t:"10am",cats:["Halloween"],out:true,fit:3,src:"LittleGuide"},
+ {n:"KinderConcert",where:"Ypsilanti District Library",min:60,ang:215,d:28,dow:"Wed",t:"10am",cats:["Shows"],fit:2,src:"LittleGuide"}
+].map(e=>({...e,added:false,hidden:false}));
+const EXINFO={
+ "Music & Me":{url:"https://littleguidedetroit.com/event/music-me/2026-10-14/",about:"A short outdoor music session for babies and toddlers with songs, shakers and movement. Grown-ups join in, and it's an easy first class for little ones who haven't done one before."},
+ "Great Skeleton Scavenger Hunt":{url:"https://littleguidedetroit.com/event/the-great-skeleton-scavenger-hunt/2026-10-14/",about:"A self-guided, not-too-spooky hunt for skeleton figures hidden around the park. Families go at their own pace, so it works well with a stroller and a nap schedule."},
+ "Toddler story time":{about:"Picture books, songs and fingerplays for ages 1–3 with a caregiver. About 30 minutes, then free play with toys in the children's area."},
+ "Fall day at Yates Cider Mill":{about:"A classic Rochester fall outing: fresh cider and donuts, a walk along the river and seasonal treats. Busiest on weekend afternoons, so mornings are easier with a toddler."},
+ "Stroller walk on Paint Creek Trail":{about:"A flat, crushed-gravel trail that's easy with a stroller. Good for spotting fall leaves, ducks and bridges, and you can turn around whenever Cleo's had enough."},
+ "HallowGlow & Boo Bounce":{url:"https://littleguidedetroit.com/hallowglow-boo-bounce-halloween-adventures-light-up-treerunner-in-west-bloomfield/",about:"Glowing Halloween decorations and bounce activities at an adventure park. Geared more to older kids, and it runs into the evening, so it may be late for little ones."},
+ "Brick or Treat":{url:"https://littleguidedetroit.com/brick-or-treat-at-legoland-discovery-center-more-halloween-fun-at-great-lakes-crossing/",about:"Halloween building activities and trick-or-treating at the indoor LEGO attraction at Great Lakes Crossing. A good rainy-day pick, with more Halloween fun around the mall."},
+ "Meadow Brook Hall-oween":{url:"https://littleguidedetroit.com/meadow-brook-hall-oween-returns-with-family-halloween-fun/",about:"Trick-or-treating and fall activities on the grounds of the historic mansion. Costumes encouraged, and it's close to home."},
+ "Little Goblins":{url:"https://littleguidedetroit.com/halloween-fun-for-little-ones-at-little-goblins-at-ford-house/",about:"A daytime Halloween party made for little kids, with gentle activities and treats on the Ford House grounds. A longer drive, but designed for toddlers."},
+ "KinderConcert":{url:"https://littleguidedetroit.com/event/kinderconcert-5/",about:"A half-hour concert introducing young kids to orchestra instruments, with time to listen and move. Short and sweet for short attention spans."}
+};
+EX.forEach(e=>Object.assign(e,EXINFO[e.n]||{}));
+const WHEN={"This weekend":[17,18],"Next 2 weeks":[14,27],"This month":[14,31]};
+const FILT=["Free","Indoor","Outdoor","Story time","Classes","Festivals","Nature","Halloween","Shows"];
+const ex={dist:20,when:"Next 2 weeks",f:new Set(),mode:"list"};
+function exFiltered(){const [a,b]=WHEN[ex.when];const cats=[...ex.f].filter(x=>!["Free","Indoor","Outdoor"].includes(x));
+  return EX.filter(e=>!e.hidden&&e.min<=ex.dist&&e.d>=a&&e.d<=b&&(!ex.f.has("Free")||e.free)&&(!ex.f.has("Indoor")||!e.out)&&(!ex.f.has("Outdoor")||e.out)&&(!cats.length||e.cats.some(c=>cats.includes(c))))
+   .sort((x,y)=>(y.fit*10-y.min/3)-(x.fit*10-x.min/3))}
+function renderExplore(){
+  $("#exDistOut").textContent=`Up to ${ex.dist} min`;
+  $("#exWhen").innerHTML=Object.keys(WHEN).map(w=>`<button class="fchip" aria-pressed="${ex.when===w}" data-when="${w}">${w}</button>`).join("");
+  $("#exCats").innerHTML=FILT.map(f=>`<button class="fchip" aria-pressed="${ex.f.has(f)}" data-filt="${f}">${f}</button>`).join("");
+  const l=exFiltered();$("#exCount").textContent=`${l.length} event${l.length===1?"":"s"} · best fit first`;
+  document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mode===ex.mode));
+  $("#exMap").hidden=ex.mode!=="map";if(ex.mode==="map")renderMap(l);
+  $("#exList").innerHTML=l.length?l.map((e,i)=>{const k=EX.indexOf(e);return `<div class="exrow"><div class="exdate"><b>${e.d}</b><span>${e.dow}</span></div><div><div class="exname">${ex.mode==="map"?`<span class="exnum">${i+1}</span>`:""}<button class="linkt" data-exinfo="${k}">${e.n}</button></div><div class="exmeta"><b>${e.t}</b> · ${e.where} · ${e.min} min drive</div><div class="badges">${e.fit===3?`<span class="badge fit">Great for little ones</span>`:""}${e.free?`<span class="badge">Free</span>`:""}<span class="badge">${e.out?"Outdoor":"Indoor"}</span>${e.cats.map(c=>`<span class="badge">${c}</span>`).join("")}${e.min>20?`<span class="badge far">Farther out</span>`:""}<span class="badge">via ${e.src}</span></div><div class="exacts">${e.added?`<button class="btn ghost" data-exadd="${k}">On calendar ✓</button>`:`<button class="btn" data-exadd="${k}">Add to calendar</button><button class="btn ghost" data-exhide="${k}">Hide</button>`}</div></div></div>`}).join(""):`<p class="empty">No events match. Try a longer drive or fewer filters.</p>`}
+function renderMap(l){const cx=300,cy=210,s=3;const rings=[10,20,30,60].filter(r=>r<=Math.max(20,ex.dist));
+  $("#exMap").innerHTML=`<svg viewBox="0 0 600 420" role="img" aria-label="Map of events around home"><rect width="600" height="420" rx="16" fill="var(--bg)"/>
+  <path d="M0 300 C120 270 200 330 320 290 S520 250 600 280" stroke="var(--line)" stroke-width="10" fill="none"/><path d="M240 0 C250 120 230 260 270 420" stroke="var(--line)" stroke-width="8" fill="none"/>
+  ${rings.map(r=>`<circle cx="${cx}" cy="${cy}" r="${r*s}" fill="none" stroke="var(--muted)" stroke-dasharray="4 6" opacity=".5"/><text x="${cx+r*s*0.7+4}" y="${cy-r*s*0.7}" font-size="13" fill="var(--muted)">${r} min</text>`).join("")}
+  <circle cx="${cx}" cy="${cy}" r="12" fill="var(--accent)"/><text x="${cx}" y="${cy+30}" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Home</text>
+  ${l.map((e,i)=>{const a=e.ang*Math.PI/180,r=Math.min(e.min*s,195),x=Math.max(16,Math.min(584,cx+Math.cos(a)*r)),y=Math.max(16,Math.min(404,cy+Math.sin(a)*r));return `<circle cx="${x}" cy="${y}" r="13" fill="var(--kid)" stroke="var(--surface)" stroke-width="3"/><text x="${x}" y="${y+4.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">${i+1}</text>`}).join("")}</svg>`}
+let evCur=null;
+function showEvent(o){evCur=o;$("#evTitle").textContent=o.n;$("#evWhen").textContent=o.when;$("#evWhere").textContent=o.where;
+  $("#evAbout").textContent=o.about||"No description yet. Open the source for details.";
+  $("#evSrc").textContent=o.url?`Summary written by the dashboard from ${o.src==='LittleGuide'?'LittleGuide Detroit':o.src}. Check the source for times and tickets.`:`Sample event. A source link appears here once ${o.src==='Library'?'the library feed':'this source'} is connected.`;
+  $("#evActs").innerHTML=(o.added?`<button class="btn ghost" data-evclose>On calendar ✓</button>`:`<button class="btn" data-evadd>Add to calendar</button>`)+
+    (o.url?`<a class="btn ghost" href="${o.url}" target="_blank" rel="noopener" style="text-decoration:none">View on ${o.src==='LittleGuide'?'LittleGuide':'source'}</a>`:"")+`<button class="btn ghost" data-evclose>Close</button>`;
+  $("#evSheet").classList.add("on");$("#evActs").querySelector("button").focus()}
+function closeEv(){$("#evSheet").classList.remove("on");evCur=null}
+function go(tab){if(tab==="explore")renderExplore();document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+tab));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===tab));$("main").scrollTop=0}
+let openRecipe=null;
+function showRecipe(i){openRecipe=i;const r=recipes[i];$("#sheetTitle").textContent=r.n;
+  $("#sheetBody").innerHTML=`<p style="color:var(--muted);margin:0">${r.time} · ${r.tags}</p><ul>${r.ing.map(x=>`<li>${x}</li>`).join("")}</ul>`;$("#sheet").classList.add("on");$("#sheetClose").focus()}
+function addItem(n,src){n=n.trim();if(!n)return;groceries.unshift({n:n[0].toUpperCase()+n.slice(1),c:"Added today",s:src||"",done:false});renderGrocery();toast(`Added ${n}`)}
+
+document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.tab)go(t.dataset.tab);
+  if(t.dataset.go)go(t.dataset.go);
+  if(t.id==="uni"){renderRoutine();go("kid");t.classList.remove("bob");void t.offsetWidth;t.classList.add("bob")}
+  if(t.dataset.p){filters[t.dataset.p]=!filters[t.dataset.p];t.setAttribute("aria-pressed",filters[t.dataset.p]);renderAgenda();renderWeek()}
+  if(t.dataset.chore!==undefined){const c=chores[+t.dataset.chore];c.done=!c.done;const kid=c.p==="kid";renderChores();
+    if(c.done){const el=document.querySelector(`#v-${$("#v-chores").classList.contains("on")?"chores":"today"} [data-chore="${t.dataset.chore}"]`)||t;
+      if(kid){sparkle(el);toast("Yay! You got a sticker ⭐")}else toast(`Nice, ${P[c.p].n}! +1 star`)}}
+  if(t.dataset.g!==undefined){const g=groceries[+t.dataset.g];g.done=!g.done;renderGrocery()}
+  if(t.dataset.recipe!==undefined)showRecipe(+t.dataset.recipe);
+  if(t.dataset.sug!==undefined){const s=sugs[+t.dataset.sug];if(!s.added){s.added=true;renderSugs();toast("Added to the Family calendar")}}
+  if(t.dataset.hide!==undefined){sugs.splice(+t.dataset.hide,1);renderSugs()}
+  if(t.dataset.exinfo!==undefined){const k=+t.dataset.exinfo,e=EX[k];showEvent({n:e.n,when:`${e.dow}, Oct ${e.d} · ${e.t}`,where:`${e.where} · ${e.min} min drive`,about:e.about,url:e.url,src:e.src,added:e.added,onAdd:()=>{e.added=true;renderExplore()}})}
+  if(t.dataset.suginfo!==undefined){const i=+t.dataset.suginfo,s=sugs[i],e=EX.find(x=>x.n===s.name);showEvent({n:s.name,when:s.when,where:s.where,about:e?e.about:SUGABOUT[s.name],url:e&&e.url,src:e?e.src:"Local",added:s.added,onAdd:()=>{s.added=true;renderSugs()}})}
+  if(t.dataset.evadd!==undefined&&evCur){if(!evCur.added){evCur.onAdd();toast("Added to the Family calendar")}closeEv()}
+  if(t.dataset.evclose!==undefined)closeEv();
+  if(t.dataset.rmode){rMode=t.dataset.rmode;renderRoutine()}
+  if(t.dataset.when){ex.when=t.dataset.when;renderExplore()}
+  if(t.dataset.filt){const f=t.dataset.filt;if(ex.f.has(f))ex.f.delete(f);else{ex.f.add(f);if(f==="Indoor")ex.f.delete("Outdoor");if(f==="Outdoor")ex.f.delete("Indoor")}renderExplore()}
+  if(t.dataset.mode){ex.mode=t.dataset.mode;renderExplore()}
+  if(t.dataset.exadd!==undefined){const e=EX[+t.dataset.exadd];if(!e.added){e.added=true;renderExplore();toast("Added to the Family calendar")}}
+  if(t.dataset.exhide!==undefined){EX[+t.dataset.exhide].hidden=true;renderExplore();toast("Hidden. You'll see fewer like this.")}
+  if(t.hasAttribute("data-mic"))listen(t)});
+$("#exDist").addEventListener("input",e=>{ex.dist=+e.target.value;renderExplore()});
+$("#sheetClose").onclick=()=>$("#sheet").classList.remove("on");
+$("#sheet").onclick=e=>{if(e.target.id==="sheet")$("#sheet").classList.remove("on")};
+$("#sheetAdd").onclick=()=>{const have=new Set(groceries.filter(g=>!g.done).map(g=>g.n.toLowerCase()));let k=0;
+  recipes[openRecipe].ing.forEach(x=>{if(!have.has(x.toLowerCase())){groceries.push({n:x,c:"From recipes",s:"Recipe",done:false});k++}});
+  renderGrocery();$("#sheet").classList.remove("on");toast(k?`Added ${k} ingredient${k>1?"s":""}`:"Everything's already on the list")};
+$("#gAdd").onclick=()=>{addItem($("#gInput").value);$("#gInput").value=""};
+$("#gInput").addEventListener("keydown",e=>{if(e.key==="Enter"){addItem(e.target.value);e.target.value=""}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("#sheet").classList.remove("on");closeEv()}});
+$("#evSheet").addEventListener("click",e=>{if(e.target.id==="evSheet")closeEv()});
+function listen(btn){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast("Say “add milk” in the final app. Voice isn't available in this browser.");return}
+  try{const r=new SR();r.lang="en-US";btn.classList.add("listening");toast("Listening…");
+    r.onresult=ev=>{let s=ev.results[0][0].transcript.replace(/^(add|put)\s+/i,"").replace(/\s+(to|on)\s+(the\s+)?(grocery|shopping)\s+list$/i,"");addItem(s,"Voice")};
+    r.onend=()=>btn.classList.remove("listening");r.onerror=()=>{btn.classList.remove("listening");toast("Didn't catch that. Tap the mic and try again.")};r.start()}
+  catch(err){toast("Voice isn't available here.")}}
+
+tick();setInterval(()=>{tick();renderAgenda();if($("#v-kid").classList.contains("on"))renderRoutine()},30000);
+renderAgenda();renderChores();renderGrocery();renderWeek();renderMeals();renderSugs();renderRoutine();
+</script>
+</body>
+</html>

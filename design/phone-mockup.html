@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Starboard · Manage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F1FC; --surface:#FFFFFF; --ink:#2A1F3D; --muted:#6C6380; --line:#E7DDF3; --field:#FBF8FF;
+  --head1:#2E1858; --head2:#5A2E96; --head-ink:#FBF7FF; --head-muted:#CBB8EC;
+  --accent:#6B3FB8; --accent-ink:#fff; --danger:#B3261E;
+  --p1:#3D7BD9; --p2:#14917F; --kid:#9B5DE5; --fam:#E08A1E;
+  --display:"Baloo 2","Segoe UI",system-ui,sans-serif; --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#150F22; --surface:#201833; --ink:#EEE8F8; --muted:#A79DBB; --line:#33284A; --field:#1A1329;
+  --head1:#120A26; --head2:#2C1752; --head-ink:#F3EEFC; --head-muted:#9C88C4;
+  --accent:#C3A2FF; --accent-ink:#1B1030; --danger:#FF8A80;
+  --p1:#82A9F0; --p2:#4CC9B4; --kid:#C3A2FF; --fam:#F2B45A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#150F22; --surface:#201833; --ink:#EEE8F8; --muted:#A79DBB; --line:#33284A; --field:#1A1329;
+  --head1:#120A26; --head2:#2C1752; --head-ink:#F3EEFC; --head-muted:#9C88C4;
+  --accent:#C3A2FF; --accent-ink:#1B1030; --danger:#FF8A80;
+  --p1:#82A9F0; --p2:#4CC9B4; --kid:#C3A2FF; --fam:#F2B45A; color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:#D9CDEB;color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.4}
+@media (prefers-color-scheme: dark){body{background:#0B0715}}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.stage{min-height:100%;display:flex;justify-content:center;align-items:flex-start;padding:24px 12px}
+.phone{width:100%;max-width:400px;height:min(820px,calc(100vh - 48px));background:var(--bg);border-radius:34px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 20px 50px rgba(40,15,80,.25);border:8px solid #1d1430}
+@media (max-width:440px){.stage{padding:0}.phone{max-width:none;height:100%;border:0;border-radius:0;box-shadow:none}}
+.bar{background:linear-gradient(160deg,var(--head1),var(--head2));color:var(--head-ink);padding:16px 18px 14px;display:flex;align-items:center;gap:10px}
+.bar h1{font-family:var(--display);font-size:24px;font-weight:800;margin:0;flex:1;line-height:1}
+.bar .who{font-size:13px;color:var(--head-muted)}
+.bar .back{border:0;background:rgba(255,255,255,.12);color:var(--head-ink);border-radius:12px;padding:6px 12px;font-weight:700}
+main{flex:1;overflow-y:auto;padding:16px}
+.view{display:none}.view.on{display:block}
+h2{font-family:var(--display);font-size:20px;font-weight:700;margin:18px 0 8px}
+h2:first-child{margin-top:0}
+.hint{font-size:13px;color:var(--muted)}
+.btn{border:0;border-radius:14px;padding:12px 16px;background:var(--accent);color:var(--accent-ink);font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent);padding:10px 14px}
+.btn.block{width:100%}
+.btn.text{background:none;color:var(--accent);padding:8px}
+.btn.danger{background:none;color:var(--danger);padding:8px}
+.row{display:flex;gap:10px;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px}
+.import{padding:14px;display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.import .row input{flex:1}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--field);border:2px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:96px}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+.list{list-style:none;margin:0;padding:0}
+.item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left}
+.item:last-child{border-bottom:0}
+.item .sw{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;flex:none}
+.item .nm{font-weight:700}
+.item .mt{font-size:13px;color:var(--muted)}
+.item .chev{margin-left:auto;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--line);background:var(--field);border-radius:999px;padding:6px 12px;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.ing{display:flex;gap:8px;margin-bottom:8px}
+.ing button{border:0;background:none;color:var(--muted);font-size:20px;width:36px;flex:none}
+.savebar{position:sticky;bottom:-16px;margin:20px -16px -16px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--line);display:flex;gap:10px}
+.savebar .btn{flex:1}
+.day{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left}
+.day:last-child{border-bottom:0}
+.day .d{font-family:var(--display);font-weight:800;width:42px;color:var(--muted)}
+.day.today .d{color:var(--kid)}
+.day .m{flex:1;font-weight:700}
+.day .m.none{font-weight:400;color:var(--muted)}
+.pgroup{margin-bottom:14px}
+.phead{display:flex;align-items:center;gap:8px;padding:12px 14px 4px;font-family:var(--display);font-weight:700;font-size:18px}
+.dot{width:12px;height:12px;border-radius:50%}
+.phead .src{margin-left:auto;font-family:var(--body);font-weight:400;font-size:12px;color:var(--muted)}
+.emoji-pick{display:flex;flex-wrap:wrap;gap:6px}
+.emoji-pick button{width:44px;height:44px;border-radius:12px;border:2px solid var(--line);background:var(--field);font-size:22px}
+.emoji-pick button[aria-pressed="true"]{border-color:var(--kid);background:color-mix(in srgb,var(--kid) 18%,var(--field))}
+.seg{display:flex;background:var(--field);border:2px solid var(--line);border-radius:14px;padding:3px}
+.seg button{flex:1;border:0;background:none;padding:10px 12px;border-radius:10px;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.setcard{padding:14px 16px;margin-bottom:14px}
+.setcard h2{margin:0 0 4px}
+.setcard label:first-of-type{margin-top:8px}
+.locwrap{position:relative}
+.locres{list-style:none;margin:6px 0 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.locres button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:11px 12px}
+.locres li:last-child button{border-bottom:0}
+.locres .sm{font-size:13px;color:var(--muted)}
+.wxprev{display:flex;align-items:center;gap:14px;margin-top:14px;padding:12px 14px;border-radius:16px;color:var(--head-ink);background:linear-gradient(160deg,var(--head1),var(--head2))}
+.wxprev .tt{font-family:var(--display);font-size:38px;font-weight:800;line-height:1}
+.wxprev .sm{font-size:13px;color:var(--head-muted)}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);padding:6px}
+.tab{border:0;background:none;padding:8px 4px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px;color:var(--muted)}
+.tab svg{width:24px;height:24px}
+.tab[aria-selected="true"]{color:var(--accent);background:var(--bg);font-weight:700}
+.sheet{position:absolute;inset:0;background:rgba(20,10,40,.45);display:none;align-items:flex-end;z-index:5}
+.sheet.on{display:flex}
+.sheet .card{width:100%;border-radius:24px 24px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));max-height:75%;overflow-y:auto}
+.sheet h3{font-family:var(--display);font-size:20px;margin:0 0 8px}
+.loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+.spin{width:18px;height:18px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.banner{background:color-mix(in srgb,var(--p2) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--p2) 40%,var(--line));border-radius:14px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+.toast{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9;white-space:nowrap}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage"><div class="phone">
+  <div class="bar" id="bar">
+    <button class="back" id="backBtn" hidden>Back</button>
+    <h1 id="barTitle">Recipes</h1>
+    <span class="who">Bob</span>
+  </div>
+  <main id="main">
+    <!-- Recipes list -->
+    <div class="view on" id="v-recipes">
+      <div class="card import">
+        <div style="font-weight:700">Import from a link</div>
+        <div class="row"><input id="url" inputmode="url" placeholder="Paste a recipe link" aria-label="Recipe link"><button class="btn" id="importBtn">Import</button></div>
+        <div class="hint">Works with most recipe sites. You can fix anything after it's imported.</div>
+        <div class="loading" id="loading" hidden><span class="spin"></span>Reading the recipe…</div>
+      </div>
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Your recipes</h2><button class="btn text" id="newRecipe">New recipe</button></div>
+      <ul class="list card" id="recipeList" style="margin-top:8px"></ul>
+    </div>
+
+    <!-- Recipe edit -->
+    <div class="view" id="v-edit">
+      <div class="banner" id="importedNote" hidden>Imported. Check the details, then save.</div>
+      <label for="rName">Name</label><input id="rName">
+      <div class="row"><div style="flex:1"><label for="rTime">Time</label><input id="rTime" placeholder="e.g. 30 min"></div><div style="flex:1"><label for="rServ">Serves</label><input id="rServ" inputmode="numeric"></div></div>
+      <label>Tags</label><div class="chips" id="rTags"></div>
+      <label>Ingredients</label><div id="rIng"></div>
+      <button class="btn text" id="addIng">Add ingredient</button>
+      <label for="rSteps">Steps</label><textarea id="rSteps" placeholder="One step per line"></textarea>
+      <label for="rSrc">Source link</label><input id="rSrc" inputmode="url" placeholder="Optional">
+      <button class="btn danger" id="delRecipe">Delete recipe</button>
+      <div class="savebar"><button class="btn ghost" data-cancel>Cancel</button><button class="btn" id="saveRecipe">Save recipe</button></div>
+    </div>
+
+    <!-- Meal plan -->
+    <div class="view" id="v-plan">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Dinners this week</h2><span class="hint">Oct 12–18</span></div>
+      <div class="card" id="planList" style="margin-top:8px"></div>
+      <p class="hint">Tap a day to change it. The kitchen screen updates right away.</p>
+    </div>
+
+    <!-- Chores -->
+    <div class="view" id="v-chores">
+      <div class="banner">Changes show on the kitchen screen right away. Daily chores reset each morning.</div>
+      <div id="choreGroups"></div>
+      <button class="btn block" id="newChore">Add a chore</button>
+    </div>
+
+    <!-- Chore edit -->
+    <div class="view" id="v-chore">
+      <label for="cName">Chore</label><input id="cName" placeholder="e.g. Water plants">
+      <label>Who</label><div class="chips" id="cWho"></div>
+      <label>Repeats</label><div class="chips" id="cRep"></div>
+      <div id="picWrap"><label>Picture for the kid</label><div class="emoji-pick" id="cPic"></div><p class="hint">Kid's chores show a big picture so they can find them on their own.</p></div>
+      <button class="btn danger" id="delChore">Delete chore</button>
+      <div class="savebar"><button class="btn ghost" data-cancel>Cancel</button><button class="btn" id="saveChore">Save chore</button></div>
+    </div>
+    <!-- Settings -->
+    <div class="view" id="v-settings">
+      <div class="card setcard">
+        <h2>Weather</h2>
+        <div class="hint">Shown in the top corner of the kitchen screen.</div>
+        <label for="locInput">Location</label>
+        <div class="locwrap">
+          <input id="locInput" autocomplete="off" placeholder="City or ZIP code" aria-describedby="locHint">
+          <ul class="locres" id="locRes" hidden></ul>
+        </div>
+        <div class="hint" id="locHint" style="margin-top:6px">Pick from the list so we get the right Rochester.</div>
+        <button class="btn text" id="useTablet" style="padding-left:0">Use the kitchen tablet's location</button>
+        <label>Temperature</label>
+        <div class="seg" role="group" aria-label="Temperature units" id="unitSeg">
+          <button aria-pressed="true" data-unit="F">°F Fahrenheit</button>
+          <button aria-pressed="false" data-unit="C">°C Celsius</button>
+        </div>
+        <div class="wxprev" aria-live="polite">
+          <span style="font-size:34px" aria-hidden="true">⛅</span>
+          <span><div class="tt" id="pvTemp">54°</div><div class="sm" id="pvHL">High 61° · Low 43°</div></span>
+          <span class="sm" style="margin-left:auto;text-align:right">Preview<br><b id="pvLoc" style="color:var(--head-ink)">Rochester, MI</b></span>
+        </div>
+      </div>
+      <p class="hint">More settings (event distance, family members, screen sleep times) will live here too.</p>
+    </div>
+  </main>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" aria-selected="true" data-tab="recipes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>Recipes</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Meal plan</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="chores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Chores</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
+  </nav>
+  <div class="sheet" id="sheet"><div class="card"><h3 id="sheetTitle"></h3><ul class="list" id="sheetList"></ul><button class="btn ghost block" style="margin-top:10px" id="sheetClose">Close</button></div></div>
+  <div class="toast" id="toast" role="status"></div>
+</div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const TAGS=["Weeknight","Kid's pick","Vegetarian","Freezes well","Big batch"];
+const P={p1:{n:"Alice",c:"var(--p1)"},p2:{n:"Bob",c:"var(--p2)"},kid:{n:"Cleo",c:"var(--kid)"}};
+const PICS=["🧸","👟","🪥","🧺","🌱","🍽️","📚","🛁","🧦","🐟"];
+const REP=["Daily","Weekdays","Weekly","Once"];
+let recipes=[
+ {n:"Sheet-pan chicken fajitas",time:"35 min",serv:"4",tags:["Weeknight"],e:"🌮",sw:"#FFD9A8",ing:["1.5 lb chicken thighs","3 bell peppers","1 red onion","8 tortillas","Sour cream","2 limes"],steps:"Heat oven to 425°F.\nSlice chicken, peppers and onion; toss with oil and spices.\nRoast 20–25 min.\nServe in warm tortillas with lime.",src:""},
+ {n:"Turkey chili",time:"50 min",serv:"6",tags:["Freezes well"],e:"🍲",sw:"#FFC2B3",ing:["1 lb ground turkey","2 cans kidney beans","28 oz crushed tomatoes","2 tbsp chili powder","Cheddar"],steps:"Brown turkey.\nAdd everything else and simmer 30 min.",src:""},
+ {n:"Unicorn pancakes",time:"25 min",serv:"4",tags:["Kid's pick"],e:"🥞",sw:"#E7D6FF",ing:["1.5 cups flour","2 eggs","1.25 cups milk","Blueberries","Sprinkles"],steps:"Whisk batter.\nCook on a buttered pan.\nTop with berries and sprinkles.",src:""},
+ {n:"Purple berry smoothie",time:"5 min",serv:"2",tags:["Kid's pick","Vegetarian"],e:"🫐",sw:"#D9C2FF",ing:["1 cup frozen blueberries","1 banana","1/2 cup Greek yogurt","1 cup milk"],steps:"Blend until smooth.",src:""}
+];
+let plan=[["Mon",1],["Tue",null],["Wed",0],["Thu",null],["Fri",2],["Sat","out"],["Sun",null]];
+let chores=[
+ {n:"Take out recycling",p:"p1",r:"Weekly"},{n:"Fold laundry",p:"p1",r:"Weekly"},
+ {n:"Water plants",p:"p2",r:"Weekly"},{n:"Pack daycare bag",p:"p2",r:"Weekdays"},
+ {n:"Toys in the bin",p:"kid",r:"Daily",e:"🧸"},{n:"Shoes by the door",p:"kid",r:"Daily",e:"👟"},{n:"Brush teeth",p:"kid",r:"Daily",e:"🪥"}
+];
+let editing=null, editingChore=null, stack=["recipes"];
+
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),1800)}
+const titles={recipes:"Recipes",edit:"Edit recipe",plan:"Meal plan",chores:"Chores",chore:"Chore",settings:"Settings"};
+function show(v,push=true){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
+  if(push)stack.push(v);const sub=v==="edit"||v==="chore";$("#backBtn").hidden=!sub;$("#tabs").style.display=sub?"none":"grid";
+  $("#barTitle").textContent=v==="edit"&&editing===-1?"New recipe":v==="chore"&&editingChore===-1?"New chore":titles[v];
+  if(!sub)document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===v));$("#main").scrollTop=0}
+function back(){stack.pop();show(stack[stack.length-1]||"recipes",false)}
+
+function renderRecipes(){$("#recipeList").innerHTML=recipes.map((r,i)=>`<li><button class="item" data-r="${i}"><span class="sw" style="background:${r.sw}" aria-hidden="true">${r.e}</span><span><div class="nm">${r.n}</div><div class="mt">${r.time}${r.tags.length?" · "+r.tags.join(", "):""}</div></span><span class="chev">›</span></button></li>`).join("")}
+function chips(el,opts,sel,multi){el.innerHTML=opts.map(o=>`<button class="chip" aria-pressed="${multi?sel.includes(o):sel===o}" data-v="${o}">${o}</button>`).join("");
+  el.onclick=e=>{const b=e.target.closest(".chip");if(!b)return;if(!multi)el.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed",multi?b.getAttribute("aria-pressed")!=="true":"true");if(el.id==="cWho")togglePic()}}
+function ingRow(v){const d=document.createElement("div");d.className="ing";d.innerHTML=`<input aria-label="Ingredient" value="${(v||"").replace(/"/g,"&quot;")}" placeholder="e.g. 2 cups milk"><button aria-label="Remove ingredient">×</button>`;d.querySelector("button").onclick=()=>d.remove();return d}
+function openRecipe(i,data,imported){editing=i;const r=data||(i>=0?recipes[i]:{n:"",time:"",serv:"",tags:[],ing:[""],steps:"",src:""});
+  $("#rName").value=r.n;$("#rTime").value=r.time;$("#rServ").value=r.serv;$("#rSteps").value=r.steps;$("#rSrc").value=r.src;
+  chips($("#rTags"),TAGS,r.tags,true);const box=$("#rIng");box.innerHTML="";r.ing.forEach(x=>box.appendChild(ingRow(x)));
+  $("#importedNote").hidden=!imported;$("#delRecipe").hidden=i<0;show("edit")}
+$("#addIng").onclick=()=>{const r=ingRow("");$("#rIng").appendChild(r);r.querySelector("input").focus()};
+$("#saveRecipe").onclick=()=>{const n=$("#rName").value.trim();if(!n){$("#rName").focus();toast("Give the recipe a name");return}
+  const r={n,time:$("#rTime").value.trim(),serv:$("#rServ").value.trim(),steps:$("#rSteps").value,src:$("#rSrc").value.trim(),
+    tags:[...$("#rTags").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.v),
+    ing:[...$("#rIng").querySelectorAll("input")].map(x=>x.value.trim()).filter(Boolean)};
+  if(editing>=0)recipes[editing]={...recipes[editing],...r};else recipes.unshift({...r,e:"🍽️",sw:"#E7DDF3"});
+  renderRecipes();renderPlan();back();toast("Recipe saved")};
+$("#delRecipe").onclick=()=>{if(!confirm("Delete this recipe?"))return;recipes.splice(editing,1);plan=plan.map(([d,r])=>[d,r===editing?null:typeof r==="number"&&r>editing?r-1:r]);renderRecipes();renderPlan();back();toast("Recipe deleted")};
+$("#newRecipe").onclick=()=>openRecipe(-1);
+$("#importBtn").onclick=()=>{const u=$("#url").value.trim();if(!u){$("#url").focus();toast("Paste a link first");return}
+  $("#loading").hidden=false;$("#importBtn").disabled=true;
+  setTimeout(()=>{$("#loading").hidden=true;$("#importBtn").disabled=false;$("#url").value="";
+    openRecipe(-1,{n:"Creamy tomato tortellini soup",time:"30 min",serv:"4",tags:["Weeknight","Vegetarian"],
+      ing:["1 tbsp olive oil","1 onion, diced","2 cloves garlic","28 oz crushed tomatoes","3 cups vegetable broth","1/2 cup heavy cream","9 oz cheese tortellini","Handful of spinach"],
+      steps:"Soften onion and garlic in oil.\nAdd tomatoes and broth; simmer 10 min.\nStir in cream and tortellini; cook 5 min.\nWilt in spinach and serve.",src:u},true)},1200)};
+
+function renderPlan(){$("#planList").innerHTML=plan.map(([d,r],i)=>`<button class="day ${d==="Wed"?"today":""}" data-day="${i}"><span class="d">${d}</span><span class="m ${r===null||r==="out"?"none":""}">${r===null?"Not planned":r==="out"?"Eating out":recipes[r]?.n||"Not planned"}</span><span class="chev" style="color:var(--muted)">›</span></button>`).join("")}
+function pickFor(i){$("#sheetTitle").textContent=`Dinner on ${plan[i][0]}`;
+  $("#sheetList").innerHTML=recipes.map((r,k)=>`<li><button class="item" data-pick="${k}"><span class="sw" style="background:${r.sw}" aria-hidden="true">${r.e}</span><span class="nm">${r.n}</span></button></li>`).join("")+
+   `<li><button class="item" data-pick="out"><span class="sw" style="background:var(--line)" aria-hidden="true">🍕</span><span class="nm">Eating out</span></button></li><li><button class="item" data-pick="clear"><span class="sw" style="background:var(--line)" aria-hidden="true">–</span><span class="nm">Clear this day</span></button></li>`;
+  $("#sheet").dataset.day=i;$("#sheet").classList.add("on")}
+$("#sheetList").onclick=e=>{const b=e.target.closest("[data-pick]");if(!b)return;const i=+$("#sheet").dataset.day,v=b.dataset.pick;
+  plan[i][1]=v==="clear"?null:v==="out"?"out":+v;renderPlan();$("#sheet").classList.remove("on");toast(`${plan[i][0]} updated`)};
+$("#sheetClose").onclick=()=>$("#sheet").classList.remove("on");
+$("#sheet").onclick=e=>{if(e.target.id==="sheet")$("#sheet").classList.remove("on")};
+
+function renderChores(){$("#choreGroups").innerHTML=Object.keys(P).map(p=>{const l=chores.map((c,i)=>({...c,i})).filter(c=>c.p===p);
+  return `<div class="card pgroup"><div class="phead"><span class="dot" style="background:${P[p].c}"></span>${P[p].n}<span class="src">${l.length} chore${l.length===1?"":"s"}</span></div><ul class="list">${l.length?l.map(c=>`<li><button class="item" data-c="${c.i}">${c.e?`<span style="font-size:24px" aria-hidden="true">${c.e}</span>`:""}<span><div class="nm">${c.n}</div><div class="mt">${c.r}</div></span><span class="chev">›</span></button></li>`).join(""):`<li class="item mt">No chores yet</li>`}</ul></div>`}).join("")}
+function togglePic(){const who=$("#cWho").querySelector('[aria-pressed="true"]')?.dataset.v;$("#picWrap").hidden=who!=="Cleo"}
+function openChore(i){editingChore=i;const c=i>=0?chores[i]:{n:"",p:"kid",r:"Daily",e:"🧸"};
+  $("#cName").value=c.n;chips($("#cWho"),Object.values(P).map(x=>x.n),P[c.p].n,false);chips($("#cRep"),REP,c.r,false);
+  $("#cPic").innerHTML=PICS.map(x=>`<button aria-pressed="${x===c.e}" data-e="${x}" aria-label="Picture ${x}">${x}</button>`).join("");
+  $("#cPic").onclick=e=>{const b=e.target.closest("button");if(!b)return;$("#cPic").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true")};
+  togglePic();$("#delChore").hidden=i<0;show("chore")}
+$("#newChore").onclick=()=>openChore(-1);
+$("#saveChore").onclick=()=>{const n=$("#cName").value.trim();if(!n){$("#cName").focus();toast("Name the chore");return}
+  const whoN=$("#cWho").querySelector('[aria-pressed="true"]').dataset.v;const p=Object.keys(P).find(k=>P[k].n===whoN);
+  const c={n,p,r:$("#cRep").querySelector('[aria-pressed="true"]').dataset.v,e:p==="kid"?$("#cPic").querySelector('[aria-pressed="true"]')?.dataset.e:undefined};
+  if(editingChore>=0)chores[editingChore]=c;else chores.push(c);renderChores();back();toast("Chore saved")};
+$("#delChore").onclick=()=>{chores.splice(editingChore,1);renderChores();back();toast("Chore deleted")};
+
+document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.tab){stack=[t.dataset.tab];show(t.dataset.tab,false)}
+  if(t.dataset.r!==undefined)openRecipe(+t.dataset.r);
+  if(t.dataset.day!==undefined)pickFor(+t.dataset.day);
+  if(t.dataset.c!==undefined)openChore(+t.dataset.c);
+  if(t.hasAttribute("data-cancel"))back()});
+$("#backBtn").onclick=back;
+const PLACES=[
+ {n:"Rochester, MI",d:"Oakland County, Michigan",t:54,h:61,l:43},
+ {n:"Rochester Hills, MI",d:"Oakland County, Michigan",t:54,h:61,l:43},
+ {n:"Rochester, NY",d:"Monroe County, New York",t:51,h:57,l:40},
+ {n:"Rochester, MN",d:"Olmsted County, Minnesota",t:47,h:55,l:35},
+ {n:"Detroit, MI",d:"Wayne County, Michigan",t:56,h:62,l:45},
+ {n:"Ann Arbor, MI",d:"Washtenaw County, Michigan",t:55,h:62,l:42},
+ {n:"Troy, MI",d:"Oakland County, Michigan",t:55,h:61,l:44}
+];
+const wx={place:PLACES[0],unit:"F"};
+const cv=f=>wx.unit==="F"?Math.round(f):Math.round((f-32)*5/9);
+function renderWx(){$("#locInput").value=wx.place.n;$("#pvLoc").textContent=wx.place.n;
+  $("#pvTemp").textContent=cv(wx.place.t)+"°"+wx.unit;$("#pvHL").textContent=`High ${cv(wx.place.h)}° · Low ${cv(wx.place.l)}°`;
+  document.querySelectorAll("#unitSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.unit===wx.unit))}
+$("#locInput").addEventListener("input",e=>{const q=e.target.value.trim().toLowerCase();const r=$("#locRes");
+  if(q.length<2){r.hidden=true;return}const m=PLACES.filter(p=>p.n.toLowerCase().includes(q)||p.d.toLowerCase().includes(q));
+  r.innerHTML=m.length?m.map(p=>`<li><button data-place="${PLACES.indexOf(p)}"><div>${p.n}</div><div class="sm">${p.d}</div></button></li>`).join(""):`<li><button disabled><div class="sm">No matches. Try a city name or ZIP code.</div></button></li>`;r.hidden=false});
+$("#locInput").addEventListener("focus",e=>e.target.select());
+$("#locInput").addEventListener("blur",()=>setTimeout(()=>{$("#locRes").hidden=true;$("#locInput").value=wx.place.n},150));
+$("#locRes").addEventListener("click",e=>{const b=e.target.closest("[data-place]");if(!b)return;wx.place=PLACES[+b.dataset.place];$("#locRes").hidden=true;renderWx();toast(`Weather set to ${wx.place.n}`)});
+$("#useTablet").onclick=()=>{wx.place=PLACES[0];renderWx();toast("Using the tablet's location: Rochester, MI")};
+$("#unitSeg").addEventListener("click",e=>{const b=e.target.closest("[data-unit]");if(!b)return;wx.unit=b.dataset.unit;renderWx();toast(`Showing °${wx.unit} on the kitchen screen`)});
+renderRecipes();renderPlan();renderChores();renderWx();
+</script>
+</body>
+</html>
