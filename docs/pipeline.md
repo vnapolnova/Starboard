@@ -49,7 +49,7 @@ In a cloud Claude Code session on the repo:
 /build 14
 ```
 
-Each command reads the issue (with `gh issue view`), the relevant files and `CLAUDE.md`. It works on a branch called `N-slug`, opens or updates one PR, moves the label and stops. A blocked session comments on the issue, adds `needs-me` and stops.
+Each command reads the issue (with `gh api` REST calls; see `CLAUDE.md`), the relevant files and `CLAUDE.md`. It works on a branch called `N-slug`, opens or updates one PR, moves the label and stops. A blocked session comments on the issue, adds `needs-me` and stops.
 
 You can run several sessions in parallel as long as their issues don't touch the same files. A dependency is noted in the issue as `Depends on #N`.
 

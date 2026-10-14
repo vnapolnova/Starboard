@@ -5,7 +5,7 @@ argument-hint: <issue-number>
 
 Build the mockups for issue #$ARGUMENTS. This stage is the owner's visual gate, so polish matters.
 
-1. Read the issue and comments (`gh issue view $ARGUMENTS --comments`), `features/<NNN>-*/brief.md`, `CLAUDE.md`, and both `design/tablet-mockup.html` and `design/phone-mockup.html` in full.
+1. Read the issue and comments (`gh api repos/{owner}/{repo}/issues/$ARGUMENTS` and `.../issues/$ARGUMENTS/comments`), `features/<NNN>-*/brief.md`, `CLAUDE.md`, and both `design/tablet-mockup.html` and `design/phone-mockup.html` in full.
 2. Work on the feature branch, or create `$ARGUMENTS-<slug>`. If this is a revision, read the PR review comments first and address each one.
 3. Create `mockup-tablet.html` and/or `mockup-phone.html` in the feature folder, depending on the surfaces in the brief:
    - Start from a **copy** of the matching design mockup, so the tokens, fonts, header, tabs and tone stay identical. Change only what the feature needs, and keep the surrounding screen so it's shown in context.
