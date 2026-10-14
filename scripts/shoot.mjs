@@ -6,7 +6,9 @@
 //
 // Output: docs/shots/<name>/<device>-<theme>[-<suffix>].png
 // Local files whose name contains "tablet" or "phone" only get that device.
-// Requires: npm i -D playwright && npx playwright install chromium
+// Run with: npm run shoot -- <url-or-html-file> <name> [flags]
+// Uses the playwright dev dependency; install a browser with `npx playwright install chromium`
+// only if none is available (cloud sessions have one preinstalled).
 
 import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
