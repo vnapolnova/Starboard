@@ -5,7 +5,7 @@ argument-hint: <issue-number>
 
 Implement issue #$ARGUMENTS.
 
-1. Read the issue and comments (`gh issue view $ARGUMENTS --comments`).
+1. Read the issue and comments (`gh api repos/{owner}/{repo}/issues/$ARGUMENTS` and `.../issues/$ARGUMENTS/comments`).
    - Stop at once if the issue is labelled `manual` or `needs-me`, or if a `Depends on #N` issue is still open. Comment why.
 2. Read `CLAUDE.md`, the relevant parts of `docs/spec.md`, and either:
    - the feature folder (`brief.md`, the approved mockups, `plan.md`), or

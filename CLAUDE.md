@@ -55,6 +55,13 @@ Full details are in `docs/pipeline.md`. The short version:
 - **Commands:** `/brief`, `/mockup`, `/plan`, `/build` and `/review`, each taking an issue number. Run one stage per session, on one branch, and open one PR.
 - **Feature folders:** `features/NNN-slug/` holds `brief.md`, `mockup-tablet.html`, `mockup-phone.html` and `plan.md`, where NNN is the issue number. Phase 1 issues have no folder; the issue body and `docs/phase-1-plan.md` are the brief.
 - **Asking in an unattended session:** if you're blocked or the spec is ambiguous, don't guess. Comment on the issue with a specific question and options, add `needs-me`, and stop. A draft PR with the work so far is fine.
+- **GitHub from cloud sessions:** GraphQL is blocked there, so `gh issue view`, `gh pr list/view/create` and `gh label` fail with HTTP 403 (and `gh auth status` wrongly reports a login failure). Use the REST API through `gh api` instead, for example:
+  - read: `gh api repos/{owner}/{repo}/issues/N` and `gh api repos/{owner}/{repo}/issues/N/comments`
+  - comment: `gh api repos/{owner}/{repo}/issues/N/comments -f body='...'`
+  - labels: `gh api repos/{owner}/{repo}/issues/N/labels -f 'labels[]=needs-me'`, and `gh api -X DELETE repos/{owner}/{repo}/issues/N/labels/stage:brief`
+  - open a PR: `gh api repos/{owner}/{repo}/pulls -f title='...' -f head=BRANCH -f base=main -F draft=true -F body=@body.md`
+  - Only `repos/{owner}/{repo}/...` paths work; `search/...` is blocked, so list PRs with `gh api "repos/{owner}/{repo}/pulls?state=open"`.
+  - Or use the GitHub MCP tools (`mcp__github__*`) when they're available.
 - **Never start an issue labelled `manual`.** Only the owner can do those, for example billing, OAuth consent or tablet setup.
 - **Visual proof:** any PR that changes UI includes screenshots from `scripts/shoot.mjs` (tablet 600×1000 and phone 390×844, light and dark) in `docs/shots/issue-N/`, linked in the PR body next to the matching mockup.
 - **Shipping:** a feature PR also updates `docs/spec.md` if anything was decided or changed, and ticks the matching box in the phase plan.

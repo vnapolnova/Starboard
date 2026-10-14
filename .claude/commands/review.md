@@ -5,7 +5,7 @@ argument-hint: <issue-or-pr-number>
 
 Review the PR for #$ARGUMENTS. You didn't write this code, so review it with fresh eyes.
 
-1. Find the PR (`gh pr list --search "$ARGUMENTS"` or `gh pr view $ARGUMENTS`). Read the diff, the PR body, the linked issue, the brief or phase-plan section, the mockups and `CLAUDE.md`.
+1. Find the PR (`gh api repos/{owner}/{repo}/pulls/$ARGUMENTS`, or list with `gh api "repos/{owner}/{repo}/pulls?state=open"` and match `Closes #$ARGUMENTS` or a branch starting `$ARGUMENTS-`; diff via `gh api repos/{owner}/{repo}/pulls/$ARGUMENTS -H 'Accept: application/vnd.github.diff'`). Read the diff, the PR body, the linked issue, the brief or phase-plan section, the mockups and `CLAUDE.md`.
 2. Check each of these, and note where you looked:
    - **Spec:** does it do what the brief or phase plan says, and nothing extra? Are the "Done when" items covered?
    - **Mockup fidelity:** compare the screenshots with the mockup. Check the layout, copy, colors per person, and the light and dark themes.
