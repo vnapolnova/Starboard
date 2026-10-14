@@ -1,4 +1,8 @@
 /* Placeholder page until the App shell lands */
+#app {
+  height: 100%;
+}
+
 .placeholder {
   min-height: 100%;
   display: grid;
