@@ -1,3 +1,5 @@
+import './app.css';
+
 // Placeholder until the App shell issue lands.
 export function App() {
   return (

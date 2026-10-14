@@ -1,0 +1,23 @@
+/* Placeholder page until the App shell lands */
+.placeholder {
+  min-height: 100%;
+  display: grid;
+  place-content: center;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.placeholder h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.placeholder p {
+  margin: 0;
+  color: var(--muted);
+}
