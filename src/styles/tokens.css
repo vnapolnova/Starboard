@@ -1,0 +1,153 @@
+/*
+ * Starboard design tokens, shared by the tablet and phone layouts.
+ * Colors and fonts are ported from design/tablet-mockup.html (plus --field and
+ * --danger from design/phone-mockup.html) with the same variable names, so
+ * mockup CSS can be copied across as-is. Keep these in sync with the mockups.
+ */
+
+:root {
+  /* Surfaces and text */
+  --bg: #f6f1fc;
+  --surface: #ffffff;
+  --field: #fbf8ff;
+  --ink: #2a1f3d;
+  --muted: #6c6380;
+  --line: #e7ddf3;
+
+  /* Night-sky header */
+  --head1: #2e1858;
+  --head2: #5a2e96;
+  --head-ink: #fbf7ff;
+  --head-muted: #cbb8ec;
+
+  /* Actions */
+  --accent: #6b3fb8;
+  --accent-ink: #fff;
+  --danger: #b3261e;
+
+  /* People: parent 1, parent 2, the kid, Family */
+  --p1: #3d7bd9;
+  --p2: #14917f;
+  --kid: #9b5de5;
+  --fam: #e08a1e;
+
+  --rainbow: linear-gradient(90deg, #ff7ab6, #ffb86b, #ffe066, #7ee0a1, #7cc8ff, #b18cff);
+
+  /* Fonts (loaded from Google Fonts in index.html) */
+  --display: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+  --body: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif;
+
+  /*
+   * Spacing and radii. The mockups use literal values; these name the ones
+   * they repeat most, so new screens stay on the same rhythm.
+   */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 14px;
+  --space-5: 18px;
+  --space-6: 28px;
+  --radius-sm: 9px;
+  --radius: 16px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  color-scheme: light;
+}
+
+/* Dark theme: follows the system unless the page forces data-theme="light". */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #150f22;
+    --surface: #201833;
+    --field: #1a1329;
+    --ink: #eee8f8;
+    --muted: #a79dbb;
+    --line: #33284a;
+    --head1: #120a26;
+    --head2: #2c1752;
+    --head-ink: #f3eefc;
+    --head-muted: #9c88c4;
+    --accent: #c3a2ff;
+    --accent-ink: #1b1030;
+    --danger: #ff8a80;
+    --p1: #82a9f0;
+    --p2: #4cc9b4;
+    --kid: #c3a2ff;
+    --fam: #f2b45a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #150f22;
+  --surface: #201833;
+  --field: #1a1329;
+  --ink: #eee8f8;
+  --muted: #a79dbb;
+  --line: #33284a;
+  --head1: #120a26;
+  --head2: #2c1752;
+  --head-ink: #f3eefc;
+  --head-muted: #9c88c4;
+  --accent: #c3a2ff;
+  --accent-ink: #1b1030;
+  --danger: #ff8a80;
+  --p1: #82a9f0;
+  --p2: #4cc9b4;
+  --kid: #c3a2ff;
+  --fam: #f2b45a;
+  color-scheme: dark;
+}
+
+/* Base, as in the mockups */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html {
+  height: 100%;
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .spark {
+    display: none;
+  }
+}

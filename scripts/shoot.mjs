@@ -6,6 +6,7 @@
 //
 // Output: docs/shots/<name>/<device>-<theme>[-<suffix>].png
 // Local files whose name contains "tablet" or "phone" only get that device.
+// Run with: npm run shoot -- <url-or-html-file> <name> [flags]
 // Requires: npm i -D playwright@1.56.1 (pinned to match the Chromium build preinstalled in
 // Claude Code cloud sessions under /opt/pw-browsers). Don't run `npx playwright install` there;
 // on your own machine, run it once after npm install.
@@ -31,7 +32,9 @@ const suffix = flag('--suffix');
 const [target, name] = args;
 
 if (!target || !name) {
-  console.error('Usage: node scripts/shoot.mjs <url-or-html-file> <name> [--only tablet|phone] [--hash <#route>]');
+  console.error(
+    'Usage: node scripts/shoot.mjs <url-or-html-file> <name> [--only tablet|phone] [--hash <#route>]',
+  );
   process.exit(1);
 }
 
