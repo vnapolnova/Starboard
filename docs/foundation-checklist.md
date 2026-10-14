@@ -9,7 +9,7 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 - [x] Commit and push the `.claude/commands/` folder.
 - [x] Done: labels and Phase 1 issues created on GitHub
 - [x] Done: GitHub Project for the repo, with issues and PRs auto-added and saved views filtered by the `stage:*` labels, plus a `label:needs-me` inbox. Labels stay the source of truth; sessions never edit the project, since cloud sessions can't reach the Projects API.
-- [ ] Connect the repo in Claude Code on the web. In the environment settings, allow network access for npm and Firebase, and add Java 17+ to the setup script so the Firestore emulator runs. Java 21 is preinstalled. `gh` works in sessions through `gh api` REST calls only (GraphQL is blocked; see `CLAUDE.md`).
+- [x] Done: repo connected in Claude Code on the web, with `api.open-meteo.com` and `geocoding-api.open-meteo.com` under Allowed domains (npm and Google/Firebase hosts already work). Java 21 is preinstalled. `gh` works in sessions through `gh api` REST calls only (GraphQL is blocked; see `CLAUDE.md`).
 
 ## B. Session 1: tooling (plan §0) 🤖 + 👤
 
@@ -29,6 +29,7 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 
 ## D. Session 2: Firebase + data model (plan §1–2) 🤖
 
+- [ ] 👤 Before this session, add `npm install -g firebase-tools` to the environment's setup script (cloud environment menu → Edit → Setup script). Optionally also `firebase setup:emulators:firestore` and `firebase setup:emulators:ui` to pre-download the emulators.
 - [ ] `firebase init` for Hosting (public dir `dist`, SPA rewrite), Firestore, Functions and the emulators.
 - [ ] Security rules: only allow-listed household accounts can read or write. Add rules tests in the emulator.
 - [ ] Add the data-model types and Firestore helpers for the collections in plan §2.
