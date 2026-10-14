@@ -9,7 +9,7 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 - [x] Commit and push the `.claude/commands/` folder.
 - [x] Done: labels and Phase 1 issues created on GitHub
 - [ ] Optional: create a GitHub Project board for the repo, with columns grouped by the `stage:*` labels, and a saved filter `label:needs-me` as your inbox.
-- [ ] Connect the repo in Claude Code on the web. In the environment settings, allow network access for npm and Firebase, and add Java 17+ to the setup script so the Firestore emulator runs. Check whether `gh` works in a session. If it doesn't, sessions will ask you to paste issue text.
+- [ ] Connect the repo in Claude Code on the web. In the environment settings, allow network access for npm and Firebase, and add Java 17+ to the setup script so the Firestore emulator runs. Java 21 is preinstalled. `gh` works in sessions through `gh api` REST calls only (GraphQL is blocked; see `CLAUDE.md`).
 
 ## B. Session 1: tooling (plan §0) 🤖 + 👤
 
