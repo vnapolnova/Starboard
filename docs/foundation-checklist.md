@@ -29,7 +29,7 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 
 ## D. Session 2: Firebase + data model (plan §1–2) 🤖
 
-- [ ] 👤 Before this session, add `npm install -g firebase-tools` to the environment's setup script (cloud environment menu → Edit → Setup script). Optionally also `firebase setup:emulators:firestore` and `firebase setup:emulators:ui` to pre-download the emulators.
+- [x] 👤 Done: `npm install -g firebase-tools` is in the environment's setup script (cloud environment menu → Edit → Setup script). Optionally also `firebase setup:emulators:firestore` and `firebase setup:emulators:ui` to pre-download the emulators.
 - [ ] `firebase init` for Hosting (public dir `dist`, SPA rewrite), Firestore, Functions and the emulators.
 - [ ] Security rules: only allow-listed household accounts can read or write. Add rules tests in the emulator.
 - [ ] Add the data-model types and Firestore helpers for the collections in plan §2.
