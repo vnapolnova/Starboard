@@ -22,3 +22,7 @@ playwright-report/
 Thumbs.db
 .vscode/*
 !.vscode/extensions.json
+
+# Firebase CLI agent skills (added by firebase init; Claude Code reads .claude/skills)
+.agents/
+skills-lock.json
