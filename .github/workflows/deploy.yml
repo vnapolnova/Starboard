@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.ready.outputs.ok == 'true' && hashFiles('package-lock.json') != ''
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - name: Build app

@@ -37,7 +37,7 @@ Open the interactive mockups in a browser:
 
 ## Develop locally
 
-Needs Node 22, Java 21 and `firebase-tools`.
+Needs Node 24.12 or later (the Firebase SDK requires it), Java 21 and `firebase-tools`. Cloud Functions still run on Node 22 (`functions/package.json`).
 
 ```sh
 npm install && npm --prefix functions install
