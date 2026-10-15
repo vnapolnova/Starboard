@@ -1,18 +1,19 @@
-/* Placeholder page until the App shell lands */
 #app {
   height: 100%;
 }
 
-.placeholder {
+/* Signed-out and "not on the list" screens */
+.gate {
   min-height: 100%;
   display: grid;
   place-content: center;
-  gap: var(--space-2);
+  justify-items: center;
+  gap: var(--space-3);
   padding: var(--space-6);
   text-align: center;
 }
 
-.placeholder h1 {
+.gate h1 {
   margin: 0;
   font-family: var(--display);
   font-size: 56px;
@@ -21,7 +22,33 @@
   color: var(--accent);
 }
 
-.placeholder p {
+.gate p {
   margin: 0;
+  max-width: 34ch;
   color: var(--muted);
+}
+
+.gate .code {
+  font-size: 13px;
+}
+
+/* Buttons, as in design/tablet-mockup.html */
+.btn {
+  border: 0;
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 10px 16px;
 }
