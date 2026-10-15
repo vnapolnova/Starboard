@@ -46,7 +46,7 @@ Header chips toggle each person's events on and off in the Today and Calendar vi
 
 Tabs: Today · Calendar · Meals · Grocery · Chores, plus Cleo's day (opened from the unicorn) and Explore (opened from the Nearby card).
 
-On a phone-sized screen (≤520px wide) the same shell uses the phone mockup's compact bar: the section title, the signed-in person's name, a small unicorn, and the person chips beneath. The big clock and weather are tablet-only.
+On a phone-sized screen (≤520px wide) the same shell uses the phone mockup's compact bar: the section title, the signed-in person's name, a small unicorn, and the person chips beneath. The chips keep their tablet size and wrap onto a second row when the names don't fit, so tap targets never shrink. The big clock and weather are tablet-only.
 
 ### Today
 
