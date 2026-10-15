@@ -1,0 +1,57 @@
+rules_version = '2';
+
+// Only allow-listed household accounts can read or write (spec §6, plan §1).
+// The allow-list is households/{hid}.allowedEmails, lowercase. The seed script
+// sets it with the Admin SDK; clients can never change it, so nobody can lock
+// the family out or add themselves.
+//
+// Phone-only actions (delete, setup, settings) are a UI rule, not a security
+// rule: the tablet and the phones sign in with accounts on the same list.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function email() {
+      return request.auth.token.email.lower();
+    }
+
+    function signedIn() {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email_verified == true;
+    }
+
+    function isMember(hid) {
+      return signedIn()
+        && email() in get(/databases/$(database)/documents/households/$(hid)).data.allowedEmails;
+    }
+
+    function appCollections() {
+      return ['members', 'settings', 'eventOverrides', 'chores', 'choreCompletions',
+              'grocery', 'routines', 'routineOverrides', 'stickers'];
+    }
+
+    match /households/{hid} {
+      // The client finds its household with
+      // where('allowedEmails', 'array-contains', email).
+      allow read: if signedIn() && email() in resource.data.allowedEmails;
+      allow write: if false;
+
+      // Mirrored from Google Calendar by a Cloud Function (Admin SDK).
+      match /events/{eventId} {
+        allow read: if isMember(hid);
+        allow write: if false;
+      }
+
+      // Undo marks an entry undone; the log itself is never deleted.
+      match /activity/{logId} {
+        allow read, create, update: if isMember(hid);
+        allow delete: if false;
+      }
+
+      // Everything else the app reads and writes. Collections not listed are denied.
+      match /{coll}/{docId} {
+        allow read, write: if isMember(hid) && coll in appCollections();
+      }
+    }
+  }
+}

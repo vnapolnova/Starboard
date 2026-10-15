@@ -6,3 +6,5 @@ design
 features
 .github
 *.md
+functions/lib
+.emulator-data

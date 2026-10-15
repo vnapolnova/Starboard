@@ -1,0 +1,78 @@
+{
+  "householdId": "home",
+  "household": {
+    "name": "Our family",
+    "allowedEmails": ["alice@example.com", "bob@example.com", "kitchen-tablet@example.com"]
+  },
+  "members": [
+    {
+      "id": "alice",
+      "name": "Alice",
+      "color": "p1",
+      "emails": ["alice@example.com"],
+      "nicknames": ["Mom"],
+      "isKid": false
+    },
+    {
+      "id": "bob",
+      "name": "Bob",
+      "color": "p2",
+      "emails": ["bob@example.com"],
+      "nicknames": ["Dad"],
+      "isKid": false
+    },
+    {
+      "id": "cleo",
+      "name": "Cleo",
+      "color": "kid",
+      "emails": ["cleo@example.com"],
+      "nicknames": [],
+      "isKid": true
+    }
+  ],
+  "settings": {
+    "weather": { "place": "Springfield", "lat": 39.7817, "lon": -89.6501, "unit": "F" },
+    "screen": { "wake": "06:15", "dim": "20:45", "off": "22:00" }
+  },
+  "chores": [
+    { "id": "dishwasher", "name": "Empty the dishwasher", "memberId": "alice", "repeat": "daily" },
+    { "id": "trash", "name": "Take out the trash", "memberId": "bob", "repeat": "weekly" },
+    {
+      "id": "toys",
+      "name": "Put toys away",
+      "memberId": "cleo",
+      "repeat": "daily",
+      "pic": "🧸"
+    },
+    {
+      "id": "fish",
+      "name": "Feed the fish",
+      "memberId": "cleo",
+      "repeat": "daily",
+      "pic": "🐟"
+    }
+  ],
+  "routines": {
+    "weekday": [
+      { "name": "Wake up", "pic": "☀️", "start": "06:30" },
+      { "name": "Breakfast", "pic": "🥣", "start": "07:00" },
+      { "name": "Teeth & get ready", "pic": "🪥", "start": "07:45" },
+      { "name": "Daycare", "pic": "🎨", "start": "08:00" },
+      { "name": "Pickup", "pic": "🚗", "start": "16:00" },
+      { "name": "Dinner", "pic": "🌮", "start": "17:00" },
+      { "name": "Snack", "pic": "🍎", "start": "19:00" },
+      { "name": "Bath", "pic": "🛁", "start": "19:30" },
+      { "name": "Bedtime", "pic": "🌙", "start": "20:20" }
+    ],
+    "weekend": [
+      { "name": "Wake up", "pic": "☀️", "start": "06:30" },
+      { "name": "Breakfast", "pic": "🥣", "start": "07:00" },
+      { "name": "Lunch", "pic": "🥪", "start": "11:00" },
+      { "name": "Nap", "pic": "😴", "start": "12:15" },
+      { "name": "Dinner", "pic": "🌮", "start": "17:00" },
+      { "name": "Snack", "pic": "🍎", "start": "19:00" },
+      { "name": "Bath", "pic": "🛁", "start": "19:30" },
+      { "name": "Bedtime", "pic": "🌙", "start": "20:20" }
+    ]
+  }
+}

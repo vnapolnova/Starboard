@@ -10,25 +10,33 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "shoot": "node scripts/shoot.mjs"
+    "shoot": "node scripts/shoot.mjs",
+    "test": "vitest run",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-starboard \"vitest run tests/rules\"",
+    "emulators": "npm --prefix functions run build && firebase emulators:start --project demo-starboard --import .emulator-data --export-on-exit",
+    "seed": "node scripts/seed.mjs"
   },
   "dependencies": {
+    "firebase": "^13.0.0",
     "preact": "^11.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@firebase/rules-unit-testing": "^6.0.0",
     "@preact/preset-vite": "^2.10.6",
     "@types/node": "^22.20.5",
     "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
+    "firebase-admin": "^14.5.0",
     "globals": "^17.13.0",
     "playwright": "1.56.1",
     "prettier": "^3.9.10",
     "typescript": "~5.9",
     "typescript-eslint": "^8.71.2",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
   },
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": ">=24.12.0"
   }
 }
