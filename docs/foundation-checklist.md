@@ -39,7 +39,7 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 - [ ] 👤 Add the six `VITE_FIREBASE_*` values from `.env.local` as repo variables (Settings → Secrets and variables → Actions → Variables).
 - [x] Google sign-in on preview channels: decided, previews are for visual review only; sign-in is tested on the emulators and the live URL (spec §1, Previews).
 - [ ] Open a PR. Check that `preview.yml` posts a working preview URL, and that `/_mockups/design/tablet-mockup.html` loads.
-- [ ] 👤 Copy `seed.example.json` to `seed.local.json`, fill in the real family, the tablet's account and the location, then run `npm run seed -- --prod` (after `gcloud auth application-default login`). Deploy the rules with `firebase deploy --only firestore`.
+- [x] 👤 Copy `seed.example.json` to `seed.local.json`, fill in the real family, the tablet's account and the location, then run `npm run seed -- --prod` (after `gcloud auth application-default login`). Deploy the rules with `firebase deploy --only firestore`.
 
 ## E. Pipeline on
 
