@@ -42,5 +42,10 @@
   "allowScripts": {
     "@firebase/util@1.15.3": true,
     "protobufjs@7.6.6": true
+  },
+  "overrides": {
+    "@firebase/firestore": {
+      "@grpc/grpc-js": "^1.14.6"
+    }
   }
 }
