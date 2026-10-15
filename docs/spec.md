@@ -31,7 +31,7 @@ Starboard is a Skylight-style family dashboard for the kitchen, with a phone com
 
 Alice, Bob and Cleo are placeholder names used in this spec, the mockups and the issues. The app reads real names from Firestore (`members`), so "Cleo's day" and "Cleo's pick" show the kid's actual name.
 
-Header chips toggle each person's events on and off in the Today and Calendar views.
+Header chips toggle each person's events on and off in the Today and Calendar views. The chips come from `members` (parents, then the kid, by color slot) plus a fixed Family chip. Filters are view state on that device: they carry across tabs, aren't saved to Firestore, and reset to all-on on reload.
 
 ## 3. Look & feel
 
@@ -45,6 +45,8 @@ Header chips toggle each person's events on and off in the Today and Calendar vi
 ## 4. Tablet screens
 
 Tabs: Today · Calendar · Meals · Grocery · Chores, plus Cleo's day (opened from the unicorn) and Explore (opened from the Nearby card).
+
+On a phone-sized screen (≤520px wide) the same shell uses the phone mockup's compact bar: the section title, the signed-in person's name, a small unicorn, and the person chips beneath. The big clock and weather are tablet-only.
 
 ### Today
 
