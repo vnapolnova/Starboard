@@ -13,8 +13,8 @@
 
 ## 1. Firebase project
 
-- [ ] Create the Firebase project and enable Auth with the Google provider, plus Firestore and Hosting.
-- [ ] Upgrade to the Blaze plan. Cloud Functions that call Google APIs require it, and normal family use should stay within the free tier.
+- [x] Create the Firebase project and enable Auth with the Google provider, plus Firestore and Hosting.
+- [x] Upgrade to the Blaze plan. Cloud Functions that call Google APIs require it, and normal family use should stay within the free tier.
 - [ ] Write security rules: only allow-listed household accounts can read and write. The tablet signs in once with a household Google account.
 
 ## 2. Data model (Firestore)
