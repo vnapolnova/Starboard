@@ -8,7 +8,7 @@
     "build:watch": "tsc --watch"
   },
   "engines": {
-    "node": "22"
+    "node": "24"
   },
   "dependencies": {
     "firebase-admin": "^14.5.0",
