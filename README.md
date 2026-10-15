@@ -35,6 +35,21 @@ Open the interactive mockups in a browser:
 - Open-Meteo for weather.
 - Fully Kiosk Browser on a Galaxy Tab S6 Lite.
 
+## Develop locally
+
+Needs Node 22, Java 21 and `firebase-tools`.
+
+```sh
+npm install && npm --prefix functions install
+cp .env.example .env.local   # set VITE_USE_EMULATORS=true to work offline
+npm run emulators            # Auth, Firestore, Functions, Hosting; UI at http://localhost:4000
+npm run seed                 # in another terminal: seeds the emulator from seed.local.json or seed.example.json
+npm run dev
+```
+
+- `npm run test:rules` runs the Firestore security rules tests on the emulator.
+- `npm run lint`, `npm run format:check` and `npm run build` are the fast checks.
+
 ## Status
 
-Design done. Phase 1 not started.
+Design done. Phase 1 foundation (tooling, Firebase, data model) in progress.

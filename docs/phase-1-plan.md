@@ -8,33 +8,33 @@
 
 - [x] Choose a lightweight front end: **Vite + Preact + TypeScript** (owner confirmed; see `docs/spec.md` §1).
 - [x] Add a linter, a formatter and a `.gitignore` that covers `.env*`, `seed.local.json` and `node_modules`.
-- [ ] Run `firebase init` for Hosting, Firestore, Functions and the emulators.
+- [x] Run `firebase init` for Hosting, Firestore, Functions and the emulators.
 - [x] Port the design tokens (colors, fonts, spacing) from `design/tablet-mockup.html` into a shared stylesheet.
 
 ## 1. Firebase project
 
 - [x] Create the Firebase project and enable Auth with the Google provider, plus Firestore and Hosting.
 - [x] Upgrade to the Blaze plan. Cloud Functions that call Google APIs require it, and normal family use should stay within the free tier.
-- [ ] Write security rules: only allow-listed household accounts can read and write. The tablet signs in once with a household Google account.
+- [x] Write security rules: only allow-listed household accounts can read and write. The tablet signs in once with a household Google account.
 
 ## 2. Data model (Firestore)
 
 ```
-households/{hid}
+households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   members/{memberId}        name, color, emails[], nicknames[], isKid
   settings/main             weather {place, lat, lon, unit}, screen {wake, dim, off}
-  events/{eventId}          mirrored from Google Calendar: title, start, end, ownerIds[], ownerSource
+  events/{eventId}          mirrored from Google Calendar: title, start, end, allDay, ownerIds[], ownerSource
   eventOverrides/{eventId}  ownerIds[] (manual correction), special: bool, pic
   chores/{choreId}          name, memberId, repeat (daily|weekdays|weekly|once), pic
-  choreCompletions/{date_choreId}  doneAt, doneBy
-  grocery/{itemId}          name, category, source, done, addedAt
+  choreCompletions/{date_choreId}  date, choreId, doneAt, doneBy
+  grocery/{itemId}          name, category, source, addedBy, done, addedAt
   routines/{weekday|weekend} steps[] {name, pic, start}
   routineOverrides/{date}   steps[] (one-off changes for that day)
   stickers/{memberId}       monthly counts
-  activity/{logId}          ts, actor/device, action, before, after, undone
+  activity/{logId}          ts, actor {email, device}, action, path, before, after, undone
 ```
 
-- [ ] Write a seed script that reads `seed.local.json` (gitignored) and creates the members, chores and both routines.
+- [x] Write a seed script that reads `seed.local.json` (gitignored) and creates the members, chores and both routines.
 
 ## 3. Calendar sync (Cloud Function)
 

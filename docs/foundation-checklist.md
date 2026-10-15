@@ -31,13 +31,15 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 ## D. Session 2: Firebase + data model (plan §1–2) 🤖
 
 - [x] 👤 Done: `npm install -g firebase-tools` is in the environment's setup script (cloud environment menu → Edit → Setup script). Optionally also `firebase setup:emulators:firestore` and `firebase setup:emulators:ui` to pre-download the emulators.
-- [ ] `firebase init` for Firestore, Functions and the emulators. Hosting is already set up in `firebase.json`.
-- [ ] Security rules: only allow-listed household accounts can read or write. Add rules tests in the emulator.
-- [ ] Add the data-model types and Firestore helpers for the collections in plan §2.
-- [ ] A seed script that reads `seed.local.json` (gitignored), with a committed `seed.example.json` that uses placeholder names.
-- [ ] 👤 + 🤖 Pass the Firebase web config to CI builds: the owner adds the six `VITE_FIREBASE_*` values as repo variables, and the session exposes them to `npm run build` in `preview.yml` and `deploy.yml` (the config isn't secret).
-- [ ] Google sign-in on preview channels: preview URLs (`starboard-family--pr-NN-….web.app`) aren't authorized domains by default. Decide how to handle them (add per channel, or test sign-in on the live URL only).
+- [x] `firebase init` for Firestore, Functions and the emulators. Hosting is already set up in `firebase.json`.
+- [x] Security rules: only allow-listed household accounts can read or write. Add rules tests in the emulator (`npm run test:rules`).
+- [x] Add the data-model types and Firestore helpers for the collections in plan §2 (`src/data/`).
+- [x] A seed script that reads `seed.local.json` (gitignored), with a committed `seed.example.json` that uses placeholder names (`npm run seed`).
+- [x] 🤖 Pass the Firebase web config to CI builds: `preview.yml` and `deploy.yml` expose the six `VITE_FIREBASE_*` repo variables to `npm run build` (the config isn't secret).
+- [ ] 👤 Add the six `VITE_FIREBASE_*` values from `.env.local` as repo variables (Settings → Secrets and variables → Actions → Variables).
+- [x] Google sign-in on preview channels: decided, previews are for visual review only; sign-in is tested on the emulators and the live URL (spec §1, Previews).
 - [ ] Open a PR. Check that `preview.yml` posts a working preview URL, and that `/_mockups/design/tablet-mockup.html` loads.
+- [ ] 👤 Copy `seed.example.json` to `seed.local.json`, fill in the real family, the tablet's account and the location, then run `npm run seed -- --prod` (after `gcloud auth application-default login`). Deploy the rules with `firebase deploy --only firestore`.
 
 ## E. Pipeline on
 

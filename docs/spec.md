@@ -14,6 +14,8 @@ Starboard is a Skylight-style family dashboard for the kitchen, with a phone com
 | App | Web app (same code base for the tablet and phone layouts) |
 | Front end | Vite + Preact + TypeScript. Preact keeps the bundle small for the tablet, and components handle the shared shell, the six screens and live Firestore updates. ESLint + Prettier; design tokens in `src/styles/tokens.css`, with the same variable names as the mockups, plus named spacing (`--space-1…6`) and radius (`--radius-sm/--radius/--radius-lg/--radius-pill`) tokens. |
 | Hosting | Firebase Hosting |
+| Access | Only allow-listed Google accounts can sign in: the parents and the tablet's household account. The list is `allowedEmails` on the `households/{hid}` doc, set by the seed script and never editable from the app. Firestore rules enforce it, and keep calendar events read-only and the activity log undeletable. Phone-only actions are a UI rule, since every device signs in with an allow-listed account. |
+| Previews | PR preview channels are for visual review only: the signed-out screen and `/_mockups/`. Their URLs aren't authorized for Google sign-in, so sign-in and data are tested on the emulators locally and on the live URL after merge. |
 | Data | Firebase (Firestore with real-time sync, Auth with Google sign-in, Cloud Functions) |
 | Calendar | Google Calendar API, using the shared "Family" calendar |
 | Screen schedule | Wake at 6:15, dim at 8:45 pm, off at 10 pm. Motion wake through Fully Kiosk's camera. |
