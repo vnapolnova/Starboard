@@ -78,8 +78,8 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
 
 ## 6. Activity log and undo
 
-- [ ] Route every write through a single helper that also writes to `activity` (before and after values).
-- [ ] Tablet: show an Undo toast for 10 seconds after each change.
+- [x] Route every write through a single helper that also writes to `activity` (before and after values).
+- [x] Tablet: show an Undo toast for 10 seconds after each change.
 - [ ] Phone: a minimal "Recent changes" list with undo, plus check-off for chores and groceries.
 
 ## 7. Tablet setup

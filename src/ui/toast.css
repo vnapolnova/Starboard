@@ -1,0 +1,55 @@
+/* Toast from design/tablet-mockup.html, plus room for the Undo button */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 110px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  z-index: 20;
+  max-width: 90%;
+  text-align: center;
+}
+
+.toast.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Nothing to say: keep the empty pill out of the way. */
+.toast:empty {
+  visibility: hidden;
+}
+
+/* With Undo, the pill tightens on the right so the button sits inside it. */
+.toast:has(.toast-undo) {
+  padding: 8px 8px 8px 20px;
+}
+
+.toast-undo {
+  flex: none;
+  min-height: 48px;
+  min-width: 88px;
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* The accent outline vanishes on the ink pill, so use the page color. */
+.toast-undo:focus-visible {
+  outline-color: var(--bg);
+  outline-offset: 3px;
+}
