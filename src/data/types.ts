@@ -34,6 +34,8 @@ export interface Member {
 export interface Settings {
   weather: { place: string; lat: number; lon: number; unit: 'F' | 'C' };
   screen: { wake: ClockTime; dim: ClockTime; off: ClockTime };
+  /** Written by the calendar sync (spec §7). id and name are empty until it's found. */
+  calendar?: { id?: string; name?: string; status: 'ok' | 'not_found' | 'ambiguous' };
 }
 
 /** How an event's owners were worked out (spec §7). */
@@ -49,6 +51,15 @@ export interface CalendarEvent {
   /** Member IDs. Empty means Family. */
   ownerIds: string[];
   ownerSource: OwnerSource;
+}
+
+/** An event as the app shows it: the mirrored event with its override applied. */
+export interface EventView extends Omit<CalendarEvent, 'ownerSource'> {
+  id: string;
+  /** 'override' when a correction made in the app set the owners. */
+  ownerSource: OwnerSource | 'override';
+  special: boolean;
+  pic?: string;
 }
 
 /** households/{hid}/eventOverrides/{eventId}. Corrections made in the app, applied on read. */

@@ -163,18 +163,23 @@ Tabs: Recipes · Meal plan · Chores · Settings.
 Every event goes on the shared Family calendar. The app decides whose event it is in this order:
 
 1. **Guests.** Google account emails are mapped to Alice, Bob and Cleo. More than one guest means more than one color. The app reads the guest list, so it never needs to sign in as Cleo.
-2. **A name at the start of the title.** Names and nicknames like "Cleo –" or "Alice:" count, which works for events added by voice on the Hub. A name in the middle of the title does not count.
+2. **A name at the start of the title.** Names and nicknames like "Cleo –" or "Alice:" count, which works for events added by voice on the Hub. A name in the middle of the title does not count. The name has to be a whole word ("Cleopatra" is not Cleo), case doesn't matter, and several names joined at the start ("Alice & Bob:", "Dad and Cleo –") give several owners.
 3. **Otherwise, Family.**
 
 Finding the calendar:
 
 - Nobody copies the calendar ID by hand. If `settings/main.calendar.id` is empty, the sync function lists the calendars the consented account can see and picks the one named "Family" (case-insensitive), then saves its ID and name to `settings/main.calendar`.
-- If no calendar or more than one matches, it saves nothing and sets `calendar.status` to `not_found` or `ambiguous`, so the app can say so.
+- If no calendar or more than one matches, it saves nothing and sets `calendar.status` to `not_found` or `ambiguous`, so the app can say so. Once found, `calendar.status` is `ok`.
 - Later, phone Settings gets a calendar picker that lists the same calendars and overwrites the saved choice. The `calendar.readonly` consent already covers listing.
+
+Syncing:
+
+- Every 5 minutes the sync function mirrors the Family calendar into `events`, from 7 days back to 14 days ahead, so today's past events and the start of the week still show. Recurring events are stored per instance; cancelled events, and events no longer in that window, are removed.
+- All-day events are stored as local midnights in the calendar's time zone.
 
 Additional rules:
 
-- Tapping an event lets you correct the person. The correction is stored in Firebase against the event ID.
+- Tapping an event lets you correct the person. The correction is stored in Firebase against the event ID (`eventOverrides`) and wins over the detected owners when the app reads events.
 - Optionally, each adult can connect their own calendar. Those events show as theirs, or as "Busy" on the kitchen screen for privacy.
 - Personal to-dos: each adult decides whether to add them to the app.
 
