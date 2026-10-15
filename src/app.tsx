@@ -24,7 +24,7 @@ export function App() {
       ) : session.status === 'loading' ? null : (
         <SignIn
           user={session.status === 'signedOut' ? undefined : session.user}
-          error={session.status === 'error'}
+          error={session.status === 'error' ? session.code : undefined}
         />
       )}
       <Toast />

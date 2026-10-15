@@ -19,7 +19,7 @@ export type Session =
   | { status: 'loading' }
   | { status: 'signedOut' }
   | { status: 'notAllowed'; user: User }
-  | { status: 'error'; user: User }
+  | { status: 'error'; user: User; code: string }
   | { status: 'ready'; user: User; hid: string };
 
 export function useSession(): Session {
@@ -34,9 +34,12 @@ export function useSession(): Session {
           setSession(
             home ? { status: 'ready', user, hid: home.id } : { status: 'notAllowed', user },
           );
-        } catch {
-          // Accounts not on a list just find nothing, so this is a real failure.
-          setSession({ status: 'error', user });
+        } catch (e) {
+          // Accounts not on a list just find nothing, so this is a real failure:
+          // offline, or the project's rules or data aren't set up.
+          const code = (e as { code?: string }).code ?? 'unknown';
+          console.error('Household lookup failed', e);
+          setSession({ status: 'error', user, code });
         }
       }),
     [],

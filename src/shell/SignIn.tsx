@@ -2,7 +2,7 @@ import type { User } from 'firebase/auth';
 import { signIn, signOutHere } from '../data/session';
 
 /** Shown before sign-in, and to Google accounts that aren't on the household list. */
-export function SignIn({ user, error }: { user?: User; error?: boolean }) {
+export function SignIn({ user, error }: { user?: User; error?: string }) {
   return (
     <main class="gate">
       <h1>Starboard</h1>
@@ -21,6 +21,7 @@ export function SignIn({ user, error }: { user?: User; error?: boolean }) {
               ? "Couldn't load your household. Check the connection and try again."
               : `${user.email} isn't on this household's list. Ask a parent to add it.`}
           </p>
+          {error && <p class="code">Error: {error}</p>}
           <button type="button" class="btn ghost" onClick={() => void signOutHere()}>
             Use another account
           </button>

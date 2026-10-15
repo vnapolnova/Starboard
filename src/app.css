@@ -28,6 +28,10 @@
   color: var(--muted);
 }
 
+.gate .code {
+  font-size: 13px;
+}
+
 /* Buttons, as in design/tablet-mockup.html */
 .btn {
   border: 0;
