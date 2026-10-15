@@ -48,6 +48,7 @@ npm run dev
 ```
 
 - `npm run test:rules` runs the Firestore security rules tests on the emulator.
+- `npm run test:functions` runs the calendar sync against the Firestore emulator with fixture events.
 - `npm run lint`, `npm run format:check` and `npm run build` are the fast checks.
 
 ## Status
