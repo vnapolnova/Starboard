@@ -150,7 +150,8 @@ Tabs: Recipes · Meal plan · Chores · Settings.
 
 - **Open on the tablet:** everyday actions, such as checking off, adding items, and adding events to the calendar.
 - **Activity log:** every change is saved to Firebase with who or which device made it, what changed and when.
-- **Undo on the tablet:** an **Undo** toast stays up for 10 seconds after each change.
+- **Undo on the tablet:** an **Undo** toast stays up for 10 seconds after each change. A newer change replaces the toast, and tapping Undo shows "Undone".
+- **How undo works:** each log entry keeps the changed doc's value before and after. Undo puts the before value back (removing the doc if the change created it) and marks the entry undone. Undoing the same entry again does nothing.
 - **Undo on the phone:** a **Recent changes** list with undo for each entry.
 - **Phone only:** deleting, editing recipes, setting up chores and changing settings.
 
