@@ -40,13 +40,13 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
 ## 3. Calendar sync (Cloud Function)
 
 - [x] Do a one-time OAuth consent for the Family calendar with the `calendar.readonly` scope, storing the refresh token in Secret Manager.
-- [ ] Add a scheduled function, every 5 minutes, that:
+- [x] Add a scheduled function, every 5 minutes, that:
   - finds the Family calendar if `settings/main.calendar.id` is empty (spec §7),
-  - fetches the next 14 days of events,
+  - fetches the next 14 days of events (and the past 7, for today and the week view),
   - works out the owner(s): guest emails first, then a name or nickname at the start of the title, otherwise Family,
   - writes the results to `events`.
-- [ ] Apply `eventOverrides` on read in the client.
-- [ ] Write unit tests for the owner detection, including that a name in the middle of the title doesn't match.
+- [x] Apply `eventOverrides` on read in the client.
+- [x] Write unit tests for the owner detection, including that a name in the middle of the title doesn't match.
 
 ## 4. Weather
 
