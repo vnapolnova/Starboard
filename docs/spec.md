@@ -141,6 +141,7 @@ Tabs: Recipes · Meal plan · Chores · Settings.
 - **Settings:**
   - Weather: location search by city or ZIP. The list disambiguates places with the same name, for example Rochester, MI vs NY vs MN. There's also an option to use the tablet's location.
   - Temperature in °F or °C, with a live preview.
+  - Calendar: pick which Google Calendar to sync, from the calendars the consented account can see. Defaults to the one found automatically (§7).
   - Still to add: event settings, family members and the screen schedule.
 - **When out:**
   - The phone can check off chores and grocery items.
@@ -161,6 +162,12 @@ Every event goes on the shared Family calendar. The app decides whose event it i
 1. **Guests.** Google account emails are mapped to Alice, Bob and Cleo. More than one guest means more than one color. The app reads the guest list, so it never needs to sign in as Cleo.
 2. **A name at the start of the title.** Names and nicknames like "Cleo –" or "Alice:" count, which works for events added by voice on the Hub. A name in the middle of the title does not count.
 3. **Otherwise, Family.**
+
+Finding the calendar:
+
+- Nobody copies the calendar ID by hand. If `settings/main.calendar.id` is empty, the sync function lists the calendars the consented account can see and picks the one named "Family" (case-insensitive), then saves its ID and name to `settings/main.calendar`.
+- If no calendar or more than one matches, it saves nothing and sets `calendar.status` to `not_found` or `ambiguous`, so the app can say so.
+- Later, phone Settings gets a calendar picker that lists the same calendars and overwrites the saved choice. The `calendar.readonly` consent already covers listing.
 
 Additional rules:
 

@@ -22,7 +22,8 @@
 ```
 households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   members/{memberId}        name, color, emails[], nicknames[], isKid
-  settings/main             weather {place, lat, lon, unit}, screen {wake, dim, off}
+  settings/main             weather {place, lat, lon, unit}, screen {wake, dim, off},
+                            calendar {id, name, status}  (found automatically, see spec §7)
   events/{eventId}          mirrored from Google Calendar: title, start, end, allDay, ownerIds[], ownerSource
   eventOverrides/{eventId}  ownerIds[] (manual correction), special: bool, pic
   chores/{choreId}          name, memberId, repeat (daily|weekdays|weekly|once), pic
@@ -38,8 +39,9 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
 
 ## 3. Calendar sync (Cloud Function)
 
-- [ ] Do a one-time OAuth consent for the Family calendar with the `calendar.readonly` scope, storing the refresh token in Secret Manager.
+- [x] Do a one-time OAuth consent for the Family calendar with the `calendar.readonly` scope, storing the refresh token in Secret Manager.
 - [ ] Add a scheduled function, every 5 minutes, that:
+  - finds the Family calendar if `settings/main.calendar.id` is empty (spec §7),
   - fetches the next 14 days of events,
   - works out the owner(s): guest emails first, then a name or nickname at the start of the title, otherwise Family,
   - writes the results to `events`.
