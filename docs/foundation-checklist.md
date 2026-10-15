@@ -19,9 +19,10 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 
 ## C. Firebase project (plan §1) 👤
 
-- [ ] Create the Firebase project. Enable Auth with Google sign-in, Firestore and Hosting.
-- [ ] Upgrade to the Blaze plan.
-- [ ] Run `firebase init` in Session 2 (below), then run `firebase init hosting:github`:
+- [x] Create the Firebase project (`starboard-family`). Enable Auth with Google sign-in, Firestore and Hosting.
+- [x] Upgrade to the Blaze plan.
+- [x] Register a web app (Project settings → Your apps) and copy its config into a local `.env.local` (keys as in `.env.example`).
+- [x] Run `firebase init hosting` (done by hand: public dir `dist`, SPA rewrite), then `firebase init hosting:github`:
   - It creates a service account and a repo secret named something like `FIREBASE_SERVICE_ACCOUNT_<PROJECT>`.
   - **Delete the two workflow files it generates.** This repo already has `preview.yml` and `deploy.yml`.
   - In the repo's Settings → Variables, set `FIREBASE_PROJECT_ID` and set `FIREBASE_SA_SECRET` to the secret's exact name.
@@ -30,10 +31,12 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 ## D. Session 2: Firebase + data model (plan §1–2) 🤖
 
 - [x] 👤 Done: `npm install -g firebase-tools` is in the environment's setup script (cloud environment menu → Edit → Setup script). Optionally also `firebase setup:emulators:firestore` and `firebase setup:emulators:ui` to pre-download the emulators.
-- [ ] `firebase init` for Hosting (public dir `dist`, SPA rewrite), Firestore, Functions and the emulators.
+- [ ] `firebase init` for Firestore, Functions and the emulators. Hosting is already set up in `firebase.json`.
 - [ ] Security rules: only allow-listed household accounts can read or write. Add rules tests in the emulator.
 - [ ] Add the data-model types and Firestore helpers for the collections in plan §2.
 - [ ] A seed script that reads `seed.local.json` (gitignored), with a committed `seed.example.json` that uses placeholder names.
+- [ ] 👤 + 🤖 Pass the Firebase web config to CI builds: the owner adds the six `VITE_FIREBASE_*` values as repo variables, and the session exposes them to `npm run build` in `preview.yml` and `deploy.yml` (the config isn't secret).
+- [ ] Google sign-in on preview channels: preview URLs (`starboard-family--pr-NN-….web.app`) aren't authorized domains by default. Decide how to handle them (add per channel, or test sign-in on the live URL only).
 - [ ] Open a PR. Check that `preview.yml` posts a working preview URL, and that `/_mockups/design/tablet-mockup.html` loads.
 
 ## E. Pipeline on
