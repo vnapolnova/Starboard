@@ -2,7 +2,10 @@
 // Screenshots for visual review: tablet 600x1000 and phone 390x844, light and dark.
 //
 //   node scripts/shoot.mjs <url-or-html-file> <name> [--only tablet|phone] [--hash <#route>]
-//                          [--click <selector>] [--suffix <label>]
+//                          [--click <selector>] [--suffix <label>] [--wait <selector>]
+//
+// --wait is for the live app: Firestore keeps a channel open, so "networkidle"
+// never comes. The page is shot once the selector is visible instead.
 //
 // Output: docs/shots/<name>/<device>-<theme>[-<suffix>].png
 // Local files whose name contains "tablet" or "phone" only get that device.
@@ -29,6 +32,7 @@ const only = flag('--only');
 const hash = flag('--hash') ?? '';
 const click = flag('--click'); // CSS selector to tap before the shot, e.g. a tab button
 const suffix = flag('--suffix');
+const wait = flag('--wait'); // CSS selector that means the page has its data
 const [target, name] = args;
 
 if (!target || !name) {
@@ -73,7 +77,12 @@ try {
         ...rest,
       });
       const page = await ctx.newPage();
-      await page.goto(url, { waitUntil: 'networkidle' });
+      if (wait) {
+        await page.goto(url, { waitUntil: 'load' });
+        await page.waitForSelector(wait);
+      } else {
+        await page.goto(url, { waitUntil: 'networkidle' });
+      }
       await page.evaluate(() => document.fonts?.ready);
       if (click) {
         await page.click(click);
