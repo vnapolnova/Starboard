@@ -26,6 +26,20 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
   - It creates a service account and a repo secret named something like `FIREBASE_SERVICE_ACCOUNT_<PROJECT>`.
   - **Delete the two workflow files it generates.** This repo already has `preview.yml` and `deploy.yml`.
   - In the repo's Settings → Variables, set `FIREBASE_PROJECT_ID` and set `FIREBASE_SA_SECRET` to the secret's exact name.
+- [ ] Let CI deploy Cloud Functions (`.github/workflows/deploy-functions.yml`, which runs on pushes to `main` that touch `functions/`, or by hand from the Actions tab). It uses the same service account as `deploy.yml`, which only has Hosting roles. In Google Cloud console → IAM, give that account (`github-action-…@starboard-family.iam.gserviceaccount.com`) these roles:
+  - Cloud Functions Admin, Cloud Run Admin, Cloud Scheduler Admin and Artifact Registry Administrator, to create the scheduled function.
+  - Service Account User, so the function can run as the default compute service account.
+  - Secret Manager Admin, so the deploy can let the function read the `GCAL_*` secrets.
+  - Service Usage Admin, so the first deploy can turn on the APIs it needs. After that first deploy, Service Usage Consumer is enough.
+
+  Or from a terminal, with `SA` set to the account's email:
+  ```
+  for r in cloudfunctions.admin run.admin cloudscheduler.admin artifactregistry.admin \
+           iam.serviceAccountUser secretmanager.admin serviceusage.serviceUsageAdmin; do
+    gcloud projects add-iam-policy-binding starboard-family --member "serviceAccount:$SA" --role "roles/$r"
+  done
+  ```
+  Then run **Deploy functions** from the Actions tab.
 - [ ] Do issue "Manual: Calendar OAuth consent", whenever suits you. It only blocks the calendar going live.
 
 ## D. Session 2: Firebase + data model (plan §1–2) 🤖
