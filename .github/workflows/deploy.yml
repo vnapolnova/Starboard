@@ -1,5 +1,5 @@
 # Deploys Hosting to the live channel on every push to main (that is, after you merge).
-# Functions and Firestore rules are deployed by hand for now: firebase deploy --only functions,firestore
+# Functions deploy from deploy-functions.yml. Firestore rules are deployed by hand: firebase deploy --only firestore
 name: Deploy
 
 on:

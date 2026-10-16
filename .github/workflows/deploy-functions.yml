@@ -1,0 +1,66 @@
+# Deploys Cloud Functions (the calendar sync) on every push to main that touches
+# them, and on demand from the Actions tab (Run workflow).
+# Uses the same project variable and service-account secret as deploy.yml. That
+# account needs extra roles to deploy functions: see docs/foundation-checklist.md §C.
+name: Deploy functions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'functions/**'
+      - 'firebase.json'
+      - '.github/workflows/deploy-functions.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-functions
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Firebase is set up
+        id: ready
+        run: |
+          if [ -f firebase.json ] && [ -n "${{ vars.FIREBASE_PROJECT_ID }}" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping functions deploy: firebase.json or FIREBASE_PROJECT_ID not set yet."
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.ready.outputs.ok == 'true'
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            functions/package-lock.json
+
+      - name: Install and test
+        if: steps.ready.outputs.ok == 'true'
+        run: |
+          npm ci
+          npm --prefix functions ci
+          npx vitest run functions/src
+
+      - uses: google-github-actions/auth@v2
+        if: steps.ready.outputs.ok == 'true'
+        with:
+          credentials_json: ${{ secrets[vars.FIREBASE_SA_SECRET || 'FIREBASE_SERVICE_ACCOUNT'] }}
+
+      # The functions predeploy step in firebase.json builds functions/lib.
+      # --force lets a non-interactive deploy set the Artifact Registry cleanup policy.
+      - name: Deploy
+        if: steps.ready.outputs.ok == 'true'
+        run: >
+          npx --yes firebase-tools@15.34.0 deploy --only functions
+          --project "${{ vars.FIREBASE_PROJECT_ID }}" --non-interactive --force
