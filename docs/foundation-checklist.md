@@ -29,17 +29,25 @@ Phase 1 plan steps 0–2 are done directly, in two or three attended sessions, b
 - [ ] Let CI deploy Cloud Functions (`.github/workflows/deploy-functions.yml`, which runs on pushes to `main` that touch `functions/`, or by hand from the Actions tab). It uses the same service account as `deploy.yml`, which only has Hosting roles. In Google Cloud console → IAM, give that account (`github-action-…@starboard-family.iam.gserviceaccount.com`) these roles:
   - Cloud Functions Admin, Cloud Run Admin, Cloud Scheduler Admin and Artifact Registry Administrator, to create the scheduled function.
   - Service Account User, so the function can run as the default compute service account.
-  - Secret Manager Admin, so the deploy can let the function read the `GCAL_*` secrets.
+  - Secret Manager Viewer, so the deploy can check the `GCAL_*` secrets and pin their versions.
   - Service Usage Admin, so the first deploy can turn on the APIs it needs. After that first deploy, Service Usage Consumer is enough.
 
   Or from a terminal, with `SA` set to the account's email:
   ```
   for r in cloudfunctions.admin run.admin cloudscheduler.admin artifactregistry.admin \
-           iam.serviceAccountUser secretmanager.admin serviceusage.serviceUsageAdmin; do
+           iam.serviceAccountUser secretmanager.viewer serviceusage.serviceUsageAdmin; do
     gcloud projects add-iam-policy-binding starboard-family --member "serviceAccount:$SA" --role "roles/$r"
   done
   ```
-  Then run **Deploy functions** from the Actions tab.
+  Also, once, on each of the three `GCAL_*` secrets in Secret Manager, give the function's runtime account (`<project-number>-compute@developer.gserviceaccount.com`) **Secret Manager Secret Accessor**. Then the deploy has no secret permissions to change, so the GitHub account doesn't need Secret Manager Admin.
+  ```
+  for s in GCAL_CLIENT_ID GCAL_CLIENT_SECRET GCAL_REFRESH_TOKEN; do
+    gcloud secrets add-iam-policy-binding $s --project starboard-family \
+      --member "serviceAccount:$(gcloud projects describe starboard-family --format='value(projectNumber)')-compute@developer.gserviceaccount.com" \
+      --role roles/secretmanager.secretAccessor
+  done
+  ```
+  Then merge, or run **Deploy functions** from the Actions tab.
 - [ ] Do issue "Manual: Calendar OAuth consent", whenever suits you. It only blocks the calendar going live.
 
 ## D. Session 2: Firebase + data model (plan §1–2) 🤖
