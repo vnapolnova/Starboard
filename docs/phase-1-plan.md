@@ -87,7 +87,7 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
 - [ ] Deploy to Firebase Hosting.
 - [ ] Configure Fully Kiosk:
   - start URL, kiosk mode, autostart on boot,
-  - wake at 6:15, dim at 8:45 pm, screen off at 10 pm,
+  - wake at 6:15, dim at 7:45 pm, screen off at 9 pm,
   - motion detection for wake,
   - allow microphone access.
 - [ ] Test on the Tab S6 Lite in portrait: tap targets, readability from about 2 m, performance.

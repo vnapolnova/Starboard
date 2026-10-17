@@ -33,7 +33,7 @@ Starboard is a family kitchen dashboard for two parents and a toddler.
   3. One-off changes for today.
   - The current step is the latest step whose start time has passed.
 - **Grocery voice:** the tablet mic through the Web Speech API. The Google Hub/Keep sync is a later experiment and not in scope.
-- **Screen:** wake at 6:15, dim at 8:45 pm, off at 10 pm, with motion wake handled by Fully Kiosk.
+- **Screen:** wake at 6:15, dim at 7:45 pm, off at 9 pm, with motion wake handled by Fully Kiosk.
 - **Phases:**
   1. Calendar, Today, weather, chores, grocery, Cleo's day.
   2. Meals and recipes with link import, phone Manage screens, Settings.
