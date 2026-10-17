@@ -1,0 +1,116 @@
+/* Today, as #v-today in design/tablet-mockup.html */
+
+main section + section {
+  margin-top: var(--space-6);
+}
+
+/* Agenda */
+.agenda {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ev {
+  display: grid;
+  grid-template-columns: 76px 8px 1fr;
+  gap: 0 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+
+.ev .time {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.ev .bar {
+  align-self: stretch;
+  border-radius: 4px;
+}
+
+.ev .what {
+  font-weight: 700;
+  font-size: 19px;
+}
+
+.ev .who {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.ev.past {
+  opacity: 0.4;
+}
+
+.now {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--kid);
+  margin: -2px 0;
+}
+
+.now::after {
+  content: '';
+  flex: 1;
+  height: 5px;
+  border-radius: 5px;
+  background: var(--rainbow);
+}
+
+.agenda-end {
+  padding: 12px 0;
+}
+
+/* Dinner and chores side by side; stacked on a phone */
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.phone .two {
+  grid-template-columns: 1fr;
+}
+
+/* Grocery strip */
+.grocery-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.grocery-strip .count {
+  font-family: var(--display);
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+  min-width: 1ch;
+}
+
+.grocery-strip .items {
+  flex: 1;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.phone .ev {
+  grid-template-columns: 64px 6px 1fr;
+  gap: 0 12px;
+}
+
+.phone .ev .time {
+  font-size: 17px;
+}
+
+.phone .ev .what {
+  font-size: 17px;
+}

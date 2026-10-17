@@ -52,3 +52,118 @@
   border: 2px solid var(--accent);
   padding: 10px 16px;
 }
+
+.mic {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  padding: 0;
+  justify-content: center;
+  flex: none;
+}
+
+.mic svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Cards, as .panel in design/tablet-mockup.html */
+.panel {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+}
+
+.panel h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 19px;
+  margin: 0 0 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.panel h3 button {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-size: 14px;
+  font-family: var(--body);
+  font-weight: 700;
+  padding: 4px;
+}
+
+/* Check-off rows for chores and groceries (.chk in the mockup) */
+.chk {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 8px 0;
+  font-size: 17px;
+  color: var(--ink);
+  position: relative;
+}
+
+.chk .box {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--muted);
+  display: grid;
+  place-items: center;
+}
+
+.chk[aria-checked='true'] .box {
+  background: var(--p2);
+  border-color: var(--p2);
+}
+
+.chk[aria-checked='true'] .box::after {
+  content: '';
+  width: 7px;
+  height: 12px;
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
+.chk.kid[aria-checked='true'] .box {
+  background: var(--kid);
+  border-color: var(--kid);
+}
+
+.chk.kid[aria-checked='true'] .box::after {
+  content: '★';
+  border: 0;
+  transform: none;
+  width: auto;
+  height: auto;
+  color: #ffe066;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.chk[aria-checked='true'] .lbl {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.chk .tag {
+  margin-left: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.chk .emo {
+  font-size: 24px;
+  line-height: 1;
+}

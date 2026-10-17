@@ -36,7 +36,15 @@ export function Shell({ hid, user }: { hid: string; user: User }) {
       )}
       <main ref={main}>
         <div id="view" role="tabpanel" aria-label={tabLabel(route) ?? kidDayTitle(kid)}>
-          <View route={route} kid={kid} onBack={() => go('today')} />
+          <View
+            route={route}
+            hid={hid}
+            user={user}
+            members={members}
+            kid={kid}
+            phone={phone}
+            go={go}
+          />
         </div>
       </main>
       <TabBar route={route} onTab={go} />
