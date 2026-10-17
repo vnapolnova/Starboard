@@ -1,8 +1,8 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { initializeApp } from 'firebase-admin/app';
-import { getFirestore, type Firestore } from 'firebase-admin/firestore';
+import { Timestamp, getFirestore, type Firestore } from 'firebase-admin/firestore';
 import type { CalendarListEntry, GoogleEvent } from '../src/calendar.js';
-import { syncHousehold, type CalendarApi } from '../src/sync.js';
+import { ERROR_MAX, syncErrorMessage, syncHousehold, type CalendarApi } from '../src/sync.js';
 
 // The sync against the Firestore emulator, with fixture events in place of
 // Google. Run with `npm run test:functions`.
@@ -119,7 +119,7 @@ describe('syncHousehold', () => {
     await syncHousehold(db, HID, api, NOW);
     expect(await settings()).toEqual({
       weather: { place: 'Here' },
-      calendar: { id: FAMILY_ID, name: 'family', status: 'ok' },
+      calendar: { id: FAMILY_ID, name: 'family', status: 'ok', lastSyncAt: expect.any(Timestamp) },
     });
     expect(calls[0].calendarId).toBe(FAMILY_ID);
   });
@@ -173,5 +173,83 @@ describe('syncHousehold', () => {
     await syncHousehold(db, HID, api, NOW);
     expect(calls[0].timeMin).toEqual(new Date('2026-10-08T12:00:00Z'));
     expect(calls[0].timeMax).toEqual(new Date('2026-10-29T12:00:00Z'));
+  });
+
+  describe('sync health', () => {
+    const saved = { id: FAMILY_ID, name: 'Family', status: 'ok' };
+    const oldSync = Timestamp.fromDate(new Date('2026-10-14T12:00:00Z'));
+    const tokenError =
+      'Token refresh failed: 400 {\n  "error": "invalid_grant",\n  "error_description": "Token has been expired or revoked."\n}';
+
+    it('sets lastSyncAt and clears an old error after a sync', async () => {
+      await db.doc(`households/${HID}/settings/main`).set({
+        calendar: { ...saved, lastSyncAt: oldSync, error: { message: 'old', at: oldSync } },
+      });
+      const { api } = fakeApi([]);
+      const before = Date.now();
+      await syncHousehold(db, HID, api, NOW);
+      const calendar = (await settings()).calendar as Record<string, unknown>;
+      expect(Object.keys(calendar).sort()).toEqual(['id', 'lastSyncAt', 'name', 'status']);
+      expect(calendar).toMatchObject(saved);
+      expect((calendar.lastSyncAt as Timestamp).toMillis()).toBeGreaterThanOrEqual(before - 1000);
+    });
+
+    it('saves a token failure as error and keeps id, name, status and lastSyncAt', async () => {
+      await db
+        .doc(`households/${HID}/settings/main`)
+        .set({ calendar: { ...saved, lastSyncAt: oldSync } });
+      const { api } = fakeApi([]);
+      api.listEvents = async () => {
+        throw new Error(tokenError);
+      };
+      await expect(syncHousehold(db, HID, api, NOW)).rejects.toThrow('invalid_grant');
+      const calendar = (await settings()).calendar as Record<string, unknown>;
+      expect(calendar).toMatchObject({ ...saved, lastSyncAt: oldSync });
+      expect(calendar.error).toEqual({
+        message:
+          'Token refresh failed: 400 { "error": "invalid_grant", "error_description": "Token has been expired or revoked." }',
+        at: expect.any(Timestamp),
+      });
+    });
+
+    it('saves an error when the token fails before the calendar is found', async () => {
+      const { api } = fakeApi([]);
+      api.listCalendars = async () => {
+        throw new Error('Token refresh failed: 401 {"error": "invalid_client"}');
+      };
+      await expect(syncHousehold(db, HID, api, NOW)).rejects.toThrow();
+      expect(await settings()).toEqual({
+        weather: { place: 'Here' },
+        calendar: {
+          error: {
+            message: 'Token refresh failed: 401 {"error": "invalid_client"}',
+            at: expect.any(Timestamp),
+          },
+        },
+      });
+    });
+
+    it('clears an error but sets no lastSyncAt when the calendar is not found', async () => {
+      await db
+        .doc(`households/${HID}/settings/main`)
+        .set({ calendar: { error: { message: 'old', at: oldSync } } });
+      const { api } = fakeApi([{ id: 'w', summary: 'Work' }]);
+      await syncHousehold(db, HID, api, NOW);
+      expect((await settings()).calendar).toEqual({ status: 'not_found' });
+    });
+  });
+});
+
+describe('syncErrorMessage', () => {
+  it('collapses whitespace and caps the length', () => {
+    expect(syncErrorMessage(new Error('  a\n\n  b  '))).toBe('a b');
+    const long = syncErrorMessage(new Error('x'.repeat(1000)));
+    expect(long).toHaveLength(ERROR_MAX);
+    expect(long.endsWith('…')).toBe(true);
+  });
+
+  it('handles non-Error throws and empty messages', () => {
+    expect(syncErrorMessage('boom')).toBe('boom');
+    expect(syncErrorMessage(new Error(''))).toBe('Unknown error');
   });
 });

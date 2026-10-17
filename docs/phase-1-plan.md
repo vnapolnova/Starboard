@@ -23,7 +23,8 @@
 households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   members/{memberId}        name, color, emails[], nicknames[], isKid
   settings/main             weather {place, lat, lon, unit}, screen {wake, dim, off},
-                            calendar {id, name, status}  (found automatically, see spec §7)
+                            calendar {id, name, status, lastSyncAt, error {message, at}}
+                            (found automatically and sync health, see spec §7)
   events/{eventId}          mirrored from Google Calendar: title, start, end, allDay, ownerIds[], ownerSource
   eventOverrides/{eventId}  ownerIds[] (manual correction), special: bool, pic
   chores/{choreId}          name, memberId, repeat (daily|weekdays|weekly|once), pic
@@ -45,6 +46,7 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   - fetches the next 14 days of events (and the past 7, for today and the week view),
   - works out the owner(s): guest emails first, then a name or nickname at the start of the title, otherwise Family,
   - writes the results to `events`.
+- [x] Record sync health on `settings/main.calendar`: `lastSyncAt` after a sync, `error {message, at}` after a failure (#32).
 - [x] Apply `eventOverrides` on read in the client.
 - [x] Write unit tests for the owner detection, including that a name in the middle of the title doesn't match.
 

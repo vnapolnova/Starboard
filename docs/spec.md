@@ -176,12 +176,18 @@ Finding the calendar:
 
 - Nobody copies the calendar ID by hand. If `settings/main.calendar.id` is empty, the sync function lists the calendars the consented account can see and picks the one named "Family" (case-insensitive), then saves its ID and name to `settings/main.calendar`.
 - If no calendar or more than one matches, it saves nothing and sets `calendar.status` to `not_found` or `ambiguous`, so the app can say so. Once found, `calendar.status` is `ok`.
+- `calendar.status` only ever holds this detection result. Whether syncing works is recorded separately, in `lastSyncAt` and `error` (see Syncing).
 - Later, phone Settings gets a calendar picker that lists the same calendars and overwrites the saved choice. The `calendar.readonly` consent already covers listing.
 
 Syncing:
 
 - Every 5 minutes the sync function mirrors the Family calendar into `events`, from 7 days back to 14 days ahead, so today's past events and the start of the week still show. Recurring events are stored per instance; cancelled events, and events no longer in that window, are removed.
 - All-day events are stored as local midnights in the calendar's time zone.
+- Each run records its health on `settings/main.calendar`, merged so `id`, `name` and `status` are kept:
+  - After a full sync it sets `lastSyncAt` (server time) and clears `error`.
+  - If anything throws, including a failed token refresh, it sets `error: { message, at }` and leaves `lastSyncAt` at the last good sync. The message is one line of at most 300 characters: the HTTP status and Google's error body (such as `invalid_grant` or `invalid_client`), never tokens or client secrets. The full message also goes to Cloud Logging.
+  - When the calendar is `not_found` or `ambiguous`, Google did answer, so `error` is cleared, but `lastSyncAt` is not set because nothing was mirrored.
+  - The app shows a notice from these fields (#7).
 
 Additional rules:
 
