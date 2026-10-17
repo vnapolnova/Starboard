@@ -28,11 +28,6 @@ export function docRef<K extends CollectionName>(hid: string, name: K, id: strin
   return doc(db, 'households', hid, name, id) as DocumentReference<Collections[K]>;
 }
 
-/** choreCompletions IDs are "{date}_{choreId}", so one check-off per chore per day. */
-export function choreCompletionId(date: string, choreId: string) {
-  return `${date}_${choreId}`;
-}
-
 /** The household whose allow-list has this account, or null if it isn't on one. */
 export async function findHousehold(email: string) {
   const snap = await getDocs(
