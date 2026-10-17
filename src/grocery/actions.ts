@@ -1,12 +1,21 @@
 import type { User } from 'firebase/auth';
-import { addGroceryItem, sameName, setGroceryDone, type GroceryWithId } from '../data/grocery';
+import {
+  addGroceryItem,
+  clearCart,
+  sameName,
+  setGroceryDone,
+  type GroceryWithId,
+} from '../data/grocery';
 import type { GrocerySource } from '../data/types';
 import { db } from '../lib/firebase';
 import { memberForEmail, type MemberWithId } from '../shell/people';
 import { toast, toastWithUndo } from '../ui/toast-store';
 
-// What adding and checking off do, for the Grocery tab and the Today strip:
-// write through the activity log, then show the 10-second Undo toast (spec §6).
+// What adding, checking off and clearing do, for the Grocery tab and the Today
+// strip, all through the activity log (spec §4 Grocery, §6). Adding and
+// clearing show the 10-second Undo toast. A check-off shows a short message
+// with no Undo, like a chore: the item stays on screen, so tapping it again is
+// the undo, and the phone's Recent changes can still undo it.
 
 export interface GroceryContext {
   hid: string;
@@ -64,17 +73,22 @@ export async function addItems(ctx: GroceryContext, names: string[], source: Gro
 /** Into the cart, or back onto the list. */
 export async function toggleItem(ctx: GroceryContext, item: GroceryWithId) {
   try {
-    const undo = await setGroceryDone(db, ctx.hid, {
-      actor: actor(ctx),
-      id: item.id,
-      done: !item.done,
-    });
-    toastWithUndo(
-      item.done ? `${item.name} is back on the list` : `${item.name} is in the cart`,
-      undo,
-    );
+    await setGroceryDone(db, ctx.hid, { actor: actor(ctx), id: item.id, done: !item.done });
+    toast(item.done ? `${item.name} is back on the list` : `${item.name} is in the cart`);
   } catch (e) {
     console.error('Grocery check-off failed', e);
     toast("Couldn't save that. Try again.");
+  }
+}
+
+/** Deletes everything in the cart; one Undo puts it all back. */
+export async function clearItems(ctx: GroceryContext) {
+  const count = ctx.items.filter((g) => g.done).length;
+  try {
+    const undo = await clearCart(db, ctx.hid, { actor: actor(ctx), items: ctx.items });
+    if (undo) toastWithUndo(`Cleared ${count} item${count === 1 ? '' : 's'} from the cart`, undo);
+  } catch (e) {
+    console.error('Clearing the cart failed', e);
+    toast("Couldn't clear the cart. Try again.");
   }
 }

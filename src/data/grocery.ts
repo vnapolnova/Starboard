@@ -142,6 +142,8 @@ export function categoryFor(name: string): string {
 
 // ---- Grouping ------------------------------------------------------------
 
+export const CART = 'In the cart';
+
 export interface GrocerySection<T> {
   title: string;
   items: T[];
@@ -166,7 +168,7 @@ export function grocerySections<T extends GroceryItem>(items: T[]): GrocerySecti
     items: open.filter((g) => (g.category || OTHER) === title),
   }));
   const cart = items.filter((g) => g.done).sort(byAdded);
-  if (cart.length) sections.push({ title: 'In the cart', items: cart });
+  if (cart.length) sections.push({ title: CART, items: cart });
   return sections;
 }
 
@@ -245,4 +247,32 @@ export async function setGroceryDone(
     data: { done: opts.done },
   });
   return () => undo(db, hid, logId);
+}
+
+/**
+ * Deletes everything in the cart, one logged delete per item, all at once.
+ * Returns an undo that puts them all back, or null when the cart was empty.
+ */
+export async function clearCart(
+  db: Firestore,
+  hid: string,
+  opts: { actor: Actor; items: GroceryWithId[] },
+) {
+  const results = await Promise.all(
+    opts.items
+      .filter((g) => g.done)
+      .map((item) =>
+        logWrite(db, hid, {
+          op: 'delete',
+          action: 'grocery.clear',
+          path: `grocery/${item.id}`,
+          actor: opts.actor,
+        }),
+      ),
+  );
+  if (!results.length) return null;
+  return async () => {
+    await Promise.all(results.map((r) => undo(db, hid, r.logId)));
+    return true;
+  };
 }

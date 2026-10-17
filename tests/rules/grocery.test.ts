@@ -2,7 +2,12 @@ import { readFileSync } from 'node:fs';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import { collection, doc, getDoc, getDocs, setDoc, type Firestore } from 'firebase/firestore';
-import { addGroceryItem, setGroceryDone, type GroceryWithId } from '../../src/data/grocery';
+import {
+  addGroceryItem,
+  clearCart,
+  setGroceryDone,
+  type GroceryWithId,
+} from '../../src/data/grocery';
 import type { GroceryItem } from '../../src/data/types';
 
 // Adding and checking off grocery items from the Grocery tab or the Today mic,
@@ -115,5 +120,38 @@ describe('setGroceryDone', () => {
 
     const actions = (await log()).map((e) => e.action).sort();
     expect(actions).toEqual(['grocery.add', 'grocery.done', 'grocery.done', 'grocery.undone']);
+  });
+});
+
+describe('clearCart', () => {
+  it('deletes only what is in the cart, logs each, and one undo puts them all back', async () => {
+    for (const name of ['Milk', 'Eggs', 'Bread']) {
+      await addGroceryItem(db, HID, [], { actor, name, source: 'typed' });
+    }
+    const [a, b] = (await list()).filter((g) => g.name !== 'Bread');
+    await setGroceryDone(db, HID, { actor, id: a.id, done: true });
+    await setGroceryDone(db, HID, { actor, id: b.id, done: true });
+
+    const undoClear = await clearCart(db, HID, { actor, items: await list() });
+    expect((await list()).map((g) => g.name)).toEqual(['Bread']);
+    const clears = (await log()).filter((e) => e.action === 'grocery.clear');
+    expect(clears).toHaveLength(2);
+    expect(clears.every((e) => e.after === null && e.before?.done === true)).toBe(true);
+
+    await undoClear!();
+    const back = await list();
+    expect(back.map((g) => g.name).sort()).toEqual(['Bread', 'Eggs', 'Milk']);
+    expect(
+      back
+        .filter((g) => g.done)
+        .map((g) => g.id)
+        .sort(),
+    ).toEqual([a.id, b.id].sort());
+  });
+
+  it('does nothing when the cart is empty', async () => {
+    await addGroceryItem(db, HID, [], { actor, name: 'Milk', source: 'typed' });
+    expect(await clearCart(db, HID, { actor, items: await list() })).toBeNull();
+    expect(await list()).toHaveLength(1);
   });
 });

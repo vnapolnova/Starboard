@@ -35,3 +35,25 @@
   margin-left: auto;
   white-space: nowrap;
 }
+
+.glist .cat.cart {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+/* Like the "Open"/"All" links on the Today panels, with a bigger tap area. */
+.glist .clear {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-family: var(--body);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 4px 10px 16px;
+  margin: -10px 0;
+}
+
+.glist .clear:disabled {
+  opacity: 0.5;
+}

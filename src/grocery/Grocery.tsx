@@ -1,16 +1,22 @@
 import type { User } from 'firebase/auth';
 import { useState } from 'preact/hooks';
-import { grocerySections, parseVoice, sourceLabel, type GroceryWithId } from '../data/grocery';
+import {
+  CART,
+  grocerySections,
+  parseVoice,
+  sourceLabel,
+  type GroceryWithId,
+} from '../data/grocery';
 import { useGrocery } from '../data/live';
 import type { MemberWithId } from '../shell/people';
 import { toast } from '../ui/toast-store';
-import { addItems, toggleItem, type GroceryContext } from './actions';
+import { addItems, clearItems, toggleItem, type GroceryContext } from './actions';
 import { NOT_CAUGHT, useVoice } from './voice';
 import './grocery.css';
 
 // The Grocery tab (spec §4 Grocery), as #v-grocery in design/tablet-mockup.html:
-// add by typing or by voice, open items by category, then "In the cart". There
-// is no delete here; clearing items out is phone Manage (spec §6).
+// add by typing or by voice, open items by category, then "In the cart" with
+// Clear, the one delete the tablet has (owner's call on #40, spec §6).
 
 interface Props {
   hid: string;
@@ -61,13 +67,35 @@ function GroceryList({ ctx }: { ctx: GroceryContext }) {
     <div class="glist">
       {grocerySections(ctx.items).map((s) => (
         <div key={s.title} role="group" aria-label={s.title}>
-          <h3 class="cat">{s.title}</h3>
+          {s.title === CART ? (
+            <h3 class="cat cart">
+              {s.title}
+              <ClearButton ctx={ctx} />
+            </h3>
+          ) : (
+            <h3 class="cat">{s.title}</h3>
+          )}
           {s.items.map((g) => (
             <GroceryRow key={g.id} ctx={ctx} item={g} />
           ))}
         </div>
       ))}
     </div>
+  );
+}
+
+/** Clears the cart. Off while it runs, so a second tap can't log a second delete. */
+function ClearButton({ ctx }: { ctx: GroceryContext }) {
+  const [busy, setBusy] = useState(false);
+  async function clear() {
+    setBusy(true);
+    await clearItems(ctx);
+    setBusy(false);
+  }
+  return (
+    <button type="button" class="clear" disabled={busy} onClick={() => void clear()}>
+      Clear
+    </button>
   );
 }
 
