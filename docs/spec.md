@@ -111,10 +111,16 @@ How the routine is built each day:
 
 ### Chores
 
-- A column per person.
-- Each chore repeats daily, on weekdays, weekly or once.
-- Daily chores reset each morning.
-- Adults earn stars. Cleo's chores show big pictures and earn stickers.
+- A column per person: parents, then Cleo. Each shows the person's name, their stars or stickers, and "x/y today".
+- Each chore repeats daily, on weekdays, weekly or once. Whether it shows and whether it's done is worked out from its check-off dates, in local time:
+  - **Daily:** every day. Daily chores reset each morning (at midnight).
+  - **Weekdays:** Monday to Friday, resetting the same way.
+  - **Weekly:** every day of the week, Monday to Sunday, until it's done. Once done it stays ticked for the rest of that week.
+  - **Once:** every day until it's done. It shows ticked that day and is gone from the next.
+- Unticking removes the check-off that counts, which for a weekly chore may be from an earlier day. Both ticking and unticking go through the activity log with the Undo toast.
+- Adults earn stars. Cleo's chores show big pictures and earn stickers. Both are one per check-off this month ("★ 14 this month", "⭐ 28 stickers"), counted from the check-offs, so Undo keeps them right and the count starts again on the 1st.
+- Ticking one of Cleo's chores sets off the sparkle burst, and the last one of her day sets off a bigger one. Neither shows under reduced motion.
+- Chores for someone who isn't a member don't show. Setting chores up is phone-only (§5).
 
 ### Explore
 

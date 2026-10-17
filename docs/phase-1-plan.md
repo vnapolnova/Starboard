@@ -31,7 +31,7 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   grocery/{itemId}          name, category, source, addedBy, done, addedAt
   routines/{weekday|weekend} steps[] {name, pic, start}
   routineOverrides/{date}   steps[] (one-off changes for that day)
-  stickers/{memberId}       monthly counts
+  stickers/{memberId}       monthly counts (unused for now: stickers are counted from choreCompletions)
   activity/{logId}          ts, actor {email, device}, action, path, before, after, undone
 ```
 
@@ -62,7 +62,7 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   - grocery strip with mic,
   - dinner card as a placeholder until Phase 2.
 - [ ] **Calendar:** week view, with the person filters applied.
-- [ ] **Chores:**
+- [x] **Chores:**
   - columns per person, with daily reset based on `choreCompletions` dates,
   - stars for adults and stickers for Cleo,
   - the sparkle burst when Cleo's chores are done.
