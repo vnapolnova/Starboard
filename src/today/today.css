@@ -12,12 +12,20 @@ main section + section {
 }
 
 .ev {
+  border-bottom: 1px solid var(--line);
+}
+
+/* The whole row is a button that opens the event sheet. */
+.evbtn {
   display: grid;
   grid-template-columns: 76px 8px 1fr;
   gap: 0 14px;
   padding: 12px 0;
-  border-bottom: 1px solid var(--line);
   align-items: start;
+  width: 100%;
+  border: 0;
+  background: none;
+  text-align: left;
 }
 
 .ev .time {
@@ -31,6 +39,11 @@ main section + section {
   align-self: stretch;
   border-radius: 4px;
   padding: 0; /* not the phone header's .bar */
+}
+
+.ev .what,
+.ev .who {
+  display: block;
 }
 
 .ev .what {
@@ -103,7 +116,7 @@ main section + section {
   font-size: 15px;
 }
 
-.phone .ev {
+.phone .evbtn {
   grid-template-columns: 64px 6px 1fr;
   gap: 0 12px;
 }

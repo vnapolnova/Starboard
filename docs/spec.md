@@ -57,6 +57,7 @@ On a phone-sized screen (≤520px wide) the same shell uses the phone mockup's c
   - The color bar is the owner's color. An event with several owners gets equal stripes, one per owner, and an event with no owners is Family. The line under the title names the owners ("Alice & Cleo").
   - An event dims once its end time has passed. The "Now" line sits before the first event that hasn't started, and both follow the clock minute by minute.
   - The person chips filter the agenda: an event shows if any of its owners is on.
+  - Tapping an event opens the event detail sheet, as on Calendar.
   - Once nothing is left to come, one line closes the list: "That's everything today." (or "Nothing on the calendar today."), plus "Tomorrow starts with Gym at 7:00." when tomorrow has a timed event.
 - **Dinner tonight:** the planned meal and a suggested start time, with a link to the recipe. Until Phase 2 it's a placeholder card, with **Week** opening Meals.
 - **Chores today:** the first four chores due today, not-done first, then parents before the kid. **All** opens Chores. A tap checks a chore off for today, or un-checks it, with a short message and no Undo (see Chores).
@@ -140,7 +141,7 @@ How the routine is built each day:
 
 ### Event detail sheet
 
-Opens when an event title is tapped, on the home screen or in Explore, and when an event is tapped on the Calendar tab. It shows:
+Opens when an event title is tapped, on the home screen or in Explore, and when an event is tapped in Today's agenda or on the Calendar tab. It shows:
 
 - the date and time,
 - the place and drive time,
