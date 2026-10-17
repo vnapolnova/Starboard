@@ -60,12 +60,12 @@ function GroceryList({ ctx }: { ctx: GroceryContext }) {
   return (
     <div class="glist">
       {grocerySections(ctx.items).map((s) => (
-        <section key={s.title} aria-label={s.title}>
+        <div key={s.title} role="group" aria-label={s.title}>
           <h3 class="cat">{s.title}</h3>
           {s.items.map((g) => (
             <GroceryRow key={g.id} ctx={ctx} item={g} />
           ))}
-        </section>
+        </div>
       ))}
     </div>
   );
