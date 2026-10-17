@@ -70,6 +70,7 @@ A picture routine with a **Weekday / Weekend** toggle.
 
 - **Current step:** the latest step whose start time has passed (a step starting at 8:00 is current from 8:00 exactly). It gets a rainbow border and "Right now", and earlier steps fade with a ✓. Before the first step nothing is highlighted; after bedtime, Bedtime stays current. The highlight, today's events and today's one-off changes only show on the routine that matches today (Saturday and Sunday are weekend); the other toggle shows the plain template.
 - **Countdown:** "N sleeps until…" the next Cleo or Family event marked as special, on a later day than today. N counts calendar days, with one moon per sleep (up to 10). The card is hidden when nothing special is coming.
+  - **Marking an event special:** put a ⭐ anywhere in its calendar title ("Pumpkin patch ⭐"), or a `*` at the very start ("*Pumpkin patch"). This works from any calendar app. The app hides the marker wherever the title is shown, and owner detection looks past it ("⭐ Cleo – zoo" is still Cleo's). A `*` elsewhere in the title doesn't count. Hub voice can't add either, so those events need the phone's **Special** setting (`eventOverrides.special`, with the event editor), which wins over the title either way.
 
 | Time | Weekday | Weekend |
 |---|---|---|
