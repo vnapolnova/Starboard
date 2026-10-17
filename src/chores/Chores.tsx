@@ -25,7 +25,7 @@ export function Chores({ hid, user, members, phone }: Props) {
 
   const heading = (
     <h2>
-      Chores<span class="sub">Resets each morning</span>
+      Chores <span class="sub">Resets each morning</span>
     </h2>
   );
   if (!data) return heading;
@@ -42,8 +42,9 @@ export function Chores({ hid, user, members, phone }: Props) {
           const done = list.filter((d) => d.done).length;
           const earned = monthCount(data.chores, data.completions, m.id, now);
           return (
-            <section
+            <div
               key={m.id}
+              role="group"
               class={m.isKid ? 'chorecol kidcol' : 'chorecol'}
               style={{ borderTopColor: `var(--${m.color})` }}
               aria-label={m.name}
@@ -60,7 +61,7 @@ export function Chores({ hid, user, members, phone }: Props) {
               ) : (
                 <p class="empty">Nothing today.</p>
               )}
-            </section>
+            </div>
           );
         })}
       </div>
