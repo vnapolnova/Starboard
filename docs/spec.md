@@ -109,7 +109,10 @@ How the routine is built each day:
   - An item already on the list isn't added again, and one in the cart goes back on the list.
 - Items are grouped by category, worked out from the name with a built-in keyword list (Produce, Bakery, Dairy & eggs, Meat & fish, Pantry, Frozen, Snacks, Drinks, Baby, Household, otherwise Other) and shown in that aisle order.
 - Each item shows its source: voice, recipe or a person. Typed items show the person only when the device's account is a member's, so the tablet's own adds have no tag.
-- Checked items move to **In the cart**. Adding, checking and unchecking each show the 10-second Undo toast (§6). Clearing the cart is a delete, so it's phone-only (§5).
+- Checked items move to **In the cart**.
+  - Checking and unchecking work like chores: they're logged, but the toast is a short message with no Undo button, because the item stays on screen and tapping it again is the undo. The phone's **Recent changes** can still undo them.
+  - **Clear** beside "In the cart" deletes every checked item, on the tablet too (the one exception to "Phone only" in §6). Each item's delete is logged, and the 10-second Undo toast puts them all back.
+- Adding shows the 10-second Undo toast (§6).
 
 ### Chores
 
@@ -167,10 +170,10 @@ Tabs: Recipes · Meal plan · Chores · Settings.
 
 - **Open on the tablet:** everyday actions, such as checking off, adding items, and adding events to the calendar.
 - **Activity log:** every change is saved to Firebase with who or which device made it, what changed and when.
-- **Undo on the tablet:** an **Undo** toast stays up for 10 seconds after each change, except chore check-offs, which show a short message instead (§4 Chores). A newer change replaces the toast, and tapping Undo shows "Undone".
+- **Undo on the tablet:** an **Undo** toast stays up for 10 seconds after each change, except chore and grocery check-offs, which show a short message instead (§4 Chores, §4 Grocery). A newer change replaces the toast, and tapping Undo shows "Undone".
 - **How undo works:** each log entry keeps the changed doc's value before and after. Undo puts the before value back (removing the doc if the change created it) and marks the entry undone. Undoing the same entry again does nothing.
 - **Undo on the phone:** a **Recent changes** list with undo for each entry.
-- **Phone only:** deleting, editing recipes, setting up chores and changing settings.
+- **Phone only:** deleting, editing recipes, setting up chores and changing settings. The one delete on the tablet is clearing the grocery cart (§4 Grocery), which has the Undo toast.
 
 ## 7. Calendar ownership
 
