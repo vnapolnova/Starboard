@@ -105,9 +105,11 @@ How the routine is built each day:
 ### Grocery
 
 - Add items by typing or by voice on the tablet mic.
-- Items are grouped by category.
-- Each item shows its source: voice, recipe or a person.
-- Checked items move to **In the cart**.
+  - Voice takes one phrase, such as "add milk", "add eggs and bread" or "put bananas on the shopping list", and ignores filler words. A bare "milk" counts too. Known pairs such as "mac and cheese" stay one item.
+  - An item already on the list isn't added again, and one in the cart goes back on the list.
+- Items are grouped by category, worked out from the name with a built-in keyword list (Produce, Bakery, Dairy & eggs, Meat & fish, Pantry, Frozen, Snacks, Drinks, Baby, Household, otherwise Other) and shown in that aisle order.
+- Each item shows its source: voice, recipe or a person. Typed items show the person only when the device's account is a member's, so the tablet's own adds have no tag.
+- Checked items move to **In the cart**. Adding, checking and unchecking each show the 10-second Undo toast (§6). Clearing the cart is a delete, so it's phone-only (§5).
 
 ### Chores
 
