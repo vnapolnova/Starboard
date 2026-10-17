@@ -51,7 +51,10 @@ for (const c of seed.chores ?? []) {
 }
 for (const [kind, steps] of Object.entries(seed.routines ?? {})) {
   check(['weekday', 'weekend'].includes(kind), `routines.${kind}: use weekday or weekend`);
-  for (const s of steps) check(TIME.test(s.start), `routines.${kind}: "${s.start}" is not HH:MM`);
+  for (const s of steps) {
+    check(TIME.test(s.start), `routines.${kind}: "${s.start}" is not HH:MM`);
+    check(s.end === undefined || TIME.test(s.end), `routines.${kind}: "${s.end}" is not HH:MM`);
+  }
 }
 
 if (args.prod) {
