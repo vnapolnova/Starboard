@@ -62,6 +62,7 @@ Full details are in `docs/pipeline.md`. The short version:
   - open a PR: `gh api repos/{owner}/{repo}/pulls -f title='...' -f head=BRANCH -f base=main -F draft=true -F body=@body.md`
   - Only `repos/{owner}/{repo}/...` paths work; `search/...` is blocked, so list PRs with `gh api "repos/{owner}/{repo}/pulls?state=open"`.
   - Or use the GitHub MCP tools (`mcp__github__*`) when they're available.
+- **Google Cloud from cloud sessions:** run `scripts/gcloud-login.sh` to sign in as the read-only `claude-readonly` service account (from `GCP_SA_KEY`; never print the key). The session sets a placeholder `CLOUDSDK_AUTH_ACCESS_TOKEN` that overrides that account, so run every later command as `env -u CLOUDSDK_AUTH_ACCESS_TOKEN gcloud ...`.
 - **Never start an issue labelled `manual`.** Only the owner can do those, for example billing, OAuth consent or tablet setup.
 - **Visual proof:** any PR that changes UI includes screenshots from `scripts/shoot.mjs` (tablet 600×1000 and phone 390×844, light and dark) in `docs/shots/issue-N/`, linked in the PR body next to the matching mockup.
 - **Shipping:** a feature PR also updates `docs/spec.md` if anything was decided or changed, and ticks the matching box in the phase plan.
