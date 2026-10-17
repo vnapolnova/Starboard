@@ -30,6 +30,7 @@ export interface GoogleEvent {
   id: string;
   status?: string;
   summary?: string;
+  location?: string;
   start?: { date?: string; dateTime?: string };
   end?: { date?: string; dateTime?: string };
   attendees?: { email?: string }[];

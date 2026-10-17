@@ -35,7 +35,19 @@ export interface Settings {
   weather: { place: string; lat: number; lon: number; unit: 'F' | 'C' };
   screen: { wake: ClockTime; dim: ClockTime; off: ClockTime };
   /** Written by the calendar sync (spec §7). id and name are empty until it's found. */
-  calendar?: { id?: string; name?: string; status: 'ok' | 'not_found' | 'ambiguous' };
+  calendar?: CalendarSettings;
+}
+
+/** settings/main.calendar: which calendar is synced, and how syncing is going (spec §7). */
+export interface CalendarSettings {
+  id?: string;
+  name?: string;
+  /** Only the result of finding the Family calendar. */
+  status: 'ok' | 'not_found' | 'ambiguous';
+  /** The last full sync. */
+  lastSyncAt?: Timestamp;
+  /** Set when the last run failed; cleared once Google answers again. */
+  error?: { message: string; at: Timestamp };
 }
 
 /** How an event's owners were worked out (spec §7). */
@@ -44,6 +56,8 @@ export type OwnerSource = 'guests' | 'title' | 'family';
 /** households/{hid}/events/{eventId}. Mirrored from Google Calendar by a Cloud Function. */
 export interface CalendarEvent {
   title: string;
+  /** Google's free-text location. Empty or missing when there's none. */
+  location?: string;
   start: Timestamp;
   end: Timestamp;
   /** All-day events have no time; start and end are local midnights. */

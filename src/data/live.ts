@@ -5,6 +5,7 @@ import { completionsFrom, type ChoreWithId } from './chores';
 import { col, docRef } from './db';
 import { subscribeEvents } from './events';
 import type {
+  CalendarSettings,
   ChoreCompletion,
   DateKey,
   EventView,
@@ -40,6 +41,24 @@ export function useEvents(hid: string) {
   const [events, setEvents] = useState<EventView[] | null>(null);
   useEffect(() => subscribeEvents(db, hid, setEvents), [hid]);
   return events;
+}
+
+/**
+ * settings/main.calendar, for the "calendar isn't usable" notice (spec §7).
+ * undefined until it loads, and while the sync hasn't written it yet.
+ */
+export function useCalendarSettings(hid: string) {
+  const [cal, setCal] = useState<CalendarSettings | undefined>(undefined);
+  useEffect(
+    () =>
+      onSnapshot(
+        docRef(hid, 'settings', 'main'),
+        (snap) => setCal(snap.data()?.calendar),
+        () => setCal(undefined), // no notice rather than a wrong one
+      ),
+    [hid],
+  );
+  return cal;
 }
 
 export function useChores(hid: string): ChoreWithId[] | null {

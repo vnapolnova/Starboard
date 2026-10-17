@@ -1,0 +1,113 @@
+/* Calendar, as #v-cal and #evSheet in design/tablet-mockup.html */
+
+.day {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.day .dn {
+  font-family: var(--display);
+}
+
+.day .dn b {
+  display: block;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.day .dn span {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.day.today .dn b {
+  color: var(--kid);
+}
+
+/* The mockup's .chip: a colored bar, the time, the title. A button, so it's
+   taller than the mockup's line for a finger-sized target. */
+.wchip {
+  display: grid;
+  grid-template-columns: 5px 58px 1fr;
+  gap: 10px;
+  align-items: baseline;
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 0;
+  margin-bottom: 2px;
+  border: 0;
+  background: none;
+  text-align: left;
+  border-radius: var(--radius-sm);
+}
+
+.wchip .stripe {
+  align-self: stretch;
+  border-radius: 2px;
+}
+
+.wchip .ct {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Read-only notice when the calendar can't be used (spec §7) */
+.notice {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  border-radius: var(--radius);
+  border-left: 5px solid var(--fam);
+  background: color-mix(in srgb, var(--fam) 12%, var(--surface));
+}
+
+.notice span {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+/* Event sheet */
+.sheet {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 10, 40, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 10;
+}
+
+.sheet .card {
+  background: var(--surface);
+  width: 100%;
+  max-width: 820px;
+  border-radius: 28px 28px 0 0;
+  padding: 24px 26px calc(26px + env(safe-area-inset-bottom, 0px));
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+.sheet .acts {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.evwhen {
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 0 2px;
+}
+
+.evwhere {
+  color: var(--muted);
+  margin: 0 0 12px;
+  font-size: 15px;
+}
