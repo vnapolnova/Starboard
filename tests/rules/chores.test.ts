@@ -1,10 +1,19 @@
 import { readFileSync } from 'node:fs';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
-import { collection, doc, getDoc, getDocs, setDoc, type Firestore } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+  type Firestore,
+} from 'firebase/firestore';
 import { setChoreDone } from '../../src/data/chores';
 
-// Checking a chore off from Today, against the Firestore emulator, signed in
+// Checking a chore off from Today or Chores, against the Firestore emulator, signed in
 // as the tablet so the security rules apply. Run with `npm run test:rules`.
 const HID = 'home';
 const TABLET = 'kitchen@example.com';
@@ -70,5 +79,49 @@ describe('setChoreDone', () => {
     expect(await completion()).toBeNull();
     await undo();
     expect(await completion()).toMatchObject({ choreId: 'toys' });
+  });
+});
+
+describe('weekly chores', () => {
+  it('unticks a check-off from an earlier day, and Undo puts it back', async () => {
+    await setChoreDone(db, HID, { ...base, choreId: 'sheets', date: '2026-10-13', done: true });
+    const undo = await setChoreDone(db, HID, {
+      ...base,
+      choreId: 'sheets',
+      date: '2026-10-13',
+      done: false,
+    });
+    const ref = doc(db, 'households', HID, 'choreCompletions', '2026-10-13_sheets');
+    expect((await getDoc(ref)).exists()).toBe(false);
+    await undo();
+    expect((await getDoc(ref)).data()).toMatchObject({ date: '2026-10-13', choreId: 'sheets' });
+  });
+});
+
+describe('the queries the Chores tab listens to', () => {
+  beforeEach(async () => {
+    await setChoreDone(db, HID, { ...base, choreId: 'dishes', date: '2026-09-30', done: true });
+    await setChoreDone(db, HID, { ...base, choreId: 'dishes', date: '2026-10-01', done: true });
+    await setChoreDone(db, HID, { ...base, choreId: 'form', date: '2025-05-05', done: true });
+  });
+
+  it('reads check-offs from a date on', async () => {
+    const snap = await getDocs(
+      query(
+        collection(db, 'households', HID, 'choreCompletions'),
+        where('date', '>=', '2026-10-01'),
+      ),
+    );
+    expect(snap.docs.map((d) => d.id)).toEqual(['2026-10-01_dishes']);
+  });
+
+  it('reads every check-off of the once chores', async () => {
+    const snap = await getDocs(
+      query(
+        collection(db, 'households', HID, 'choreCompletions'),
+        where('choreId', 'in', ['form']),
+      ),
+    );
+    expect(snap.docs.map((d) => d.id)).toEqual(['2025-05-05_form']);
   });
 });

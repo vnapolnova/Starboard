@@ -64,5 +64,5 @@ Full details are in `docs/pipeline.md`. The short version:
   - Or use the GitHub MCP tools (`mcp__github__*`) when they're available.
 - **Google Cloud from cloud sessions:** run `scripts/gcloud-login.sh` to sign in as the read-only `claude-readonly` service account (from `GCP_SA_KEY`; never print the key). The session sets a placeholder `CLOUDSDK_AUTH_ACCESS_TOKEN` that overrides that account, so run every later command as `env -u CLOUDSDK_AUTH_ACCESS_TOKEN gcloud ...`.
 - **Never start an issue labelled `manual`.** Only the owner can do those, for example billing, OAuth consent or tablet setup.
-- **Visual proof:** any PR that changes UI includes screenshots from `scripts/shoot.mjs` (tablet 600×1000 and phone 390×844, light and dark) in `docs/shots/issue-N/`, linked in the PR body next to the matching mockup.
+- **Visual proof:** any PR that changes UI includes screenshots from `scripts/shoot.mjs` (tablet 600×1000 and phone 390×844, light and dark) in `docs/shots/issue-N/`, linked in the PR body next to the matching mockup. Use Markdown images pinned to a commit on `raw.githubusercontent.com`, not `<img>` tags, so they show in the phone app (details in `docs/pipeline.md`).
 - **Shipping:** a feature PR also updates `docs/spec.md` if anything was decided or changed, and ticks the matching box in the phase plan.

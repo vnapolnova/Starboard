@@ -16,7 +16,7 @@ Build the mockups for issue #$ARGUMENTS. This stage is the owner's visual gate, 
 4. Take screenshots with `node scripts/shoot.mjs features/<folder>/mockup-tablet.html issue-$ARGUMENTS` (and the same for the phone file). If Playwright isn't installed yet, skip this and say so in the PR.
 5. Open or update a PR titled `Mockup: <feature> (#$ARGUMENTS)`. The PR body should include:
    - the preview links (`/_mockups/features/<folder>/mockup-tablet.html`; the bot comments the base URL),
-   - the screenshots,
+   - the screenshots, as Markdown images pinned to the pushed commit (`![name](https://raw.githubusercontent.com/{owner}/{repo}/<sha>/docs/shots/...)`), never `<img>` tags (see `docs/pipeline.md`),
    - a short list of the design decisions you made and the questions for the owner.
 6. Labels: keep `stage:mockup` and add `needs-me`.
 

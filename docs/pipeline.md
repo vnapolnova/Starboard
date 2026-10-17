@@ -40,6 +40,7 @@ The owner reviews by looking at the result, not by reading code.
 - **Mockups** are self-contained HTML. Each one starts as a copy of `design/tablet-mockup.html` or `design/phone-mockup.html` so it keeps the tokens, fonts and wording, and changes only what the feature needs.
 - **Preview URLs:** `.github/workflows/preview.yml` deploys every PR to a Firebase Hosting preview channel and comments the link on the PR. Mockups are served under `/_mockups/`. Open the link on a phone, or on the tablet itself.
 - **Screenshots:** UI PRs include output from `scripts/shoot.mjs` at 600×1000 (tablet) and 390×844 (phone), in light and dark, committed to `docs/shots/issue-N/` and linked in the PR body.
+- **Images in PR bodies** must show in the GitHub phone app. Use Markdown images pinned to a pushed commit: `![tablet-light](https://raw.githubusercontent.com/{owner}/{repo}/<commit-sha>/docs/shots/issue-N/tablet-light.png)`. Don't use HTML `<img>` tags, because some ways of writing a PR body escape them into plain text. Don't use `blob/...?raw=1` links either. Push the screenshots first, then use that commit's SHA, and check that each URL returns 200.
 
 ## Running a session
 

@@ -59,7 +59,7 @@ On a phone-sized screen (≤520px wide) the same shell uses the phone mockup's c
   - The person chips filter the agenda: an event shows if any of its owners is on.
   - Once nothing is left to come, one line closes the list: "That's everything today." (or "Nothing on the calendar today."), plus "Tomorrow starts with Gym at 7:00." when tomorrow has a timed event.
 - **Dinner tonight:** the planned meal and a suggested start time, with a link to the recipe. Until Phase 2 it's a placeholder card, with **Week** opening Meals.
-- **Chores today:** the first four chores due today, not-done first, then parents before the kid. **All** opens Chores. A tap checks a chore off for today (with the Undo toast), or un-checks it.
+- **Chores today:** the first four chores due today, not-done first, then parents before the kid. **All** opens Chores. A tap checks a chore off for today, or un-checks it, with a short message and no Undo (see Chores).
 - **Grocery:** count, a short preview (the first five items still to buy, oldest first, then "and N more") and a mic button. **Open** opens Grocery. Until voice add lands, the mic opens the Grocery tab too.
 - **Nearby this week:** 4–6 ranked suggestions, plus **See more**, which opens Explore.
 
@@ -111,10 +111,16 @@ How the routine is built each day:
 
 ### Chores
 
-- A column per person.
-- Each chore repeats daily, on weekdays, weekly or once.
-- Daily chores reset each morning.
-- Adults earn stars. Cleo's chores show big pictures and earn stickers.
+- A column per person: parents, then Cleo. Each shows the person's name, their stars or stickers, and "x/y today".
+- Each chore repeats daily, on weekdays, weekly or once. Whether it shows and whether it's done is worked out from its check-off dates, in local time:
+  - **Daily:** every day. Daily chores reset each morning (at midnight).
+  - **Weekdays:** Monday to Friday, resetting the same way.
+  - **Weekly:** every day of the week, Monday to Sunday, until it's done. Once done it stays ticked for the rest of that week.
+  - **Once:** every day until it's done. It shows ticked that day and is gone from the next.
+- Unticking removes the check-off that counts, which for a weekly chore may be from an earlier day. Both ticking and unticking go through the activity log. The toast is a short message (about 2 seconds) with no Undo button: a chore stays on the list, so tapping it again is the undo. Each change can still be undone from the phone's **Recent changes**.
+- Adults earn stars. Cleo's chores show big pictures and earn stickers. Both are one per check-off this month ("★ 14 this month", "⭐ 28 stickers"), counted from the check-offs, so unticking or undoing keeps them right and the count starts again on the 1st.
+- Ticking one of Cleo's chores sets off the sparkle burst, and the last one of her day sets off a bigger one. Neither shows under reduced motion.
+- Chores for someone who isn't a member don't show. Setting chores up is phone-only (§5).
 
 ### Explore
 
@@ -159,7 +165,7 @@ Tabs: Recipes · Meal plan · Chores · Settings.
 
 - **Open on the tablet:** everyday actions, such as checking off, adding items, and adding events to the calendar.
 - **Activity log:** every change is saved to Firebase with who or which device made it, what changed and when.
-- **Undo on the tablet:** an **Undo** toast stays up for 10 seconds after each change. A newer change replaces the toast, and tapping Undo shows "Undone".
+- **Undo on the tablet:** an **Undo** toast stays up for 10 seconds after each change, except chore check-offs, which show a short message instead (§4 Chores). A newer change replaces the toast, and tapping Undo shows "Undone".
 - **How undo works:** each log entry keeps the changed doc's value before and after. Undo puts the before value back (removing the doc if the change created it) and marks the entry undone. Undoing the same entry again does nothing.
 - **Undo on the phone:** a **Recent changes** list with undo for each entry.
 - **Phone only:** deleting, editing recipes, setting up chores and changing settings.
