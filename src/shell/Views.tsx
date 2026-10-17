@@ -1,22 +1,32 @@
+import type { User } from 'firebase/auth';
+import { Today } from '../today/Today';
 import { kidDayTitle, type MemberWithId } from './people';
 import type { Route } from './routes';
 
-// Placeholder views until each screen's issue lands: Today (#6), Calendar (#7),
+// Placeholder views until each screen's issue lands: Calendar (#7),
 // Chores (#8), Grocery (#9), Cleo's day (#10). Meals comes in Phase 2.
 // Headings and copy are the mockup's.
 
 export function View({
   route,
+  hid,
+  user,
+  members,
   kid,
-  onBack,
+  phone,
+  go,
 }: {
   route: Route;
+  hid: string;
+  user: User;
+  members: MemberWithId[];
   kid: MemberWithId | null;
-  onBack: () => void;
+  phone: boolean;
+  go: (r: Route) => void;
 }) {
   switch (route) {
     case 'today':
-      return <Placeholder title="Today" />;
+      return <Today hid={hid} user={user} members={members} phone={phone} go={go} />;
     case 'cal':
       return <Placeholder title="This week" sub="Google Calendar · Family" />;
     case 'meals':
@@ -28,7 +38,7 @@ export function View({
     case 'kid':
       return (
         <div class="backbar">
-          <button type="button" class="btn ghost" onClick={onBack}>
+          <button type="button" class="btn ghost" onClick={() => go('today')}>
             Back
           </button>
           <h2>{kidDayTitle(kid)}</h2>

@@ -53,9 +53,14 @@ On a phone-sized screen (≤520px wide) the same shell uses the phone mockup's c
 - **Header:** clock, date, weather (current temperature plus high and low), person chips and the unicorn.
   - Weather comes from Open-Meteo on the tablet (no API key), using `settings/main.weather`. It shows a sky icon, the current temperature, today's high and low, and the town (the part of `place` before the comma). It refreshes every 30 minutes, always fetches in °C and converts to the unit from settings, so changing the unit needs no refetch. The last reading is cached on the device: offline it keeps showing, and with nothing cached the slot stays empty. It never shows an error.
 - **Agenda:** today's events with a color bar per person, the "Now" line, and past events dimmed.
-- **Dinner tonight:** the planned meal and a suggested start time, with a link to the recipe.
-- **Chores today:** the first few chores, with a link to the full list.
-- **Grocery:** count, a short preview and a mic button.
+  - It lists every event that overlaps today, in local time. All-day events come first, labelled "All day", and are never dimmed. A timed event carried over from yesterday shows "Until 2:00".
+  - The color bar is the owner's color. An event with several owners gets equal stripes, one per owner, and an event with no owners is Family. The line under the title names the owners ("Alice & Cleo").
+  - An event dims once its end time has passed. The "Now" line sits before the first event that hasn't started, and both follow the clock minute by minute.
+  - The person chips filter the agenda: an event shows if any of its owners is on.
+  - Once nothing is left to come, one line closes the list: "That's everything today." (or "Nothing on the calendar today."), plus "Tomorrow starts with Gym at 7:00." when tomorrow has a timed event.
+- **Dinner tonight:** the planned meal and a suggested start time, with a link to the recipe. Until Phase 2 it's a placeholder card, with **Week** opening Meals.
+- **Chores today:** the first four chores due today, not-done first, then parents before the kid. **All** opens Chores. A tap checks a chore off for today (with the Undo toast), or un-checks it.
+- **Grocery:** count, a short preview (the first five items still to buy, oldest first, then "and N more") and a mic button. **Open** opens Grocery. Until voice add lands, the mic opens the Grocery tab too.
 - **Nearby this week:** 4–6 ranked suggestions, plus **See more**, which opens Explore.
 
 ### Cleo's day

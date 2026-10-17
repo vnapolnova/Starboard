@@ -2,7 +2,8 @@
 // Screenshots for visual review: tablet 600x1000 and phone 390x844, light and dark.
 //
 //   node scripts/shoot.mjs <url-or-html-file> <name> [--only tablet|phone] [--hash <#route>]
-//                          [--click <selector>] [--suffix <label>] [--wait <selector>]
+//                          [--click <selector>] [--scroll <selector>] [--suffix <label>]
+//                          [--wait <selector>]
 //
 // --wait is for the live app: Firestore keeps a channel open, so "networkidle"
 // never comes. The page is shot once the selector is visible instead.
@@ -32,6 +33,7 @@ const only = flag('--only');
 const hash = flag('--hash') ?? '';
 const click = flag('--click'); // CSS selector to tap before the shot, e.g. a tab button
 const suffix = flag('--suffix');
+const scroll = flag('--scroll'); // CSS selector to scroll into view, for content below the fold
 const wait = flag('--wait'); // CSS selector that means the page has its data
 const [target, name] = args;
 
@@ -86,6 +88,10 @@ try {
       await page.evaluate(() => document.fonts?.ready);
       if (click) {
         await page.click(click);
+        await page.waitForTimeout(300);
+      }
+      if (scroll) {
+        await page.locator(scroll).first().scrollIntoViewIfNeeded();
         await page.waitForTimeout(300);
       }
       const file = resolve(outDir, `${device}-${colorScheme}${suffix ? '-' + suffix : ''}.png`);

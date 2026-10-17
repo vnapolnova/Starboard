@@ -56,7 +56,7 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
 ## 5. Tablet screens
 
 - [x] **App shell:** header (clock, date, weather, person chips, unicorn) and bottom tabs.
-- [ ] **Today:**
+- [x] **Today:**
   - agenda with a "Now" line and past events dimmed,
   - chores preview,
   - grocery strip with mic,
