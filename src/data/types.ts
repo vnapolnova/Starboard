@@ -121,6 +121,8 @@ export interface RoutineStep {
   name: string;
   pic: string;
   start: ClockTime;
+  /** Optional, for a step with a set length such as the nap ("12:15–2:00"). */
+  end?: ClockTime;
 }
 
 export type RoutineKind = 'weekday' | 'weekend';
@@ -130,9 +132,18 @@ export interface Routine {
   steps: RoutineStep[];
 }
 
+/**
+ * A one-off change, matched to the day's steps by start time: it replaces the
+ * step(s) starting then, or removes them with `skip` ("no nap today"), or is
+ * added if nothing starts then.
+ */
+export interface RoutineChange extends RoutineStep {
+  skip?: boolean;
+}
+
 /** households/{hid}/routineOverrides/{date}. One-off changes for that day only. */
 export interface RoutineOverride {
-  steps: RoutineStep[];
+  steps: RoutineChange[];
 }
 
 /** households/{hid}/stickers/{memberId} */

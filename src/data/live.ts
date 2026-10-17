@@ -1,11 +1,19 @@
-import { onSnapshot, query, where, type Query } from 'firebase/firestore';
+import { onSnapshot, query, where, type DocumentReference, type Query } from 'firebase/firestore';
 import { useEffect, useState } from 'preact/hooks';
 import { db } from '../lib/firebase';
 import { completionsFrom, type ChoreWithId } from './chores';
 import { col, docRef } from './db';
 import { subscribeEvents } from './events';
 import type { GroceryWithId } from './grocery';
-import type { CalendarSettings, ChoreCompletion, DateKey, EventView } from './types';
+import type {
+  CalendarSettings,
+  ChoreCompletion,
+  DateKey,
+  EventView,
+  Routine,
+  RoutineKind,
+  RoutineOverride,
+} from './types';
 
 // Live Firestore data for the screens (plan §5: everything updates through
 // onSnapshot). Each hook returns null until its first snapshot arrives.
@@ -17,6 +25,16 @@ function useQuery<T>(make: () => Query<T>, deps: unknown[]) {
     return onSnapshot(make(), (snap) => setDocs(snap.docs.map((d) => ({ id: d.id, ...d.data() }))));
   }, deps); // `make` is rebuilt each render; `deps` say when the query changes.
   return docs;
+}
+
+/** One doc: undefined until loaded, null if it doesn't exist. */
+function useDoc<T>(make: () => DocumentReference<T>, deps: unknown[]) {
+  const [data, setData] = useState<T | null | undefined>(undefined);
+  useEffect(() => {
+    setData(undefined);
+    return onSnapshot(make(), (snap) => setData(snap.exists() ? snap.data() : null));
+  }, deps);
+  return data;
 }
 
 export function useEvents(hid: string) {
@@ -95,4 +113,14 @@ export function useChoreDay(hid: string, day: Date) {
 
 export function useGrocery(hid: string): GroceryWithId[] | null {
   return useQuery(() => col(hid, 'grocery'), [hid]);
+}
+
+/** The weekday or weekend template. */
+export function useRoutine(hid: string, kind: RoutineKind): Routine | null | undefined {
+  return useDoc(() => docRef(hid, 'routines', kind), [hid, kind]);
+}
+
+/** One-off changes for that day, or null if there are none. */
+export function useRoutineOverride(hid: string, date: DateKey): RoutineOverride | null | undefined {
+  return useDoc(() => docRef(hid, 'routineOverrides', date), [hid, date]);
 }

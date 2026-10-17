@@ -1,0 +1,135 @@
+/* Cleo's day, as #v-kid in design/tablet-mockup.html */
+
+.countdown {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border: 2px solid var(--kid);
+  border-radius: 22px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+}
+
+.countdown .big {
+  font-family: var(--display);
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--kid);
+}
+
+.countdown .txt {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.countdown .moons {
+  font-size: 22px;
+  letter-spacing: 4px;
+}
+
+.routine {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.step {
+  border-radius: 24px;
+  padding: 16px;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+
+.step .pic {
+  font-size: 46px;
+  line-height: 1;
+}
+
+.step .nm {
+  overflow-wrap: anywhere;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.step .tm {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.step.done {
+  opacity: 0.45;
+}
+
+.step.done::after {
+  content: '✓';
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-weight: 800;
+  color: var(--p2);
+}
+
+.step.cur {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    var(--rainbow) border-box;
+  border-width: 4px;
+  padding: 14px;
+}
+
+.step.cur .tm {
+  color: var(--kid);
+  font-weight: 700;
+}
+
+/* Phone: two columns still, with smaller pictures so names fit */
+@media (max-width: 520px) {
+  .routine {
+    gap: 10px;
+  }
+
+  .step {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 20px;
+  }
+
+  .step.cur {
+    padding: 10px;
+  }
+
+  .step.done::after {
+    top: 6px;
+    right: 10px;
+  }
+
+  .step .pic {
+    font-size: 34px;
+  }
+
+  .step .nm {
+    font-size: 18px;
+  }
+
+  .countdown .big {
+    font-size: 44px;
+  }
+
+  .countdown .txt {
+    font-size: 18px;
+  }
+}

@@ -30,8 +30,8 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   chores/{choreId}          name, memberId, repeat (daily|weekdays|weekly|once), pic
   choreCompletions/{date_choreId}  date, choreId, doneAt, doneBy
   grocery/{itemId}          name, category, source, addedBy, done, addedAt
-  routines/{weekday|weekend} steps[] {name, pic, start}
-  routineOverrides/{date}   steps[] (one-off changes for that day)
+  routines/{weekday|weekend} steps[] {name, pic, start, end?}
+  routineOverrides/{date}   steps[] {name, pic, start, end?, skip?} (one-off changes, matched by start)
   stickers/{memberId}       monthly counts (unused for now: stickers are counted from choreCompletions)
   activity/{logId}          ts, actor {email, device}, action, path, before, after, undone
 ```
@@ -71,7 +71,7 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
 - [x] **Grocery:**
   - add by typing or voice through the Web Speech API (parse "add X"),
   - categories, an "In the cart" section and source tags.
-- [ ] **Cleo's day:**
+- [x] **Cleo's day:**
   - merge the template, today's Cleo events and the day's overrides,
   - highlight the current step,
   - Weekday/Weekend toggle,

@@ -68,8 +68,8 @@ On a phone-sized screen (≤520px wide) the same shell uses the phone mockup's c
 
 A picture routine with a **Weekday / Weekend** toggle.
 
-- **Current step:** the latest step whose start time has passed. It gets a rainbow border, and earlier steps fade. The highlight only shows on the routine that matches today.
-- **Countdown:** "N sleeps until…" the next Cleo or Family event marked as special.
+- **Current step:** the latest step whose start time has passed (a step starting at 8:00 is current from 8:00 exactly). It gets a rainbow border and "Right now", and earlier steps fade with a ✓. Before the first step nothing is highlighted; after bedtime, Bedtime stays current. The highlight, today's events and today's one-off changes only show on the routine that matches today (Saturday and Sunday are weekend); the other toggle shows the plain template.
+- **Countdown:** "N sleeps until…" the next Cleo or Family event marked as special, on a later day than today. N counts calendar days, with one moon per sleep (up to 10). The card is hidden when nothing special is coming.
 
 | Time | Weekday | Weekend |
 |---|---|---|
@@ -79,6 +79,7 @@ A picture routine with a **Weekday / Weekend** toggle.
 | 8:00 | 🎨 Daycare | |
 | 11:00 | | 🥪 Lunch |
 | 12:15–2:00 | | 😴 Nap |
+| 2:00 | | 🧸 Up from nap |
 | 4:00 | 🚗 Pickup | |
 | 5:00 | 🌮 Dinner | 🌮 Dinner |
 | 7:00 | 🍎 Snack | 🍎 Snack |
@@ -88,10 +89,12 @@ A picture routine with a **Weekday / Weekend** toggle.
 How the routine is built each day:
 
 1. Start from the routine template for the day type. Templates are stored in Firebase and edited on the phone.
-2. Merge in today's calendar events that involve Cleo, placed by time.
-   - Each event gets a picture: matched from words in the title, or picked when the event is edited.
-   - An event that overlaps a routine step replaces that step for the day.
-3. Apply any one-off changes for today only, such as "no nap today." The template is not changed.
+   - A step lasts until its optional end time (the nap: 12:15–2:00) or else until the next step starts. The last step lasts until midnight.
+2. Merge in today's timed calendar events that involve Cleo (she's one of the owners), placed by time. All-day events aren't placed.
+   - Each event gets a picture: picked when the event is edited, else matched from words in the title, else 📅.
+   - A leading "Cleo –" or "Cleo:" (name or nickname) is dropped from the step name.
+   - An event that overlaps a routine step replaces that step for the day. Because a step without an end lasts until the next one, giving short steps an end keeps a nearby event from replacing them.
+3. Apply any one-off changes for today only (`routineOverrides/{date}`), such as "no nap today." Each change is matched to the day's steps by start time: it replaces the step(s) starting then, removes them when marked `skip`, or is added if nothing starts then. The template is not changed.
 
 ### Calendar
 
