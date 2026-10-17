@@ -12,7 +12,7 @@
     "format:check": "prettier --check .",
     "shoot": "node scripts/shoot.mjs",
     "test": "vitest run",
-    "test:rules": "firebase emulators:exec --only firestore --project demo-starboard \"vitest run tests/rules --no-file-parallelism\"",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-starboard \"vitest run tests/rules\"",
     "test:functions": "firebase emulators:exec --only firestore --project demo-starboard \"vitest run functions/test\"",
     "emulators": "npm --prefix functions run build && firebase emulators:start --project demo-starboard --import .emulator-data --export-on-exit",
     "seed": "node scripts/seed.mjs"

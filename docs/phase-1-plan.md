@@ -25,7 +25,7 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   settings/main             weather {place, lat, lon, unit}, screen {wake, dim, off},
                             calendar {id, name, status, lastSyncAt, error {message, at}}
                             (found automatically and sync health, see spec §7)
-  events/{eventId}          mirrored from Google Calendar: title, start, end, allDay, ownerIds[], ownerSource
+  events/{eventId}          mirrored from Google Calendar: title, location, start, end, allDay, ownerIds[], ownerSource
   eventOverrides/{eventId}  ownerIds[] (manual correction), special: bool, pic
   chores/{choreId}          name, memberId, repeat (daily|weekdays|weekly|once), pic
   choreCompletions/{date_choreId}  date, choreId, doneAt, doneBy
@@ -63,7 +63,7 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   - chores preview,
   - grocery strip with mic,
   - dinner card as a placeholder until Phase 2.
-- [ ] **Calendar:** week view, with the person filters applied.
+- [x] **Calendar:** week view, with the person filters applied, the event sheet and the sync notice.
 - [x] **Chores:**
   - columns per person, with daily reset based on `choreCompletions` dates,
   - stars for adults and stickers for Cleo,
