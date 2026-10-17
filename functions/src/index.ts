@@ -40,7 +40,8 @@ export const syncCalendar = onSchedule(
         const result = await syncHousehold(db, home.id, api);
         logger.info('Calendar sync', { hid: home.id, ...result });
       } catch (err) {
-        // A nested Error serializes to {}, so log its message instead.
+        // syncHousehold already saved a short copy to settings/main.calendar.error.
+        // A nested Error serializes to {}, so log its full message instead.
         logger.error('Calendar sync failed', {
           hid: home.id,
           error: err instanceof Error ? err.message : String(err),
