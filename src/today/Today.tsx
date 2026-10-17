@@ -2,6 +2,7 @@ import type { User } from 'firebase/auth';
 import { ChoreRow, type ChoreContext } from '../chores/ChoreRow';
 import { choresOn, choresPreview } from '../data/chores';
 import { groceryPreview, openItems } from '../data/grocery';
+import { MicButton } from '../grocery/Grocery';
 import { useChoreDay, useEvents, useGrocery } from '../data/live';
 import type { EventView } from '../data/types';
 import { showsOwners, useFilters } from '../shell/filters';
@@ -60,7 +61,13 @@ export function Today({ hid, user, members, phone, go }: Props) {
           <ChoresPreview hid={hid} user={user} members={members} phone={phone} now={now} />
         </div>
       </section>
-      <GroceryStrip hid={hid} onOpen={() => go('grocery')} />
+      <GroceryStrip
+        hid={hid}
+        user={user}
+        members={members}
+        phone={phone}
+        onOpen={() => go('grocery')}
+      />
     </>
   );
 }
@@ -156,7 +163,19 @@ function ChoresPreview({
   );
 }
 
-function GroceryStrip({ hid, onOpen }: { hid: string; onOpen: () => void }) {
+function GroceryStrip({
+  hid,
+  user,
+  members,
+  phone,
+  onOpen,
+}: {
+  hid: string;
+  user: User;
+  members: MemberWithId[];
+  phone: boolean;
+  onOpen: () => void;
+}) {
   const items = useGrocery(hid);
   const open = items ? openItems(items) : [];
   return (
@@ -170,20 +189,10 @@ function GroceryStrip({ hid, onOpen }: { hid: string; onOpen: () => void }) {
       <div class="grocery-strip">
         <div class="count">{items ? open.length : ''}</div>
         <div class="items">{items ? groceryPreview(open) : ''}</div>
-        {/* Voice add comes with the Grocery tab (#9); until then the mic opens the list. */}
-        <button type="button" class="btn mic" aria-label="Add a grocery item" onClick={onOpen}>
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <rect x="9" y="3" width="6" height="11" rx="3" />
-            <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
-          </svg>
-        </button>
+        <MicButton
+          ctx={items && { hid, user, members, phone, items }}
+          label="Add grocery item by voice"
+        />
       </div>
     </section>
   );
