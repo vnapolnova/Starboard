@@ -67,6 +67,10 @@
   height: 22px;
 }
 
+.mic.listening {
+  background: #ff7ab6;
+}
+
 /* Cards, as .panel in design/tablet-mockup.html */
 .panel {
   background: var(--surface);

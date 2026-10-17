@@ -68,7 +68,7 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
   - columns per person, with daily reset based on `choreCompletions` dates,
   - stars for adults and stickers for Cleo,
   - the sparkle burst when Cleo's chores are done.
-- [ ] **Grocery:**
+- [x] **Grocery:**
   - add by typing or voice through the Web Speech API (parse "add X"),
   - categories, an "In the cart" section and source tags.
 - [ ] **Cleo's day:**

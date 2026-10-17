@@ -16,7 +16,7 @@ Starboard is a family kitchen dashboard for two parents and a toddler.
 - **Keep the tablet simple and safe:**
   - Large tap targets, readable from about 2 m away.
   - No PIN. Instead, use an activity log, a 10-second Undo toast on the tablet, and a "Recent changes" undo list on the phone.
-  - Destructive and admin actions (delete, edit recipes, chore setup, settings) are phone-only.
+  - Destructive and admin actions (delete, edit recipes, chore setup, settings) are phone-only. The one exception is the grocery cart's **Clear**, which has an Undo toast.
 - **No secrets in the repo.** Firebase config goes in env files, and OAuth client secrets and refresh tokens stay server-side only, in Functions config or Secret Manager. Keep `.env*` in `.gitignore`.
 - **Family data lives in Firestore, not in code.** That covers names, emails, routines and location. Seed scripts read from a gitignored local file.
 - **Accessibility:** visible focus states, respect `prefers-reduced-motion` (the sparkles turn off), and support light and dark themes.

@@ -10,5 +10,9 @@ export default defineConfig({
     ],
     // Emulator tests share one emulator, so files run one at a time.
     fileParallelism: false,
+    // Each emulator test runs several transactions, and the emulator can take
+    // seconds per transaction once warm runs pile up (seen in cloud containers).
+    testTimeout: 20_000,
+    hookTimeout: 30_000,
   },
 });

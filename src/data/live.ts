@@ -4,7 +4,8 @@ import { db } from '../lib/firebase';
 import { completionsFrom, type ChoreWithId } from './chores';
 import { col, docRef } from './db';
 import { subscribeEvents } from './events';
-import type { CalendarSettings, ChoreCompletion, DateKey, EventView, GroceryItem } from './types';
+import type { GroceryWithId } from './grocery';
+import type { CalendarSettings, ChoreCompletion, DateKey, EventView } from './types';
 
 // Live Firestore data for the screens (plan §5: everything updates through
 // onSnapshot). Each hook returns null until its first snapshot arrives.
@@ -92,6 +93,6 @@ export function useChoreDay(hid: string, day: Date) {
   return { chores, completions: [...recent, ...once] };
 }
 
-export function useGrocery(hid: string): GroceryItem[] | null {
+export function useGrocery(hid: string): GroceryWithId[] | null {
   return useQuery(() => col(hid, 'grocery'), [hid]);
 }
