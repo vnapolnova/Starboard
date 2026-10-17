@@ -51,6 +51,7 @@ On a phone-sized screen (≤520px wide) the same shell uses the phone mockup's c
 ### Today
 
 - **Header:** clock, date, weather (current temperature plus high and low), person chips and the unicorn.
+  - Weather comes from Open-Meteo on the tablet (no API key), using `settings/main.weather`. It shows a sky icon, the current temperature, today's high and low, and the town (the part of `place` before the comma). It refreshes every 30 minutes, always fetches in °C and converts to the unit from settings, so changing the unit needs no refetch. The last reading is cached on the device: offline it keeps showing, and with nothing cached the slot stays empty. It never shows an error.
 - **Agenda:** today's events with a color bar per person, the "Now" line, and past events dimmed.
 - **Dinner tonight:** the planned meal and a suggested start time, with a link to the recipe.
 - **Chores today:** the first few chores, with a link to the full list.
