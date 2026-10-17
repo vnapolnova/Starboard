@@ -18,7 +18,7 @@ Implement issue #$ARGUMENTS.
    - **Tests:** write unit tests for any logic, and run them along with the emulator tests. Fix failures before opening the PR.
    - **Commits:** small and descriptive.
 5. If the change touches UI, run the app and capture it: `node scripts/shoot.mjs <url> issue-$ARGUMENTS`. Commit the results to `docs/shots/issue-$ARGUMENTS/`.
-6. Open a PR titled `<Feature> (#$ARGUMENTS)` from `.github/pull_request_template.md`, with `Closes #$ARGUMENTS`. Fill in every section, including putting the screenshots next to the matching mockup.
+6. Open a PR titled `<Feature> (#$ARGUMENTS)` from `.github/pull_request_template.md`, with `Closes #$ARGUMENTS`. Fill in every section, including putting the screenshots next to the matching mockup. Add images as Markdown pinned to the pushed commit (`![name](https://raw.githubusercontent.com/{owner}/{repo}/<sha>/docs/shots/...)`), never as `<img>` tags; see Visual review in `docs/pipeline.md`.
 7. Move the issue to `stage:review`.
 
 If something's ambiguous or the spec conflicts with the mockup, stop and ask:
