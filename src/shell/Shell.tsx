@@ -32,7 +32,7 @@ export function Shell({ hid, user }: { hid: string; user: User }) {
           who={memberForEmail(members, user.email)?.name ?? null}
         />
       ) : (
-        <Header {...headerProps} />
+        <Header {...headerProps} hid={hid} />
       )}
       <main ref={main}>
         <div id="view" role="tabpanel" aria-label={tabLabel(route) ?? kidDayTitle(kid)}>

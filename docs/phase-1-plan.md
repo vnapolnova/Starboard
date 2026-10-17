@@ -50,8 +50,8 @@ households/{hid}            name, allowedEmails[] (lowercase; seed script only)
 
 ## 4. Weather
 
-- [ ] Fetch from Open-Meteo on the client (no API key) using the lat/lon from settings. Refresh every 30 minutes and cache the last result.
-- [ ] Support the °F/°C unit from settings. The phone Settings screen comes in Phase 2; seed the location for now.
+- [x] Fetch from Open-Meteo on the client (no API key) using the lat/lon from settings. Refresh every 30 minutes and cache the last result.
+- [x] Support the °F/°C unit from settings. The phone Settings screen comes in Phase 2; seed the location for now.
 
 ## 5. Tablet screens
 

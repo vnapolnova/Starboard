@@ -3,6 +3,7 @@ import { isShown, toggleFilter, useFilters } from './filters';
 import { clockParts, longDate } from './format';
 import { useNow } from './hooks';
 import { UnicornSvg } from './icons';
+import { Weather } from '../weather/Weather';
 import { chipsFor, initial, kidDayTitle, type MemberWithId } from './people';
 
 interface Props {
@@ -69,7 +70,7 @@ export function Unicorn({
 }
 
 /** Tablet header: the starry sky from design/tablet-mockup.html. */
-export function Header({ members, kid, onKid }: Props) {
+export function Header({ hid, members, kid, onKid }: Props & { hid: string }) {
   const now = useNow();
   const { time, ampm } = clockParts(now);
   return (
@@ -78,8 +79,7 @@ export function Header({ members, kid, onKid }: Props) {
         {time}
         <small>{ampm}</small>
       </div>
-      {/* Weather (#5) fills this slot. */}
-      <div class="wx" />
+      <Weather hid={hid} />
       <div class="date">{longDate(now)}</div>
       <PersonChips members={members} />
       {kid && <Unicorn kid={kid} onKid={onKid} bubble />}
