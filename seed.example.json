@@ -69,6 +69,7 @@
       { "name": "Breakfast", "pic": "🥣", "start": "07:00" },
       { "name": "Lunch", "pic": "🥪", "start": "11:00" },
       { "name": "Nap", "pic": "😴", "start": "12:15", "end": "14:00" },
+      { "name": "Up from nap", "pic": "🧸", "start": "14:00" },
       { "name": "Dinner", "pic": "🌮", "start": "17:00" },
       { "name": "Snack", "pic": "🍎", "start": "19:00" },
       { "name": "Bath", "pic": "🛁", "start": "19:30" },

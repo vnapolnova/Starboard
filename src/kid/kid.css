@@ -36,7 +36,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -57,6 +57,7 @@
 }
 
 .step .nm {
+  overflow-wrap: anywhere;
   font-family: var(--display);
   font-weight: 700;
   font-size: 22px;
@@ -93,4 +94,42 @@
 .step.cur .tm {
   color: var(--kid);
   font-weight: 700;
+}
+
+/* Phone: two columns still, with smaller pictures so names fit */
+@media (max-width: 520px) {
+  .routine {
+    gap: 10px;
+  }
+
+  .step {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 20px;
+  }
+
+  .step.cur {
+    padding: 10px;
+  }
+
+  .step.done::after {
+    top: 6px;
+    right: 10px;
+  }
+
+  .step .pic {
+    font-size: 34px;
+  }
+
+  .step .nm {
+    font-size: 18px;
+  }
+
+  .countdown .big {
+    font-size: 44px;
+  }
+
+  .countdown .txt {
+    font-size: 18px;
+  }
 }
