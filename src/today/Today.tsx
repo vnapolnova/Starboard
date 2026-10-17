@@ -1,14 +1,13 @@
 import type { User } from 'firebase/auth';
-import { choresPreview, dateKey, setChoreDone, type ChoreWithId } from '../data/chores';
+import { ChoreRow, type ChoreContext } from '../chores/ChoreRow';
+import { choresOn, choresPreview } from '../data/chores';
 import { groceryPreview, openItems } from '../data/grocery';
-import { useChores, useCompletions, useEvents, useGrocery } from '../data/live';
+import { useChoreDay, useEvents, useGrocery } from '../data/live';
 import type { EventView } from '../data/types';
-import { db } from '../lib/firebase';
 import { showsOwners, useFilters } from '../shell/filters';
 import { useNow } from '../shell/hooks';
-import { memberForEmail, sortMembers, type MemberWithId } from '../shell/people';
+import { sortMembers, type MemberWithId } from '../shell/people';
 import type { Route } from '../shell/routes';
-import { toast, toastWithUndo } from '../ui/toast-store';
 import {
   addDays,
   agendaEnd,
@@ -139,70 +138,20 @@ function ChoresPreview({
   phone: boolean;
   now: Date;
 }) {
-  const date = dateKey(now);
-  const chores = useChores(hid);
-  const completions = useCompletions(hid, date);
-  if (!chores || !completions) return null;
+  const data = useChoreDay(hid, now);
+  if (!data) return null;
 
-  const done = new Set(completions.map((c) => c.choreId));
+  const today = choresOn(data.chores, data.completions, now);
   const order = sortMembers(members).map((m) => m.id);
-  const list = choresPreview(chores, done, now, order);
+  const list = choresPreview(today, order);
   if (!list.length) return <p class="empty">No chores today.</p>;
 
-  const toggle = async (chore: ChoreWithId, owner: MemberWithId | undefined) => {
-    const nowDone = !done.has(chore.id);
-    const device = phone ? 'phone' : 'tablet';
-    try {
-      const undo = await setChoreDone(db, hid, {
-        actor: { email: user.email ?? '', device },
-        doneBy: memberForEmail(members, user.email)?.id ?? device,
-        choreId: chore.id,
-        date,
-        done: nowDone,
-      });
-      const message = !nowDone
-        ? `Unchecked ${chore.name}`
-        : owner?.isKid
-          ? 'Yay! You got a sticker ⭐'
-          : owner
-            ? `Nice, ${owner.name}! +1 star`
-            : `Done: ${chore.name}`;
-      toastWithUndo(message, undo);
-    } catch (e) {
-      console.error('Chore check-off failed', e);
-      toast("Couldn't save that. Try again.");
-    }
-  };
-
+  const ctx: ChoreContext = { hid, user, members, phone, today };
   return (
     <div>
-      {list.map((c) => {
-        const owner = members.find((m) => m.id === c.memberId);
-        const kid = !!owner?.isKid;
-        return (
-          <button
-            key={c.id}
-            type="button"
-            class={kid ? 'chk kid' : 'chk'}
-            role="checkbox"
-            aria-checked={done.has(c.id)}
-            onClick={() => void toggle(c, owner)}
-          >
-            <span class="box" aria-hidden="true" />
-            {c.pic && (
-              <span class="emo" aria-hidden="true">
-                {c.pic}
-              </span>
-            )}
-            <span class="lbl">{c.name}</span>
-            <span
-              class="tag"
-              style={{ background: `var(--${owner?.color ?? 'fam'})` }}
-              aria-hidden="true"
-            />
-          </button>
-        );
-      })}
+      {list.map((d) => (
+        <ChoreRow key={d.chore.id} ctx={ctx} item={d} showTag />
+      ))}
     </div>
   );
 }

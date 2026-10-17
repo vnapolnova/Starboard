@@ -1,0 +1,51 @@
+/* Chores tab, as .chorecols in design/tablet-mockup.html */
+.chorecols {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 14px;
+}
+
+.chorecol {
+  background: var(--surface);
+  border-radius: 22px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-top: 7px solid;
+  min-width: 0;
+}
+
+.chorecol h3 {
+  font-family: var(--display);
+  font-size: 22px;
+  margin: 0;
+}
+
+.chorecol .stars {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.chorecol .chk {
+  font-size: 16px;
+}
+
+.chorecol.kidcol {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--kid) 12%, var(--surface)),
+    var(--surface)
+  );
+}
+
+.chorecol.kidcol .chk {
+  font-size: 18px;
+  font-family: var(--display);
+  font-weight: 700;
+}
+
+@media (max-width: 520px) {
+  .chorecols {
+    grid-template-columns: 1fr;
+  }
+}

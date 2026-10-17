@@ -167,3 +167,35 @@
   font-size: 24px;
   line-height: 1;
 }
+
+/* Sparkle burst (src/ui/sparkle.ts); hidden under reduced motion in tokens.css */
+.spark {
+  position: fixed;
+  pointer-events: none;
+  z-index: 30;
+  font-size: 20px;
+  animation: spark 0.9s ease-out forwards;
+}
+
+.spark.big {
+  font-size: 28px;
+  animation-duration: 1.2s;
+}
+
+@keyframes spark {
+  from {
+    transform: translate(0, 0) scale(0.4);
+    opacity: 1;
+  }
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.chk img.emo {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}

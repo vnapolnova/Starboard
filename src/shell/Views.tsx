@@ -1,10 +1,11 @@
 import type { User } from 'firebase/auth';
+import { Chores } from '../chores/Chores';
 import { Today } from '../today/Today';
 import { kidDayTitle, type MemberWithId } from './people';
 import type { Route } from './routes';
 
 // Placeholder views until each screen's issue lands: Calendar (#7),
-// Chores (#8), Grocery (#9), Cleo's day (#10). Meals comes in Phase 2.
+// Grocery (#9), Cleo's day (#10). Meals comes in Phase 2.
 // Headings and copy are the mockup's.
 
 export function View({
@@ -34,7 +35,7 @@ export function View({
     case 'grocery':
       return <Placeholder title="Grocery list" />;
     case 'chores':
-      return <Placeholder title="Chores" sub="Resets each morning" />;
+      return <Chores hid={hid} user={user} members={members} phone={phone} />;
     case 'kid':
       return (
         <div class="backbar">

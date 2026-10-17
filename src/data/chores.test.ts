@@ -175,9 +175,7 @@ describe('choresOn', () => {
       [done('dishes', '2026-10-17'), done('form', '2026-10-16')],
       sat,
     );
-    expect(list.map((d) => [d.chore.id, d.done?.date ?? null])).toEqual([
-      ['dishes', '2026-10-17'],
-    ]);
+    expect(list.map((d) => [d.chore.id, d.done?.date ?? null])).toEqual([['dishes', '2026-10-17']]);
   });
 });
 
@@ -219,7 +217,11 @@ describe('choresFor', () => {
 });
 
 describe('monthCount', () => {
-  const chores = [chore('dishes', 'alice'), chore('sheets', 'alice', 'weekly'), chore('toys', 'cleo')];
+  const chores = [
+    chore('dishes', 'alice'),
+    chore('sheets', 'alice', 'weekly'),
+    chore('toys', 'cleo'),
+  ];
 
   it("counts this month's check-offs of the person's chores", () => {
     const completions = [
@@ -258,7 +260,9 @@ describe('finishesList', () => {
   });
 
   it('is false while others are still to do', () => {
-    expect(finishesList(choresOn([chore('toys', 'cleo'), chore('teeth', 'cleo')], [], wed), 'toys')).toBe(false);
+    expect(
+      finishesList(choresOn([chore('toys', 'cleo'), chore('teeth', 'cleo')], [], wed), 'toys'),
+    ).toBe(false);
     expect(finishesList([], 'toys')).toBe(false);
   });
 });
