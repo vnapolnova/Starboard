@@ -203,6 +203,40 @@ main h2 .sub {
   margin: 0;
 }
 
+/* Shared from the mockup: a label with a segmented toggle (Cleo's day, Explore) */
+.resline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 0 10px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.seg {
+  display: inline-flex;
+  background: var(--bg);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 3px;
+}
+
+.seg button {
+  border: 0;
+  background: none;
+  padding: 7px 16px;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.seg button[aria-pressed='true'] {
+  background: var(--surface);
+  color: var(--ink);
+}
+
 /* Bottom tabs */
 .tabbar {
   display: grid;

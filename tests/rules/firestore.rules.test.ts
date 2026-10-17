@@ -139,3 +139,19 @@ describe('household data', () => {
     await assertFails(deleteDoc(doc(db, `households/${HID}/activity/a1`)));
   });
 });
+
+describe("Cleo's day docs", () => {
+  it('let the household read the template and a missing day override', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), `households/${HID}/routines/weekday`), { steps: [] });
+    });
+    const db = as(TABLET);
+    await assertSucceeds(getDoc(doc(db, `households/${HID}/routines/weekday`)));
+    await assertSucceeds(getDoc(doc(db, `households/${HID}/routineOverrides/2026-10-17`)));
+  });
+
+  it("don't let other accounts read them", async () => {
+    await assertFails(getDoc(doc(as(STRANGER), `households/${HID}/routines/weekday`)));
+    await assertFails(getDoc(doc(as(STRANGER), `households/${HID}/routineOverrides/2026-10-17`)));
+  });
+});
