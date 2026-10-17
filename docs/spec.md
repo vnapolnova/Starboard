@@ -18,7 +18,7 @@ Starboard is a Skylight-style family dashboard for the kitchen, with a phone com
 | Previews | PR preview channels are for visual review only: the signed-out screen and `/_mockups/`. Their URLs aren't authorized for Google sign-in, so sign-in and data are tested on the emulators locally and on the live URL after merge. |
 | Data | Firebase (Firestore with real-time sync, Auth with Google sign-in, Cloud Functions) |
 | Calendar | Google Calendar API, using the shared "Family" calendar |
-| Screen schedule | Wake at 6:15, dim at 8:45 pm, off at 10 pm. Motion wake through Fully Kiosk's camera. |
+| Screen schedule | Wake at 6:15, dim at 7:45 pm, off at 9 pm. Motion wake through Fully Kiosk's camera. |
 
 ## 2. Family
 
