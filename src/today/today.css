@@ -30,6 +30,7 @@ main section + section {
 .ev .bar {
   align-self: stretch;
   border-radius: 4px;
+  padding: 0; /* not the phone header's .bar */
 }
 
 .ev .what {
