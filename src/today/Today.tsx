@@ -1,8 +1,12 @@
 import type { User } from 'firebase/auth';
+import { useState } from 'preact/hooks';
+import { EventSheet } from '../calendar/EventSheet';
+import { CalendarNotice } from '../calendar/Notice';
+import { calendarNotice } from '../calendar/week';
 import { ChoreRow, type ChoreContext } from '../chores/ChoreRow';
 import { choresOn, choresPreview } from '../data/chores';
 import { groceryPreview, openItems } from '../data/grocery';
-import { useChoreDay, useEvents, useGrocery } from '../data/live';
+import { useCalendarSettings, useChoreDay, useEvents, useGrocery } from '../data/live';
 import type { EventView } from '../data/types';
 import { showsOwners, useFilters } from '../shell/filters';
 import { useNow } from '../shell/hooks';
@@ -68,31 +72,42 @@ export function Today({ hid, user, members, phone, go }: Props) {
 function Agenda({ hid, members, now }: { hid: string; members: MemberWithId[]; now: Date }) {
   useFilters();
   const events = useEvents(hid);
+  const notice = calendarNotice(useCalendarSettings(hid), now);
+  const [open, setOpen] = useState<EventView | null>(null);
+  // When no calendar is found, say so instead of an empty agenda (spec §7).
+  if (notice?.blocking) return <CalendarNotice notice={notice} />;
   if (!events) return <ul class="agenda" />;
 
   const shown = events.filter((e) => showsOwners(e.ownerIds));
   const today = eventsOn(shown, now);
   const end = agendaEnd(today, eventsOn(shown, addDays(now, 1)), now);
+  // An event still open in the sheet stays in step with live changes.
+  const current = open && (events.find((e) => e.id === open.id) ?? open);
 
   return (
-    <ul class="agenda">
-      {agendaRows(today, now).map((row) =>
-        row.kind === 'now' ? (
-          <li key="now" class="now">
-            Now
-          </li>
-        ) : (
-          <EventRow
-            key={row.event.id}
-            event={row.event}
-            past={row.past}
-            members={members}
-            day={now}
-          />
-        ),
-      )}
-      {end && <AgendaEnd text={end} />}
-    </ul>
+    <>
+      {notice && <CalendarNotice notice={notice} />}
+      <ul class="agenda">
+        {agendaRows(today, now).map((row) =>
+          row.kind === 'now' ? (
+            <li key="now" class="now">
+              Now
+            </li>
+          ) : (
+            <EventRow
+              key={row.event.id}
+              event={row.event}
+              past={row.past}
+              members={members}
+              day={now}
+              onOpen={() => setOpen(row.event)}
+            />
+          ),
+        )}
+        {end && <AgendaEnd text={end} />}
+      </ul>
+      {current && <EventSheet event={current} onClose={() => setOpen(null)} />}
+    </>
   );
 }
 
@@ -101,21 +116,26 @@ function EventRow({
   past,
   members,
   day,
+  onOpen,
 }: {
   event: EventView;
   past: boolean;
   members: MemberWithId[];
   day: Date;
+  onOpen: () => void;
 }) {
   const owners = ownersOf(event, members);
   return (
     <li class={past ? 'ev past' : 'ev'}>
-      <span class="time">{timeLabel(event, day)}</span>
-      <span class="bar" style={{ background: barBackground(owners) }} aria-hidden="true" />
-      <span>
-        <div class="what">{event.title}</div>
-        <div class="who">{joinNames(owners.map((o) => o.name))}</div>
-      </span>
+      {/* Tapping opens the read-only event sheet, as on the Calendar tab. */}
+      <button type="button" class="evbtn" onClick={onOpen}>
+        <span class="time">{timeLabel(event, day)}</span>
+        <span class="bar" style={{ background: barBackground(owners) }} aria-hidden="true" />
+        <span>
+          <span class="what">{event.title}</span>
+          <span class="who">{joinNames(owners.map((o) => o.name))}</span>
+        </span>
+      </button>
     </li>
   );
 }

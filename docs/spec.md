@@ -57,6 +57,7 @@ On a phone-sized screen (≤520px wide) the same shell uses the phone mockup's c
   - The color bar is the owner's color. An event with several owners gets equal stripes, one per owner, and an event with no owners is Family. The line under the title names the owners ("Alice & Cleo").
   - An event dims once its end time has passed. The "Now" line sits before the first event that hasn't started, and both follow the clock minute by minute.
   - The person chips filter the agenda: an event shows if any of its owners is on.
+  - Tapping an event opens the event detail sheet, as on Calendar.
   - Once nothing is left to come, one line closes the list: "That's everything today." (or "Nothing on the calendar today."), plus "Tomorrow starts with Gym at 7:00." when tomorrow has a timed event.
 - **Dinner tonight:** the planned meal and a suggested start time, with a link to the recipe. Until Phase 2 it's a placeholder card, with **Week** opening Meals.
 - **Chores today:** the first four chores due today, not-done first, then parents before the kid. **All** opens Chores. A tap checks a chore off for today, or un-checks it, with a short message and no Undo (see Chores).
@@ -94,7 +95,15 @@ How the routine is built each day:
 
 ### Calendar
 
-- A week view, color-coded by person.
+- **This week,** Monday to Sunday, one row per day: the date number and short weekday (today's in Cleo's color), then that day's events, or "Free day".
+- Each event shows its time ("All day" for all-day events) and title, with a bar in the owner's color. Several owners get equal stripes, and no owners is Family, as on Today. An event spanning several days shows on each of them.
+- The person chips filter the week the same way as the agenda.
+- Tapping an event opens the event detail sheet (Phase 1: the date and time, and the place).
+- **When the calendar can't be used** (§7), Calendar and Today's agenda show a short read-only notice:
+  - `status` is `not_found`: "Family calendar not found", in place of the list.
+  - `status` is `ambiguous`: "More than one Family calendar", in place of the list.
+  - `error` is set, or `lastSyncAt` is more than 30 minutes old: "Calendar sync failing since …" (the last good sync, else the error's time), above whatever events are still there, with "Events here may be out of date."
+  - Nothing shows before the sync has written `calendar` at all. Fixing it is a Google Calendar or phone task.
 
 ### Meals
 
@@ -132,7 +141,7 @@ How the routine is built each day:
 
 ### Event detail sheet
 
-Opens when an event title is tapped, on the home screen or in Explore. It shows:
+Opens when an event title is tapped, on the home screen or in Explore, and when an event is tapped in Today's agenda or on the Calendar tab. It shows:
 
 - the date and time,
 - the place and drive time,
@@ -140,6 +149,8 @@ Opens when an event title is tapped, on the home screen or in Explore. It shows:
 - a credit for the source,
 - **View on [source]**, which opens an in-app viewer with a Back button,
 - **Add to calendar**.
+
+For a Family calendar event (Phase 1) it shows only the title, the date and time ("Wed, Oct 14 · 10:00 – 11:00 am", "Sat, Oct 17 · All day") and the place from Google's location field, with **Close**. It's read-only.
 
 ## 5. Phone (Manage)
 
@@ -189,11 +200,12 @@ Syncing:
 
 - Every 5 minutes the sync function mirrors the Family calendar into `events`, from 7 days back to 14 days ahead, so today's past events and the start of the week still show. Recurring events are stored per instance; cancelled events, and events no longer in that window, are removed.
 - All-day events are stored as local midnights in the calendar's time zone.
+- Each event keeps its title, times, owners and Google's free-text `location` (empty when there's none).
 - Each run records its health on `settings/main.calendar`, merged so `id`, `name` and `status` are kept:
   - After a full sync it sets `lastSyncAt` (server time) and clears `error`.
   - If anything throws, including a failed token refresh, it sets `error: { message, at }` and leaves `lastSyncAt` at the last good sync. The message is one line of at most 300 characters: the HTTP status and Google's error body (such as `invalid_grant` or `invalid_client`), never tokens or client secrets. The full message also goes to Cloud Logging.
   - When the calendar is `not_found` or `ambiguous`, Google did answer, so `error` is cleared, but `lastSyncAt` is not set because nothing was mirrored.
-  - The app shows a notice from these fields (#7).
+  - The app shows a notice from these fields (§4 Calendar).
 
 Additional rules:
 

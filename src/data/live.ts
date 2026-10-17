@@ -2,9 +2,9 @@ import { onSnapshot, query, where, type Query } from 'firebase/firestore';
 import { useEffect, useState } from 'preact/hooks';
 import { db } from '../lib/firebase';
 import { completionsFrom, type ChoreWithId } from './chores';
-import { col } from './db';
+import { col, docRef } from './db';
 import { subscribeEvents } from './events';
-import type { ChoreCompletion, DateKey, EventView, GroceryItem } from './types';
+import type { CalendarSettings, ChoreCompletion, DateKey, EventView, GroceryItem } from './types';
 
 // Live Firestore data for the screens (plan §5: everything updates through
 // onSnapshot). Each hook returns null until its first snapshot arrives.
@@ -22,6 +22,24 @@ export function useEvents(hid: string) {
   const [events, setEvents] = useState<EventView[] | null>(null);
   useEffect(() => subscribeEvents(db, hid, setEvents), [hid]);
   return events;
+}
+
+/**
+ * settings/main.calendar, for the "calendar isn't usable" notice (spec §7).
+ * undefined until it loads, and while the sync hasn't written it yet.
+ */
+export function useCalendarSettings(hid: string) {
+  const [cal, setCal] = useState<CalendarSettings | undefined>(undefined);
+  useEffect(
+    () =>
+      onSnapshot(
+        docRef(hid, 'settings', 'main'),
+        (snap) => setCal(snap.data()?.calendar),
+        () => setCal(undefined), // no notice rather than a wrong one
+      ),
+    [hid],
+  );
+  return cal;
 }
 
 export function useChores(hid: string): ChoreWithId[] | null {

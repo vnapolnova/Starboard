@@ -135,6 +135,8 @@ async function mirror(
     seen.add(e.id);
     void writer.set(events.doc(e.id), {
       title: e.summary ?? '',
+      // Free text from Google; shown on the event sheet. Empty when there's none.
+      location: e.location?.trim() ?? '',
       start: Timestamp.fromDate(times.start),
       end: Timestamp.fromDate(times.end),
       allDay: times.allDay,

@@ -46,6 +46,7 @@ const fixtures: GoogleEvent[] = [
   {
     id: 'swim',
     summary: 'Cleo – swim',
+    location: ' Rochester Hills Pool, 500 Letica Dr ',
     start: { dateTime: '2026-10-15T16:00:00-04:00' },
     end: { dateTime: '2026-10-15T17:00:00-04:00' },
   },
@@ -100,11 +101,13 @@ describe('syncHousehold', () => {
     expect(Object.keys(got).sort()).toEqual(['fair', 'pickup', 'swim', 'zoo']);
     expect(got.swim).toMatchObject({
       title: 'Cleo – swim',
+      location: 'Rochester Hills Pool, 500 Letica Dr',
       allDay: false,
       ownerIds: ['cleo'],
       ownerSource: 'title',
     });
     expect(got.swim.start.toDate()).toEqual(new Date('2026-10-15T20:00:00Z'));
+    expect(got.zoo.location).toBe('');
     expect(got.zoo).toMatchObject({ ownerIds: ['alice', 'cleo'], ownerSource: 'guests' });
     expect(got.pickup).toMatchObject({ ownerIds: [], ownerSource: 'family' });
     expect(got.fair).toMatchObject({ allDay: true, ownerIds: ['bob'], ownerSource: 'title' });
