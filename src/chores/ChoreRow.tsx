@@ -10,11 +10,12 @@ import {
 import { db } from '../lib/firebase';
 import { memberForEmail, type MemberWithId } from '../shell/people';
 import { sparkle } from '../ui/sparkle';
-import { toast, toastWithUndo } from '../ui/toast-store';
+import { toast } from '../ui/toast-store';
 
 // A chore's check-off row (.chk in the mockup), shared by Today and Chores, and
-// what a tap does: tick it for today or untick it, through the activity log,
-// with the Undo toast. Ticking one of the kid's chores sparkles, and the last
+// what a tap does: tick it for today or untick it, through the activity log.
+// The toast is a short message with no Undo: a chore stays on the list, so
+// tapping it again is the undo (owner's call on #37). Ticking one of the kid's chores sparkles, and the last
 // one of the day gets the big burst.
 
 export interface ChoreContext {
@@ -34,7 +35,7 @@ async function toggle(ctx: ChoreContext, item: ChoreDay, el: Element) {
     sparkle(el, finishesList(choresFor(ctx.today, owner.id), chore.id));
   }
   try {
-    const undo = await setChoreDone(db, ctx.hid, {
+    await setChoreDone(db, ctx.hid, {
       actor: { email: ctx.user.email ?? '', device },
       doneBy: memberForEmail(ctx.members, ctx.user.email)?.id ?? device,
       choreId: chore.id,
@@ -42,7 +43,7 @@ async function toggle(ctx: ChoreContext, item: ChoreDay, el: Element) {
       date: done ? done.date : dateKey(new Date()),
       done: !done,
     });
-    toastWithUndo(message(chore, owner, !done), undo);
+    toast(message(chore, owner, !done));
   } catch (e) {
     console.error('Chore check-off failed', e);
     toast("Couldn't save that. Try again.");
