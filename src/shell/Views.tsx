@@ -1,11 +1,12 @@
 import type { User } from 'firebase/auth';
+import { Calendar } from '../calendar/Calendar';
 import { Chores } from '../chores/Chores';
 import { Today } from '../today/Today';
 import { kidDayTitle, type MemberWithId } from './people';
 import type { Route } from './routes';
 
-// Placeholder views until each screen's issue lands: Calendar (#7),
-// Grocery (#9), Cleo's day (#10). Meals comes in Phase 2.
+// Placeholder views until each screen's issue lands: Grocery (#9) and
+// Cleo's day (#10). Meals comes in Phase 2.
 // Headings and copy are the mockup's.
 
 export function View({
@@ -29,7 +30,7 @@ export function View({
     case 'today':
       return <Today hid={hid} user={user} members={members} phone={phone} go={go} />;
     case 'cal':
-      return <Placeholder title="This week" sub="Google Calendar · Family" />;
+      return <Calendar hid={hid} members={members} />;
     case 'meals':
       return <Placeholder title="Dinner plan" note="Meals and recipes are coming in Phase 2." />;
     case 'grocery':

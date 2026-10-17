@@ -1,8 +1,10 @@
 import type { User } from 'firebase/auth';
+import { CalendarNotice } from '../calendar/Notice';
+import { calendarNotice } from '../calendar/week';
 import { ChoreRow, type ChoreContext } from '../chores/ChoreRow';
 import { choresOn, choresPreview } from '../data/chores';
 import { groceryPreview, openItems } from '../data/grocery';
-import { useChoreDay, useEvents, useGrocery } from '../data/live';
+import { useCalendarSettings, useChoreDay, useEvents, useGrocery } from '../data/live';
 import type { EventView } from '../data/types';
 import { showsOwners, useFilters } from '../shell/filters';
 import { useNow } from '../shell/hooks';
@@ -68,6 +70,9 @@ export function Today({ hid, user, members, phone, go }: Props) {
 function Agenda({ hid, members, now }: { hid: string; members: MemberWithId[]; now: Date }) {
   useFilters();
   const events = useEvents(hid);
+  const notice = calendarNotice(useCalendarSettings(hid), now);
+  // When no calendar is found, say so instead of an empty agenda (spec §7).
+  if (notice?.blocking) return <CalendarNotice notice={notice} />;
   if (!events) return <ul class="agenda" />;
 
   const shown = events.filter((e) => showsOwners(e.ownerIds));
@@ -75,24 +80,27 @@ function Agenda({ hid, members, now }: { hid: string; members: MemberWithId[]; n
   const end = agendaEnd(today, eventsOn(shown, addDays(now, 1)), now);
 
   return (
-    <ul class="agenda">
-      {agendaRows(today, now).map((row) =>
-        row.kind === 'now' ? (
-          <li key="now" class="now">
-            Now
-          </li>
-        ) : (
-          <EventRow
-            key={row.event.id}
-            event={row.event}
-            past={row.past}
-            members={members}
-            day={now}
-          />
-        ),
-      )}
-      {end && <AgendaEnd text={end} />}
-    </ul>
+    <>
+      {notice && <CalendarNotice notice={notice} />}
+      <ul class="agenda">
+        {agendaRows(today, now).map((row) =>
+          row.kind === 'now' ? (
+            <li key="now" class="now">
+              Now
+            </li>
+          ) : (
+            <EventRow
+              key={row.event.id}
+              event={row.event}
+              past={row.past}
+              members={members}
+              day={now}
+            />
+          ),
+        )}
+        {end && <AgendaEnd text={end} />}
+      </ul>
+    </>
   );
 }
 
