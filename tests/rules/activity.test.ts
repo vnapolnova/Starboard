@@ -1,13 +1,25 @@
 import { readFileSync } from 'node:fs';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
-import { Timestamp, doc, getDoc, setDoc, type Firestore } from 'firebase/firestore';
+import {
+  Timestamp,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  setDoc,
+  type Firestore,
+} from 'firebase/firestore';
 import { logWrite, newDocPath, undo, type Actor } from '../../src/data/activity';
 
 // The activity-log helper against the Firestore emulator, signed in as the
 // tablet so the security rules apply. Run with `npm run test:rules`.
 const HID = 'home';
 const TABLET = 'kitchen@example.com';
+const PHONE = 'bob@example.com';
 const actor: Actor = { email: TABLET, device: 'tablet' };
 
 let env: RulesTestEnvironment;
@@ -28,7 +40,7 @@ beforeEach(async () => {
   await env.clearFirestore();
   await env.withSecurityRulesDisabled(async (ctx) => {
     const admin = ctx.firestore() as unknown as Firestore;
-    await setDoc(doc(admin, 'households', HID), { name: 'Home', allowedEmails: [TABLET] });
+    await setDoc(doc(admin, 'households', HID), { name: 'Home', allowedEmails: [TABLET, PHONE] });
     await setDoc(doc(admin, `households/${HID}/grocery/milk`), {
       name: 'Milk',
       category: 'Dairy',
@@ -157,5 +169,36 @@ describe('undo', () => {
 
   it('returns false for an unknown entry', async () => {
     expect(await undo(db, HID, 'nope')).toBe(false);
+  });
+});
+
+describe('Recent changes on a phone', () => {
+  it('lists the log newest first and undoes a tablet change', async () => {
+    await logWrite(db, HID, {
+      actor,
+      action: 'grocery.done',
+      path: 'grocery/milk',
+      op: 'merge',
+      data: { done: true },
+    });
+    const { logId } = await logWrite(db, HID, {
+      actor,
+      action: 'grocery.clear',
+      path: 'grocery/milk',
+      op: 'delete',
+    });
+
+    const phone = env
+      .authenticatedContext(PHONE, { email: PHONE, email_verified: true })
+      .firestore() as unknown as Firestore;
+    const recent = await getDocs(
+      query(collection(phone, 'households', HID, 'activity'), orderBy('ts', 'desc'), limit(50)),
+    );
+    expect(recent.docs.map((d) => d.data().action)).toEqual(['grocery.clear', 'grocery.done']);
+    expect(recent.docs[0].id).toBe(logId);
+
+    expect(await undo(phone, HID, logId)).toBe(true);
+    expect(await read('grocery/milk')).toEqual({ name: 'Milk', category: 'Dairy', done: true });
+    expect((await read(`activity/${logId}`))?.undone).toBe(true);
   });
 });

@@ -3,6 +3,7 @@ import { Calendar } from '../calendar/Calendar';
 import { Chores } from '../chores/Chores';
 import { Grocery } from '../grocery/Grocery';
 import { KidDay } from '../kid/KidDay';
+import { Recent } from '../recent/Recent';
 import { Today } from '../today/Today';
 import type { MemberWithId } from './people';
 import type { Route } from './routes';
@@ -40,6 +41,8 @@ export function View({
       return <Chores hid={hid} user={user} members={members} phone={phone} />;
     case 'kid':
       return <KidDay hid={hid} kid={kid} go={go} />;
+    case 'recent':
+      return <Recent hid={hid} members={members} />;
   }
 }
 

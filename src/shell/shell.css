@@ -297,6 +297,17 @@ main h2 .sub {
   color: var(--head-muted);
 }
 
+/* Back and Recent: the mockup's .bar .back pill */
+.bar .back {
+  border: 0;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--head-ink);
+  border-radius: 12px;
+  padding: 6px 12px;
+  min-height: 36px;
+  font-weight: 700;
+}
+
 .bar .people {
   margin-top: var(--space-3);
   padding-right: 0;

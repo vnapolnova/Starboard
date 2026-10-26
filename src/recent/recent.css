@@ -1,0 +1,67 @@
+/* Recent changes on the phone: the .card .list .item rows of design/phone-mockup.html */
+.recent-hint {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.recent {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.recent .item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.recent .item:last-child {
+  border-bottom: 0;
+}
+
+.recent .txt {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.recent .nm {
+  font-weight: 700;
+}
+
+.recent .mt {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.recent .undone .nm {
+  font-weight: 400;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.recent .state {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 8px;
+}
+
+/* .btn.text from the phone mockup */
+.btn.text {
+  background: none;
+  color: var(--accent);
+  padding: 8px;
+  min-height: 44px;
+}
+
+.btn.text:disabled {
+  opacity: 0.5;
+}

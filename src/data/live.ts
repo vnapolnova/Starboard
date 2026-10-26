@@ -1,4 +1,12 @@
-import { onSnapshot, query, where, type DocumentReference, type Query } from 'firebase/firestore';
+import {
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+  type DocumentReference,
+  type Query,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'preact/hooks';
 import { db } from '../lib/firebase';
 import { completionsFrom, type ChoreWithId } from './chores';
@@ -6,6 +14,7 @@ import { col, docRef } from './db';
 import { subscribeEvents } from './events';
 import type { GroceryWithId } from './grocery';
 import type {
+  ActivityEntry,
   CalendarSettings,
   ChoreCompletion,
   DateKey,
@@ -123,4 +132,23 @@ export function useRoutine(hid: string, kind: RoutineKind): Routine | null | und
 /** One-off changes for that day, or null if there are none. */
 export function useRoutineOverride(hid: string, date: DateKey): RoutineOverride | null | undefined {
   return useDoc(() => docRef(hid, 'routineOverrides', date), [hid, date]);
+}
+
+export type ActivityWithId = ActivityEntry & { id: string };
+
+/**
+ * The newest `count` activity entries, newest first, for the phone's Recent
+ * changes. A change made a moment ago gets an estimated time until the
+ * server's arrives, so it shows at the top right away.
+ */
+export function useRecentActivity(hid: string, count = 50) {
+  const [entries, setEntries] = useState<ActivityWithId[] | null>(null);
+  useEffect(() => {
+    setEntries(null);
+    const q = query(col(hid, 'activity'), orderBy('ts', 'desc'), limit(count));
+    return onSnapshot(q, (snap) =>
+      setEntries(snap.docs.map((d) => ({ id: d.id, ...d.data({ serverTimestamps: 'estimate' }) }))),
+    );
+  }, [hid, count]);
+  return entries;
 }

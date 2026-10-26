@@ -187,6 +187,9 @@ Tabs: Recipes · Meal plan · Chores · Settings.
 - **Undo on the tablet:** an **Undo** toast stays up for 10 seconds after each change, except chore and grocery check-offs, which show a short message instead (§4 Chores, §4 Grocery). A newer change replaces the toast, and tapping Undo shows "Undone".
 - **How undo works:** each log entry keeps the changed doc's value before and after. Undo puts the before value back (removing the doc if the change created it) and marks the entry undone. Undoing the same entry again does nothing.
 - **Undo on the phone:** a **Recent changes** list with undo for each entry.
+  - The **Recent** button in the phone's top bar opens it, with **Back** to return. It isn't on the tablet.
+  - It shows the newest 50 changes from every device, newest first. Each row says what changed ("Checked off Water plants", "Milk is in the cart"), then who and when: the member's name for a parent's phone, or "Kitchen screen" for the tablet, and "10:42 am", "Yesterday 6:05 pm" or "Mon, Oct 12 · 6:05 pm".
+  - **Undo** confirms with "Undone", and the row stays, struck through and marked **Undone**.
 - **Phone only:** deleting, editing recipes, setting up chores and changing settings. The one delete on the tablet is clearing the grocery cart (§4 Grocery), which has the Undo toast.
 
 ## 7. Calendar ownership

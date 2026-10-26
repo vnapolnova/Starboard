@@ -4,7 +4,7 @@ import { useMembers } from '../data/session';
 import { Header, PhoneBar } from './Header';
 import { PHONE_QUERY, useMediaQuery, useRoute } from './hooks';
 import { kidDayTitle, kidOf, memberForEmail } from './people';
-import { tabLabel } from './routes';
+import { tabLabel, type Route } from './routes';
 import { TabBar } from './TabBar';
 import { View } from './Views';
 import './shell.css';
@@ -12,10 +12,17 @@ import './shell.css';
 /** The app shell: header, the current view and the bottom tabs (plan §5). */
 export function Shell({ hid, user }: { hid: string; user: User }) {
   const members = useMembers(hid) ?? [];
-  const [route, go] = useRoute();
+  const [hashRoute, go] = useRoute();
   const phone = useMediaQuery(PHONE_QUERY);
   const main = useRef<HTMLElement>(null);
   const kid = kidOf(members);
+  // Recent changes is phone only; the tablet has its Undo toast instead.
+  const route = hashRoute === 'recent' && !phone ? 'today' : hashRoute;
+  const recent = route === 'recent';
+  // Where Back on Recent changes returns to.
+  const lastRoute = useRef<Route>('today');
+  if (!recent) lastRoute.current = route;
+  const title = recent ? 'Recent changes' : (tabLabel(route) ?? kidDayTitle(kid));
 
   useEffect(() => {
     main.current?.scrollTo(0, 0);
@@ -28,14 +35,16 @@ export function Shell({ hid, user }: { hid: string; user: User }) {
       {phone ? (
         <PhoneBar
           {...headerProps}
-          title={tabLabel(route) ?? kidDayTitle(kid)}
+          title={title}
           who={memberForEmail(members, user.email)?.name ?? null}
+          onRecent={recent ? undefined : () => go('recent')}
+          onBack={recent ? () => go(lastRoute.current) : undefined}
         />
       ) : (
         <Header {...headerProps} hid={hid} />
       )}
       <main ref={main}>
-        <div id="view" role="tabpanel" aria-label={tabLabel(route) ?? kidDayTitle(kid)}>
+        <div id="view" role="tabpanel" aria-label={title}>
           <View
             route={route}
             hid={hid}
@@ -47,7 +56,7 @@ export function Shell({ hid, user }: { hid: string; user: User }) {
           />
         </div>
       </main>
-      <TabBar route={route} onTab={go} />
+      {!recent && <TabBar route={route} onTab={go} />}
     </div>
   );
 }

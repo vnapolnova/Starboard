@@ -87,22 +87,37 @@ export function Header({ hid, members, kid, onKid }: Props & { hid: string }) {
   );
 }
 
-/** Phone header: the compact bar from design/phone-mockup.html, plus the chips. */
+/**
+ * Phone header: the compact bar from design/phone-mockup.html, plus the chips.
+ * Recent opens Recent changes; there, Back returns and the chips are hidden.
+ */
 export function PhoneBar({
   title,
   who,
   members,
   kid,
   onKid,
-}: Props & { title: string; who: string | null }) {
+  onRecent,
+  onBack,
+}: Props & { title: string; who: string | null; onRecent?: () => void; onBack?: () => void }) {
   return (
     <header class="bar">
       <div class="bar-row">
+        {onBack && (
+          <button type="button" class="back" onClick={onBack}>
+            Back
+          </button>
+        )}
         <h1>{title}</h1>
         {who && <span class="who">{who}</span>}
-        {kid && <Unicorn kid={kid} onKid={onKid} bubble={false} />}
+        {onRecent && (
+          <button type="button" class="back" onClick={onRecent}>
+            Recent
+          </button>
+        )}
+        {kid && !onBack && <Unicorn kid={kid} onKid={onKid} bubble={false} />}
       </div>
-      <PersonChips members={members} />
+      {!onBack && <PersonChips members={members} />}
     </header>
   );
 }
