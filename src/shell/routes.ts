@@ -1,5 +1,6 @@
-// Hash routes for the shell: #today, #cal, #meals, #grocery, #chores, and #kid
-// for Cleo's day (opened from the unicorn, not a tab). Names match the mockup's
+// Hash routes for the shell: #today, #cal, #meals, #grocery, #chores, #kid for
+// Cleo's day (opened from the unicorn, not a tab), and #recent for the phone's
+// Recent changes (opened from its top bar). Names match the mockup's
 // data-tab values, so `scripts/shoot.mjs --hash #cal` works.
 
 export const TABS = [
@@ -11,9 +12,9 @@ export const TABS = [
 ] as const;
 
 export type TabId = (typeof TABS)[number]['id'];
-export type Route = TabId | 'kid';
+export type Route = TabId | 'kid' | 'recent';
 
-const ROUTES: readonly string[] = [...TABS.map((t) => t.id), 'kid'];
+const ROUTES: readonly string[] = [...TABS.map((t) => t.id), 'kid', 'recent'];
 
 /** The route for a location hash; anything unknown goes to Today. */
 export function parseHash(hash: string): Route {

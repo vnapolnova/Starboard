@@ -67,7 +67,11 @@ else if (isFile) {
 const outDir = resolve('docs/shots', name);
 await mkdir(outDir, { recursive: true });
 
-const browser = await chromium.launch();
+// Cloud sessions preinstall one Chromium there, which may be newer than the pinned Playwright expects.
+const CLOUD_CHROMIUM = '/opt/pw-browsers/chromium';
+const browser = await chromium.launch(
+  existsSync(CLOUD_CHROMIUM) ? { executablePath: CLOUD_CHROMIUM } : {},
+);
 try {
   for (const device of pick) {
     const { width, height, ...rest } = devices[device];
