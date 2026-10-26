@@ -10,6 +10,12 @@ const members: OwnerMember[] = [
 const title = (t: string) => detectOwners({ title: t }, members);
 
 describe('detectOwners', () => {
+  it('looks past the special markers: a ⭐ or a leading *', () => {
+    expect(title('⭐ Cleo – pumpkin patch').ownerIds).toEqual(['cleo']);
+    expect(title('*Cleo: zoo').ownerIds).toEqual(['cleo']);
+    expect(title('* Alice & Bob: date night ⭐').ownerIds).toEqual(['alice', 'bob']);
+  });
+
   it('maps a guest email to its member', () => {
     expect(detectOwners({ title: 'Dentist', guestEmails: ['cleo@example.com'] }, members)).toEqual({
       ownerIds: ['cleo'],

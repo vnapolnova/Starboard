@@ -4,12 +4,25 @@ import type { CalendarEvent, EventOverride, EventView } from './types';
 // Events are mirrored from Google Calendar by the sync function; corrections
 // made in the app live in eventOverrides/{eventId} and win on read (spec §7).
 
+// A title can mark an event special (spec §4 Cleo's day): a ⭐ anywhere
+// ("Pumpkin patch ⭐") or a * at the start ("*Pumpkin patch"). The marker isn't
+// shown. The phone's Special setting (eventOverrides) wins over the title.
+const STAR = /\s*⭐\uFE0F?\s*/gu;
+const LEADING_ASTERISK = /^\s*\*\s*/u;
+
+/** The title without its special markers, and whether it had one. */
+export function specialFromTitle(title: string) {
+  const plain = title.replace(LEADING_ASTERISK, '').replace(STAR, ' ').trim();
+  return { title: plain || title, marked: plain !== title.trim() };
+}
+
 export function applyOverride(
   id: string,
   event: CalendarEvent,
   override?: EventOverride,
 ): EventView {
-  const view: EventView = { id, ...event, special: override?.special ?? false };
+  const { title, marked } = specialFromTitle(event.title);
+  const view: EventView = { id, ...event, title, special: override?.special ?? marked };
   if (override?.ownerIds) {
     view.ownerIds = override.ownerIds;
     view.ownerSource = 'override';

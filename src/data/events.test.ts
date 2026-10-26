@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Timestamp } from 'firebase/firestore';
-import { applyOverride } from './events';
+import { applyOverride, specialFromTitle } from './events';
 import type { CalendarEvent } from './types';
 
 const event: CalendarEvent = {
@@ -36,5 +36,39 @@ describe('applyOverride', () => {
       special: true,
       pic: '🏊',
     });
+  });
+});
+
+describe('special from the title', () => {
+  it('takes a ⭐ anywhere or a leading *, and hides it', () => {
+    expect(specialFromTitle('Pumpkin patch ⭐')).toEqual({ title: 'Pumpkin patch', marked: true });
+    expect(specialFromTitle('⭐️ Pumpkin patch')).toEqual({ title: 'Pumpkin patch', marked: true });
+    expect(specialFromTitle('Cleo ⭐ birthday')).toEqual({ title: 'Cleo birthday', marked: true });
+    expect(specialFromTitle('*Pumpkin patch')).toEqual({ title: 'Pumpkin patch', marked: true });
+    expect(specialFromTitle(' * Pumpkin patch')).toEqual({ title: 'Pumpkin patch', marked: true });
+  });
+
+  it('ignores a * that is not at the start, and plain titles', () => {
+    expect(specialFromTitle('Math 5*2 review')).toEqual({
+      title: 'Math 5*2 review',
+      marked: false,
+    });
+    expect(specialFromTitle('Swim')).toEqual({ title: 'Swim', marked: false });
+  });
+
+  it('keeps a title that is only a marker', () => {
+    expect(specialFromTitle('⭐')).toEqual({ title: '⭐', marked: true });
+  });
+
+  it('marks the event special and shows it without the marker', () => {
+    const view = applyOverride('e1', { ...event, title: '⭐ Cleo – pumpkin patch' });
+    expect(view).toMatchObject({ title: 'Cleo – pumpkin patch', special: true });
+  });
+
+  it("lets the phone's Special setting win over the title", () => {
+    expect(applyOverride('e1', { ...event, title: '*Zoo' }, { special: false }).special).toBe(
+      false,
+    );
+    expect(applyOverride('e1', event, { special: true }).special).toBe(true);
   });
 });

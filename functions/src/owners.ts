@@ -19,6 +19,9 @@ export interface Owners {
 // Joins two or more names at the start: "Alice & Bob: dinner", "Mom and Cleo – zoo".
 const JOINER = /^\s*(?:&|\+|,|and\b)\s*/iu;
 const LETTER = /[\p{L}\p{N}]/u;
+// The "special" markers (spec §4 Cleo's day): ⭐ anywhere, or * at the start.
+// The app reads them; owner detection looks past them ("⭐ Cleo – zoo").
+const MARKERS = /⭐\uFE0F?|^\s*\*/gu;
 
 export function detectOwners(
   event: { title?: string; guestEmails?: string[] },
@@ -27,7 +30,7 @@ export function detectOwners(
   const byGuests = ownersFromGuests(event.guestEmails ?? [], members);
   if (byGuests.length) return { ownerIds: byGuests, ownerSource: 'guests' };
 
-  const byTitle = ownersFromTitle(event.title ?? '', members);
+  const byTitle = ownersFromTitle((event.title ?? '').replace(MARKERS, ''), members);
   if (byTitle.length) return { ownerIds: byTitle, ownerSource: 'title' };
 
   return { ownerIds: [], ownerSource: 'family' };
